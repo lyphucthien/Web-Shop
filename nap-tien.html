@@ -210,16 +210,22 @@
 
     function activateTab(tab){
       tabButtons.forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
-      panels.the.style.display = tab === 'nap-the' ? '' : 'none';
-      panels.bank.style.display = tab === 'chuyen-khoang' ? '' : 'none';
+      panels.the.style.display = tab === 'the' ? '' : 'none';
+      panels.bank.style.display = tab === 'bank' ? '' : 'none';
       depositHeader.querySelector('h1').textContent = tabTitles[tab].title;
       depositHeader.querySelector('p').textContent = tabTitles[tab].desc;
-      history.replaceState(null, '', '/' + tab);
+      history.replaceState(
+        null,
+        '',
+        tab === 'bank'
+          ? '/nap-tien/chuyen-khoan'
+          : '/nap-tien/nap-the'
+      );
     }
 
     tabButtons.forEach(btn => btn.addEventListener('click', () => activateTab(btn.dataset.tab)));
 
-    const initialTab = window.location.hash === '/chuyen-khoang' ? 'chuyen-khoang' : 'nap-the';
+    const initialTab = window.location.pathname === '/nap-tien/chuyen-khoan' ? 'bank' : 'the';
     activateTab(initialTab);
 
     function formatVND(n){
@@ -270,10 +276,6 @@
       const val = btn.dataset.amount;
       summaryAmount.textContent = formatVND(val);
       summaryTotal.textContent = formatVND(val);
-    });
-
-    document.getElementById('submitCardBtn').addEventListener('click', () => {
-      showToast('Chức năng nạp thẻ đang ở chế độ demo.');
     });
 
     // ===== NGÂN HÀNG / VÍ ĐIỆN TỬ =====
