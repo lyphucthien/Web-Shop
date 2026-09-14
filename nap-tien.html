@@ -38,13 +38,15 @@
       <div class="container nav-inner">
         <a href="/" class="nav-item">TRANG CHỦ</a>
         <a href="/categories" class="nav-item">DANH MỤC <span class="nav-caret">&gt;</span></a>
+
         <div class="nav-item-wrap">
-          <a href="/" class="nav-item active">NẠP TIỀN <span class="nav-caret">&gt;</span></a>
+          <a href="/nap-tien/nap-the" class="nav-item active">NẠP TIỀN <span class="nav-caret">&gt;</span></a>
           <div class="nav-dropdown">
             <a href="/nap-tien/nap-the" class="nav-dropdown-item"><span class="nav-dropdown-icon">🎫</span>NẠP THẺ CÀO</a>
-            <a href="/nap-tien/chuyen-khoang" class="nav-dropdown-item"><span class="nav-dropdown-icon">🏦</span>NẠP NGÂN HÀNG/VÍ ĐIỆN TỬ</a>
+            <a href="/nap-tien/chuyen-khoan" class="nav-dropdown-item"><span class="nav-dropdown-icon">🏦</span>NẠP NGÂN HÀNG/VÍ ĐIỆN TỬ</a>
           </div>
         </div>
+
         <a href="/lich-su" class="nav-item" data-toast="Lịch sử giao dịch sẽ được thêm sau.">LỊCH SỬ <span class="nav-caret">&gt;</span></a>
         <a href="/cap-bac" class="nav-item" data-toast="Hệ thống cấp bậc sẽ được thêm sau.">CẤP BẬC</a>
         <a href="/guide" class="nav-item" data-toast="Hướng dẫn sẽ được thêm sau.">HƯỚNG DẪN</a>
@@ -178,12 +180,14 @@
           <p>LPTSHOP.COM - Hệ Thống Bán Acc Đa Loại Game. Mua ngay!</p>
           <p>Giá cả phải chăng - Chất lượng - An toàn</p>
         </div>
+
         <div>
           <h4>LIÊN KẾT NHANH</h4>
           <a href="/account">Tài khoản của tôi</a>
           <a href="/favorites">Danh sách yêu thích</a>
           <a href="/new">Sản phẩm mới</a>
         </div>
+
         <div>
           <h4>LIÊN HỆ</h4>
           <p class="contact-line">Hotline: facebook.com/lyphucthien180312</p>
@@ -191,6 +195,7 @@
         </div>
       </div>
     </div>
+
     <div class="footer-bottom">
       <div class="container">© Bản Quyền Thuộc Về LPTSHOP - Phiên bản: 1.0.0</div>
     </div>
@@ -198,47 +203,95 @@
 
   <div id="toast" class="toast"></div>
   <script src="script.js"></script>
+
   <script>
     // ===== Chuyển tab NẠP THẺ / NGÂN HÀNG =====
     const tabTitles = {
-      the: { title: 'Nạp Thẻ Cào', desc: 'Chọn loại thẻ, nhập thông tin và nạp ngay lập tức' },
-      bank: { title: 'Chuyển Khoản', desc: 'Chuyển khoản trực tiếp, cộng tiền tự động sau vài phút' }
+      the: {
+        title: 'Nạp Thẻ Cào',
+        desc: 'Chọn loại thẻ, nhập thông tin và nạp ngay lập tức'
+      },
+      bank: {
+        title: 'Chuyển Khoản',
+        desc: 'Chuyển khoản trực tiếp, cộng tiền tự động sau vài phút'
+      }
     };
+
     const depositHeader = document.getElementById('depositHeader');
     const tabButtons = document.querySelectorAll('.deposit-tab');
-    const panels = { the: document.getElementById('panel-the'), bank: document.getElementById('panel-bank') };
+    const panels = {
+      the: document.getElementById('panel-the'),
+      bank: document.getElementById('panel-bank')
+    };
 
-    function activateTab(tab){
+    function activateTab(tab) {
       tabButtons.forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
       panels.the.style.display = tab === 'the' ? '' : 'none';
       panels.bank.style.display = tab === 'bank' ? '' : 'none';
       depositHeader.querySelector('h1').textContent = tabTitles[tab].title;
       depositHeader.querySelector('p').textContent = tabTitles[tab].desc;
-      history.replaceState(
-        null,
-        '',
-        tab === 'bank'
-          ? '/nap-tien/chuyen-khoan'
-          : '/nap-tien/nap-the'
-      );
     }
 
-    tabButtons.forEach(btn => btn.addEventListener('click', () => activateTab(btn.dataset.tab)));
+    // Chỉ khi CLICK tab mới đổi URL
+    tabButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tab = btn.dataset.tab;
+        activateTab(tab);
 
-    const initialTab = window.location.pathname === '/nap-tien/chuyen-khoan' ? 'bank' : 'the';
+        const targetUrl = tab === 'bank'
+          ? '/nap-tien/chuyen-khoan'
+          : '/nap-tien/nap-the';
+
+        if (window.location.pathname !== targetUrl) {
+          history.pushState(null, '', targetUrl);
+        }
+      });
+    });
+
+    // Khi mở trang:
+    // "/" -> giữ nguyên "/"
+    // "/nap-tien/nap-the" -> tab thẻ
+    // "/nap-tien/chuyen-khoan" -> tab chuyển khoản
+    let initialTab = 'the';
+
+    if (window.location.pathname === '/nap-tien/chuyen-khoan') {
+      initialTab = 'bank';
+    } else if (window.location.pathname === '/nap-tien/nap-the') {
+      initialTab = 'the';
+    }
+
+    // Không đổi URL ở đây
     activateTab(initialTab);
 
-    function formatVND(n){
+    // Back / Forward
+    window.addEventListener('popstate', () => {
+      let tab = 'the';
+
+      if (window.location.pathname === '/nap-tien/chuyen-khoan') {
+        tab = 'bank';
+      } else if (window.location.pathname === '/nap-tien/nap-the') {
+        tab = 'the';
+      }
+
+      activateTab(tab);
+    });
+
+    // ===== Format VNĐ =====
+    function formatVND(n) {
       return Number(n || 0).toLocaleString('vi-VN') + 'đ';
     }
 
-    function showToast(msg){
+    // ===== Toast =====
+    const toast = document.getElementById('toast');
+
+    function showToast(msg) {
       toast.textContent = msg;
       toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 2500);
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
     }
 
-    // ===== Dropdown chọn loại thẻ (bấm mở bảng) =====
+    // ===== Dropdown chọn loại thẻ =====
     const cardTypeDropdown = document.getElementById('cardTypeDropdown');
     const cardTypeToggle = document.getElementById('cardTypeToggle');
     const cardTypeMenu = document.getElementById('cardTypeMenu');
@@ -249,30 +302,35 @@
       cardTypeDropdown.classList.toggle('open');
     });
 
-    cardTypeMenu.addEventListener('click', (e) => {
+    cardTypeMenu.addEventListener('click', e => {
       const opt = e.target.closest('.dropdown-option');
-      if(!opt) return;
+      if (!opt) return;
+
       cardTypeMenu.querySelectorAll('.dropdown-option').forEach(o => o.classList.remove('active'));
       opt.classList.add('active');
-      cardTypeLabel.textContent = opt.textContent;
-      summaryCard.textContent = opt.textContent;
+      cardTypeLabel.textContent = opt.textContent.trim();
+      summaryCard.textContent = opt.textContent.trim();
       cardTypeDropdown.classList.remove('open');
     });
 
-    document.addEventListener('click', (e) => {
-      if (!cardTypeDropdown.contains(e.target)) cardTypeDropdown.classList.remove('open');
+    document.addEventListener('click', e => {
+      if (!cardTypeDropdown.contains(e.target)) {
+        cardTypeDropdown.classList.remove('open');
+      }
     });
 
-    // ===== Lưới chọn mệnh giá (hiện sẵn) =====
+    // ===== Lưới chọn mệnh giá =====
     const amountGrid = document.getElementById('amountGrid');
     const summaryAmount = document.getElementById('summaryAmount');
     const summaryTotal = document.getElementById('summaryTotal');
 
-    amountGrid.addEventListener('click', (e) => {
+    amountGrid.addEventListener('click', e => {
       const btn = e.target.closest('.amount-btn');
-      if(!btn) return;
+      if (!btn) return;
+
       amountGrid.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
+
       const val = btn.dataset.amount;
       summaryAmount.textContent = formatVND(val);
       summaryTotal.textContent = formatVND(val);
@@ -280,27 +338,27 @@
 
     // ===== NGÂN HÀNG / VÍ ĐIỆN TỬ =====
     const bankAmount = document.getElementById('bankAmount');
-    const summaryBankAmount = document.getElementById('summaryBankAmount');
-    const summaryBankTotal = document.getElementById('summaryBankTotal');
 
     bankAmount.addEventListener('input', () => {
-      summaryBankAmount.textContent = formatVND(bankAmount.value);
-      summaryBankTotal.textContent = formatVND(bankAmount.value);
+      // Không còn cập nhật summaryBankAmount / summaryBankTotal
+      // vì HTML hiện tại không có 2 phần tử đó.
     });
 
-    function markCopied(btn){
+    // ===== Copy =====
+    function markCopied(btn) {
       const original = btn.dataset.originalText || btn.textContent;
       btn.dataset.originalText = original;
       btn.textContent = 'Đã Sao Chép ✓';
       btn.classList.add('copied');
       clearTimeout(btn._copyTimer);
+
       btn._copyTimer = setTimeout(() => {
         btn.textContent = original;
         btn.classList.remove('copied');
       }, 2000);
     }
 
-    function fallbackCopy(text, btn, successMsg){
+    function fallbackCopy(text, btn, successMsg) {
       const ta = document.createElement('textarea');
       ta.value = text;
       ta.style.position = 'fixed';
@@ -308,36 +366,83 @@
       document.body.appendChild(ta);
       ta.focus();
       ta.select();
+
       try {
         const ok = document.execCommand('copy');
-        if (ok) { markCopied(btn); showToast(successMsg); }
-        else showToast('Không thể sao chép, vui lòng chọn và copy thủ công.');
+
+        if (ok) {
+          markCopied(btn);
+          showToast(successMsg);
+        } else {
+          showToast('Không thể sao chép, vui lòng chọn và copy thủ công.');
+        }
       } catch (err) {
         showToast('Không thể sao chép, vui lòng chọn và copy thủ công.');
       }
+
       document.body.removeChild(ta);
     }
 
-    function copyText(text, btn, successMsg){
+    function copyText(text, btn, successMsg) {
       if (navigator.clipboard && window.isSecureContext) {
         navigator.clipboard.writeText(text)
-          .then(() => { markCopied(btn); showToast(successMsg); })
+          .then(() => {
+            markCopied(btn);
+            showToast(successMsg);
+          })
           .catch(() => fallbackCopy(text, btn, successMsg));
       } else {
         fallbackCopy(text, btn, successMsg);
       }
     }
 
-    document.getElementById('copyAccountBtn').addEventListener('click', (e) => {
-      copyText(document.getElementById('infoAccount').textContent, e.currentTarget, 'Đã sao chép số tài khoản.');
+    document.getElementById('copyAccountBtn').addEventListener('click', e => {
+      copyText(
+        document.getElementById('infoAccount').textContent.trim(),
+        e.currentTarget,
+        'Đã sao chép số tài khoản.'
+      );
     });
 
-    document.getElementById('copyContentBtn').addEventListener('click', (e) => {
-      copyText(document.getElementById('infoContent').textContent, e.currentTarget, 'Đã sao chép nội dung chuyển khoản.');
+    document.getElementById('copyContentBtn').addEventListener('click', e => {
+      copyText(
+        document.getElementById('infoContent').textContent.trim(),
+        e.currentTarget,
+        'Đã sao chép nội dung chuyển khoản.'
+      );
     });
 
+    // ===== Xác nhận chuyển khoản =====
     document.getElementById('submitBankBtn').addEventListener('click', () => {
+      const amount = Number(bankAmount.value || 0);
+
+      if (!amount || amount < 10000) {
+        showToast('Vui lòng nhập số tiền tối thiểu 10.000đ.');
+        bankAmount.focus();
+        return;
+      }
+
       showToast('Chức năng xác nhận đang ở chế độ demo.');
+    });
+
+    // ===== Nạp thẻ =====
+    document.getElementById('submitCardBtn').addEventListener('click', () => {
+      const cardCode = document.getElementById('cardCode').value.trim();
+      const cardSerial = document.getElementById('cardSerial').value.trim();
+
+      if (!cardCode) {
+        showToast('Vui lòng nhập mã thẻ.');
+        document.getElementById('cardCode').focus();
+        return;
+      }
+
+      if (!cardSerial) {
+        showToast('Vui lòng nhập số serial.');
+        document.getElementById('cardSerial').focus();
+        return;
+      }
+
+      showToast('Chức năng nạp thẻ đang ở chế độ demo.');
     });
   </script>
 </body>
