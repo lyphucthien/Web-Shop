@@ -1,0 +1,486 @@
+/* ==================== NẠP TIỀN — LAYOUT CHUNG ==================== */
+
+.deposit-page{
+  padding:40px 0 70px;
+}
+
+.deposit-header{
+  text-align:center;
+  margin-bottom:30px;
+}
+
+.deposit-header h1{
+  font-family:"Barlow Condensed",sans-serif;
+  font-size:34px;
+  font-weight:800;
+  color:#25313e;
+  margin:0 0 8px;
+}
+
+.deposit-header p{
+  color:var(--muted);
+  font-size:14px;
+  margin:0;
+}
+
+.deposit-tabs{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  margin-bottom:30px;
+}
+
+.deposit-tab{
+  height:42px;
+  padding:0 22px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:#fff;
+  color:#596473;
+  font-family:"Barlow Condensed",sans-serif;
+  font-size:15px;
+  font-weight:700;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  transition:.2s;
+}
+
+.deposit-tab:hover{
+  border-color:var(--green);
+  color:var(--green-dark);
+}
+
+.deposit-tab.active{
+  background:var(--green);
+  border-color:var(--green);
+  color:#fff;
+}
+
+.deposit-layout{
+  display:grid;
+  grid-template-columns:1.2fr .8fr;
+  gap:22px;
+  align-items:start;
+}
+
+.deposit-panel{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:14px;
+  box-shadow:var(--shadow);
+  padding:26px;
+}
+
+.deposit-panel h2{
+  font-family:"Barlow Condensed",sans-serif;
+  font-size:22px;
+  margin:0 0 18px;
+  color:#25313e;
+}
+
+
+/* ==================== FORM CHUNG ==================== */
+
+.form-group{
+  margin-bottom:16px;
+}
+
+.form-group label{
+  display:block;
+  font-size:12.5px;
+  font-weight:700;
+  color:#455564;
+  margin-bottom:7px;
+}
+
+.form-control{
+  width:100%;
+  height:46px;
+  border:1px solid #dfe5eb;
+  border-radius:7px;
+  padding:0 14px;
+  font-size:13.5px;
+  color:#33404d;
+  background:#fff;
+  outline:0;
+  transition:.2s;
+}
+
+.form-control:focus{
+  border-color:var(--green);
+  box-shadow:0 0 0 3px rgba(79,168,232,.14);
+}
+
+select.form-control{
+  appearance:none;
+  background-image:linear-gradient(45deg,transparent 50%,#8a94a0 50%),linear-gradient(135deg,#8a94a0 50%,transparent 50%);
+  background-position:calc(100% - 20px) center,calc(100% - 15px) center;
+  background-size:5px 5px,5px 5px;
+  background-repeat:no-repeat;
+}
+
+.submit-btn{
+  width:100%;
+  height:48px;
+  border:0;
+  border-radius:8px;
+  background:var(--green);
+  color:#fff;
+  font-size:14px;
+  font-weight:800;
+  margin-top:6px;
+  transition:.2s;
+}
+
+.submit-btn:hover{
+  background:var(--green-dark);
+}
+
+.submit-btn:disabled{
+  background:#c8ced4;
+  cursor:not-allowed;
+}
+
+
+/* ==================== NẠP THẺ CÀO ==================== */
+
+.card-type-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  margin-bottom:18px;
+}
+
+.card-type{
+  height:64px;
+  border:1.5px solid var(--line);
+  border-radius:9px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+  font-size:12px;
+  font-weight:700;
+  color:#455564;
+  background:#fff;
+  transition:.2s;
+}
+
+.card-type img{
+  width:26px;
+  height:26px;
+  object-fit:contain;
+}
+
+.card-type:hover{
+  border-color:#b8c8d6;
+}
+
+.card-type.active{
+  border-color:var(--green);
+  background:var(--green-soft);
+  color:var(--green-dark);
+}
+
+/* ===== Dropdown chọn loại thẻ (bấm mở bảng) ===== */
+.dropdown-select{
+  position:relative;
+  margin-bottom:18px;
+}
+
+.dropdown-toggle{
+  width:100%;
+  height:46px;
+  border:1px solid #dfe5eb;
+  border-radius:7px;
+  padding:0 14px;
+  font-size:13.5px;
+  font-weight:700;
+  color:#33404d;
+  background:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  transition:.2s;
+}
+
+.dropdown-toggle:hover{
+  border-color:#b8c8d6;
+}
+
+.dropdown-select.open .dropdown-toggle{
+  border-color:var(--green);
+  box-shadow:0 0 0 3px rgba(79,168,232,.14);
+}
+
+.dropdown-arrow{
+  font-size:11px;
+  color:#8a94a0;
+  transition:transform .2s;
+}
+
+.dropdown-select.open .dropdown-arrow{
+  transform:rotate(180deg);
+}
+
+.dropdown-menu{
+  position:absolute;
+  top:calc(100% + 6px);
+  left:0;
+  right:0;
+  background:#fff;
+  border:1px solid #dfe5eb;
+  border-radius:9px;
+  box-shadow:0 10px 24px rgba(20,30,40,.14);
+  padding:6px;
+  display:none;
+  z-index:30;
+  max-height:260px;
+  overflow-y:auto;
+}
+
+.dropdown-select.open .dropdown-menu{
+  display:block;
+}
+
+.dropdown-option{
+  width:100%;
+  text-align:left;
+  padding:10px 12px;
+  border-radius:6px;
+  font-size:13px;
+  font-weight:600;
+  color:#455564;
+  background:transparent;
+}
+
+.dropdown-option:hover{
+  background:#f2f5f8;
+}
+
+.dropdown-option.active{
+  background:var(--green-soft);
+  color:var(--green-dark);
+}
+
+/* ===== Lưới chọn mệnh giá (hiện sẵn) ===== */
+.amount-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin-bottom:18px;
+}
+
+.amount-btn{
+  height:44px;
+  border:1.5px solid var(--line);
+  border-radius:9px;
+  font-size:13px;
+  font-weight:700;
+  color:#455564;
+  background:#fff;
+  transition:.2s;
+}
+
+.amount-btn:hover{
+  border-color:#b8c8d6;
+}
+
+.amount-btn.active{
+  border-color:var(--green);
+  background:var(--green-soft);
+  color:var(--green-dark);
+}
+
+
+/* ==================== CHUYỂN KHOẢN / VÍ ĐIỆN TỬ ==================== */
+
+#panel-bank{
+  display:flex;
+  justify-content:center;
+}
+
+#panel-bank .deposit-panel{
+  width:100%;
+  max-width:620px;
+}
+
+.bank-method-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin-bottom:18px;
+}
+
+.bank-method{
+  border:1.5px solid var(--line);
+  border-radius:9px;
+  padding:12px 8px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+  background:#fff;
+  transition:.2s;
+}
+
+.bank-method img{
+  height:26px;
+  object-fit:contain;
+}
+
+.bank-method span{
+  font-size:11.5px;
+  font-weight:700;
+  color:#596473;
+}
+
+.bank-method:hover{
+  border-color:#b8c8d6;
+}
+
+.bank-method.active{
+  border-color:var(--green);
+  background:var(--green-soft);
+}
+
+.bank-info-box{
+  border:1px dashed #cfd7df;
+  border-radius:10px;
+  padding:16px;
+  background:#f7f9fb;
+}
+
+.bank-info-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:9px 0;
+  border-bottom:1px solid #e5e9ee;
+  font-size:13px;
+}
+
+.bank-info-row:last-child{
+  border-bottom:0;
+}
+
+.bank-info-row b{
+  color:#25313e;
+}
+
+.copy-btn{
+  width:110px;
+  min-width:110px;
+  height:30px;
+  border:1px solid #cfd7df;
+  background:#fff;
+  color:#596473;
+  padding:5px 10px;
+  border-radius:6px;
+  font-size:11px;
+  font-weight:700;
+  text-align:center;
+  white-space:nowrap;
+  box-sizing:border-box;
+}
+
+.copy-btn:hover{
+  border-color:var(--green);
+  color:var(--green-dark);
+}
+
+.copy-btn.copied{
+  border-color:var(--green);
+  background:var(--green);
+  color:#fff;
+}
+
+.qr-box{
+  text-align:center;
+  margin-top:16px;
+}
+
+.qr-box img{
+  width:350px;
+  height:350px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:8px;
+  background:#fff;
+}
+
+.qr-box p{
+  font-size:11.5px;
+  color:var(--muted);
+  margin:10px 0 0;
+}
+
+
+/* ==================== TÓM TẮT / SIDEBAR ==================== */
+
+.summary-row{
+  display:flex;
+  justify-content:space-between;
+  padding:10px 0;
+  border-bottom:1px solid #eef0f2;
+  font-size:13px;
+  color:#596473;
+}
+
+.summary-row:last-of-type{
+  border-bottom:0;
+}
+
+.summary-row.total{
+  margin-top:6px;
+  padding-top:14px;
+  border-top:1.5px solid var(--line);
+  font-weight:800;
+  color:#25313e;
+  font-size:15px;
+}
+
+.summary-row.total strong{
+  color:var(--green-dark);
+}
+
+.note-box{
+  margin-top:18px;
+  padding:13px 14px;
+  border-radius:8px;
+  background:#fff6e5;
+  border:1px solid #ffe4a8;
+  font-size:12px;
+  color:#8a6100;
+  line-height:1.5;
+}
+
+
+/* ==================== RESPONSIVE ==================== */
+
+@media(max-width:860px){
+  .deposit-layout{
+    grid-template-columns:1fr;
+  }
+  .card-type-grid{
+    grid-template-columns:repeat(3,1fr);
+  }
+}
+
+@media(max-width:560px){
+  .deposit-header h1{
+    font-size:26px;
+  }
+  .deposit-tabs{
+    flex-wrap:wrap;
+  }
+  .card-type-grid,.bank-method-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+  .deposit-panel{
+    padding:18px;
+  }
+}
