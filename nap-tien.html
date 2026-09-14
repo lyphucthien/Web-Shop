@@ -210,16 +210,16 @@
 
     function activateTab(tab){
       tabButtons.forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
-      panels.the.style.display = tab === 'the' ? '' : 'none';
-      panels.bank.style.display = tab === 'bank' ? '' : 'none';
+      panels.the.style.display = tab === 'nap-the' ? '' : 'none';
+      panels.bank.style.display = tab === 'chuyen-khoang' ? '' : 'none';
       depositHeader.querySelector('h1').textContent = tabTitles[tab].title;
       depositHeader.querySelector('p').textContent = tabTitles[tab].desc;
-      history.replaceState(null, '', '#' + tab);
+      history.replaceState(null, '', '/' + tab);
     }
 
     tabButtons.forEach(btn => btn.addEventListener('click', () => activateTab(btn.dataset.tab)));
 
-    const initialTab = window.location.hash === '#bank' ? 'bank' : 'the';
+    const initialTab = window.location.hash === '/chuyen-khoang' ? 'chuyen-khoang' : 'nap-the';
     activateTab(initialTab);
 
     function formatVND(n){
