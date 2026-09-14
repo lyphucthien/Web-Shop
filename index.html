@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LPTSHOP — Nơi Bán Chính Thức Của LPT</title>
-  <meta name="description" content="LPTSHOP — giao diện cửa hàng sản phẩm số hiện đại." />
+  <title>Nạp Tiền — LPTSHOP</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="CSS/chung.css" />
+  <link rel="stylesheet" href="CSS/nap-the.css" />
 </head>
 <body>
   <div class="bg-glow glow-a"></div>
@@ -20,12 +20,10 @@
         <a href="/" class="brand-image brand-home" aria-label="Trang chủ">
           <img src="" alt="lptshop.com" onerror="this.style.display='none'">
         </a>
-
         <div class="search-box">
           <input type="search" placeholder="Tìm kiếm tài khoản, danh mục..." aria-label="Tìm kiếm">
           <button type="button" data-toast="Tìm kiếm đang ở chế độ demo." aria-label="Tìm kiếm">⌕</button>
         </div>
-
         <div class="top-actions">
           <button class="circle-btn" data-toast="Đã bật chế độ sáng/tối." aria-label="Đổi giao diện">◔</button>
           <button class="circle-btn" data-toast="Đổi ngôn ngữ sẽ được thêm sau." aria-label="Ngôn ngữ">◎</button>
@@ -38,10 +36,10 @@
 
     <nav class="main-nav">
       <div class="container nav-inner">
-        <a href="/" class="nav-item active">TRANG CHỦ</a>
+        <a href="/" class="nav-item">TRANG CHỦ</a>
         <a href="/categories" class="nav-item">DANH MỤC <span class="nav-caret">&gt;</span></a>
         <div class="nav-item-wrap">
-          <a href="/nap-tien" class="nav-item">NẠP TIỀN <span class="nav-caret">&gt;</span></a>
+          <a href="/" class="nav-item active">NẠP TIỀN <span class="nav-caret">&gt;</span></a>
           <div class="nav-dropdown">
             <a href="/nap-tien/nap-the" class="nav-dropdown-item"><span class="nav-dropdown-icon">🎫</span>NẠP THẺ CÀO</a>
             <a href="/nap-tien/chuyen-khoang" class="nav-dropdown-item"><span class="nav-dropdown-icon">🏦</span>NẠP NGÂN HÀNG/VÍ ĐIỆN TỬ</a>
@@ -54,67 +52,119 @@
     </nav>
   </header>
 
-  <main id="home">
-    <section class="showcase">
-      <div class="showcase-bg"></div>
-      <div class="container showcase-inner">
-        <div class="hero-carousel" id="heroCarousel">
-          <div class="carousel-track" id="carouselTrack">
-            <article class="promo-slide promo-image-slide">
-              <img src="Link Ảnh" alt="Sự kiện nổi bật">
-              <div class="promo-overlay">
-                <a href="/products" class="promo-cta">Xem sản phẩm →</a>
+  <main>
+    <div class="container deposit-page">
+      <div class="deposit-header" id="depositHeader">
+        <h1>Nạp Thẻ Cào</h1>
+        <p>Chọn loại thẻ, nhập thông tin và nạp ngay lập tức</p>
+      </div>
+
+      <div class="deposit-tabs">
+        <button type="button" class="deposit-tab active" data-tab="the">Nạp Thẻ Cào</button>
+        <button type="button" class="deposit-tab" data-tab="bank">Chuyển Khoản</button>
+      </div>
+
+      <!-- TAB: NẠP THẺ CÀO -->
+      <div class="deposit-layout deposit-tab-panel" id="panel-the">
+        <div class="deposit-panel">
+          <h2>Thông tin thẻ nạp</h2>
+
+          <div class="form-group">
+            <label>Chọn loại thẻ</label>
+            <div class="dropdown-select" id="cardTypeDropdown">
+              <button type="button" class="dropdown-toggle" id="cardTypeToggle">
+                <span id="cardTypeLabel">Viettel</span>
+                <span class="dropdown-arrow">▾</span>
+              </button>
+              <div class="dropdown-menu" id="cardTypeMenu">
+                <button type="button" class="dropdown-option active" data-card="Viettel">Viettel</button>
+                <button type="button" class="dropdown-option" data-card="Vinaphone">Vinaphone</button>
+                <button type="button" class="dropdown-option" data-card="Mobifone">Mobifone</button>
+                <button type="button" class="dropdown-option" data-card="Garena">Garena</button>
+                <button type="button" class="dropdown-option" data-card="Zing">Zing</button>
+                <button type="button" class="dropdown-option" data-card="Gate">Vcoin</button>
+                <button type="button" class="dropdown-option" data-card="VNMobile">Scoin</button>
               </div>
-            </article>
+            </div>
           </div>
-          <button class="carousel-arrow arrow-prev" id="carouselPrev" aria-label="Slide trước">‹</button>
-          <button class="carousel-arrow arrow-next" id="carouselNext" aria-label="Slide sau">›</button>
-          <div class="carousel-dots" id="carouselDots"></div>
+
+          <div class="form-group">
+            <label>Mệnh giá</label>
+            <div class="amount-grid" id="amountGrid">
+              <button type="button" class="amount-btn active" data-amount="10000">10.000đ</button>
+              <button type="button" class="amount-btn" data-amount="20000">20.000đ</button>
+              <button type="button" class="amount-btn" data-amount="50000">50.000đ</button>
+              <button type="button" class="amount-btn" data-amount="100000">100.000đ</button>
+              <button type="button" class="amount-btn" data-amount="200000">200.000đ</button>
+              <button type="button" class="amount-btn" data-amount="500000">500.000đ</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Mã thẻ</label>
+            <input type="text" class="form-control" id="cardCode" placeholder="Nhập mã thẻ">
+          </div>
+
+          <div class="form-group">
+            <label>Số Serial</label>
+            <input type="text" class="form-control" id="cardSerial" placeholder="Nhập số serial">
+          </div>
+
+          <button type="button" class="submit-btn" id="submitCardBtn">Nạp Thẻ Ngay</button>
+
+          <div class="note-box">
+            ⚠ Vui lòng kiểm tra kỹ thông tin thẻ trước khi gửi. Thẻ sai mệnh giá hoặc đã sử dụng sẽ không được đối soát.
+          </div>
         </div>
 
-        <div class="login-strip">
-          <span class="user-circle">♙</span>
-          <div class="login-copy">
-            <strong>Xin chào!</strong>
-            <small>Vui lòng đăng nhập để thực hiện mua hàng và xem số dư</small>
+        <div class="deposit-panel">
+          <h2>Tóm tắt</h2>
+          <div class="summary-row"><span>Loại thẻ</span><strong id="summaryCard">Viettel</strong></div>
+          <div class="summary-row"><span>Mệnh giá</span><strong id="summaryAmount">10.000đ</strong></div>
+          <div class="summary-row"><span>Chiết khấu</span><strong>0%</strong></div>
+          <div class="summary-row total"><span>Số tiền nhận</span><strong id="summaryTotal">10.000đ</strong></div>
+        </div>
+      </div>
+
+      <!-- TAB: NGÂN HÀNG / VÍ ĐIỆN TỬ -->
+      <div class="deposit-layout deposit-tab-panel" id="panel-bank" style="display:none;">
+        <div class="deposit-panel">
+          <h2>Quét mã để chuyển khoản</h2>
+
+          <div class="qr-box">
+            <img src="https://res.cloudinary.com/dkui88bcf/image/upload/v1789383251/qr_imvwwn.jpg" alt="QR chuyển khoản" onerror="this.style.display='none'">
           </div>
-          <div class="login-actions">
-            <button class="login-btn" data-toast="Đăng nhập sẽ được thêm sau.">↪ &nbsp; Đăng Nhập</button>
-            <button class="register-btn" data-toast="Đăng ký sẽ được thêm sau.">♙ &nbsp; Đăng Ký</button>
+
+          <div class="bank-info-box">
+            <div class="bank-info-row">
+              <span>Chủ tài khoản</span>
+              <b>LY PHUC THIEN</b>
+            </div>
+            <div class="bank-info-row">
+              <span>Số tài khoản</span>
+              <b id="infoAccount">0946518312</b>
+              <button type="button" class="copy-btn" id="copyAccountBtn">Sao chép</button>
+            </div>
+            <div class="bank-info-row">
+              <span>Nội dung CK</span>
+              <b id="infoContent">NAP LPT12345</b>
+              <button type="button" class="copy-btn" id="copyContentBtn">Sao chép</button>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-top:18px;">
+            <label>Số tiền muốn nạp</label>
+            <input type="number" class="form-control" id="bankAmount" placeholder="Nhập số tiền (VNĐ)" min="10000" step="1000">
+          </div>
+
+          <button type="button" class="submit-btn" id="submitBankBtn">Xác Nhận Đã Chuyển Khoản</button>
+
+          <div class="note-box">
+            ⚠ Vui lòng ghi đúng nội dung chuyển khoản. Sai nội dung có thể khiến giao dịch xử lí chậm.
           </div>
         </div>
       </div>
-    </section>
-
-    <section id="categories" class="container section">
-      <div class="category-grid">
-        <button class="category-card" data-filter="BloxFruit">
-          <img class="cat-icon-img" src="https://res.cloudinary.com/dkui88bcf/image/upload/v1786939501/Logo_LPT_vnq390.png" onerror="this.style.display='none'">
-          <b>Túi Mù BLOX FRUIT - 100% QUỐC TẾ</b>
-        </button>
-      </div>
-    </section>
-
-    <section id="products" class="container section products-section">
-      <div class="section-head">
-        <div><span class="section-kicker">SHOP</span><h2>Sản phẩm nổi bật</h2></div>
-        <div class="filter-wrap">
-          <button class="filter-btn active" data-filter="Tất cả">Tất cả</button>
-          <button class="filter-btn" data-filter="Roblox">Roblox</button>
-          <button class="filter-btn" data-filter="Minecraft">Minecraft</button>
-          <button class="filter-btn" data-filter="Discord">Discord</button>
-        </div>
-      </div>
-      <div id="productGrid" class="product-grid"></div>
-    </section>
-
-    <section id="about" class="container section trust-section">
-      <div class="trust-card">
-        <div class="trust-icon">✦</div>
-        <div><span class="section-kicker">WHY US</span><h2>Một shop nhỏ, trải nghiệm lớn.</h2><p>Đây là giao diện nền để phát triển thành hệ thống shop đầy đủ: tài khoản, đơn hàng, kho sản phẩm, thanh toán và quản trị.</p></div>
-        <button class="primary-btn" data-toast="Khu vực hỗ trợ sẽ được thêm sau.">Liên hệ hỗ trợ →</button>
-      </div>
-    </section>
+    </div>
   </main>
 
   <footer class="footer">
@@ -148,5 +198,151 @@
 
   <div id="toast" class="toast"></div>
   <script src="script.js"></script>
+  <script>
+    // ===== Chuyển tab NẠP THẺ / NGÂN HÀNG =====
+    const tabTitles = {
+      the: { title: 'Nạp Thẻ Cào', desc: 'Chọn loại thẻ, nhập thông tin và nạp ngay lập tức' },
+      bank: { title: 'Chuyển Khoản', desc: 'Chuyển khoản trực tiếp, cộng tiền tự động sau vài phút' }
+    };
+    const depositHeader = document.getElementById('depositHeader');
+    const tabButtons = document.querySelectorAll('.deposit-tab');
+    const panels = { the: document.getElementById('panel-the'), bank: document.getElementById('panel-bank') };
+
+    function activateTab(tab){
+      tabButtons.forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+      panels.the.style.display = tab === 'the' ? '' : 'none';
+      panels.bank.style.display = tab === 'bank' ? '' : 'none';
+      depositHeader.querySelector('h1').textContent = tabTitles[tab].title;
+      depositHeader.querySelector('p').textContent = tabTitles[tab].desc;
+      history.replaceState(
+        null,
+        '',
+        tab === 'bank'
+          ? '/nap-tien/chuyen-khoan'
+          : '/nap-tien/nap-the'
+      );
+    }
+
+    tabButtons.forEach(btn => btn.addEventListener('click', () => activateTab(btn.dataset.tab)));
+
+    const initialTab = window.location.pathname === '/nap-tien/chuyen-khoan' ? 'bank' : 'the';
+    activateTab(initialTab);
+
+    function formatVND(n){
+      return Number(n || 0).toLocaleString('vi-VN') + 'đ';
+    }
+
+    function showToast(msg){
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    // ===== Dropdown chọn loại thẻ (bấm mở bảng) =====
+    const cardTypeDropdown = document.getElementById('cardTypeDropdown');
+    const cardTypeToggle = document.getElementById('cardTypeToggle');
+    const cardTypeMenu = document.getElementById('cardTypeMenu');
+    const cardTypeLabel = document.getElementById('cardTypeLabel');
+    const summaryCard = document.getElementById('summaryCard');
+
+    cardTypeToggle.addEventListener('click', () => {
+      cardTypeDropdown.classList.toggle('open');
+    });
+
+    cardTypeMenu.addEventListener('click', (e) => {
+      const opt = e.target.closest('.dropdown-option');
+      if(!opt) return;
+      cardTypeMenu.querySelectorAll('.dropdown-option').forEach(o => o.classList.remove('active'));
+      opt.classList.add('active');
+      cardTypeLabel.textContent = opt.textContent;
+      summaryCard.textContent = opt.textContent;
+      cardTypeDropdown.classList.remove('open');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!cardTypeDropdown.contains(e.target)) cardTypeDropdown.classList.remove('open');
+    });
+
+    // ===== Lưới chọn mệnh giá (hiện sẵn) =====
+    const amountGrid = document.getElementById('amountGrid');
+    const summaryAmount = document.getElementById('summaryAmount');
+    const summaryTotal = document.getElementById('summaryTotal');
+
+    amountGrid.addEventListener('click', (e) => {
+      const btn = e.target.closest('.amount-btn');
+      if(!btn) return;
+      amountGrid.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const val = btn.dataset.amount;
+      summaryAmount.textContent = formatVND(val);
+      summaryTotal.textContent = formatVND(val);
+    });
+
+    document.getElementById('submitCardBtn').addEventListener('click', () => {
+      window.location.href = 'https://lptshop.vercel.app/nap-tien/chuyen-khoang';
+    });
+
+    // ===== NGÂN HÀNG / VÍ ĐIỆN TỬ =====
+    const bankAmount = document.getElementById('bankAmount');
+    const summaryBankAmount = document.getElementById('summaryBankAmount');
+    const summaryBankTotal = document.getElementById('summaryBankTotal');
+
+    bankAmount.addEventListener('input', () => {
+      summaryBankAmount.textContent = formatVND(bankAmount.value);
+      summaryBankTotal.textContent = formatVND(bankAmount.value);
+    });
+
+    function markCopied(btn){
+      const original = btn.dataset.originalText || btn.textContent;
+      btn.dataset.originalText = original;
+      btn.textContent = 'Đã Sao Chép ✓';
+      btn.classList.add('copied');
+      clearTimeout(btn._copyTimer);
+      btn._copyTimer = setTimeout(() => {
+        btn.textContent = original;
+        btn.classList.remove('copied');
+      }, 2000);
+    }
+
+    function fallbackCopy(text, btn, successMsg){
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      try {
+        const ok = document.execCommand('copy');
+        if (ok) { markCopied(btn); showToast(successMsg); }
+        else showToast('Không thể sao chép, vui lòng chọn và copy thủ công.');
+      } catch (err) {
+        showToast('Không thể sao chép, vui lòng chọn và copy thủ công.');
+      }
+      document.body.removeChild(ta);
+    }
+
+    function copyText(text, btn, successMsg){
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text)
+          .then(() => { markCopied(btn); showToast(successMsg); })
+          .catch(() => fallbackCopy(text, btn, successMsg));
+      } else {
+        fallbackCopy(text, btn, successMsg);
+      }
+    }
+
+    document.getElementById('copyAccountBtn').addEventListener('click', (e) => {
+      copyText(document.getElementById('infoAccount').textContent, e.currentTarget, 'Đã sao chép số tài khoản.');
+    });
+
+    document.getElementById('copyContentBtn').addEventListener('click', (e) => {
+      copyText(document.getElementById('infoContent').textContent, e.currentTarget, 'Đã sao chép nội dung chuyển khoản.');
+    });
+
+    document.getElementById('submitBankBtn').addEventListener('click', () => {
+      showToast('Chức năng xác nhận đang ở chế độ demo.');
+    });
+  </script>
 </body>
 </html>
