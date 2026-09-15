@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nạp Tiền — LPTSHOP</title>
+  <title>LPTSHOP - Nạp Tiền<noscript></noscript></title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -37,19 +37,19 @@
     <nav class="main-nav">
       <div class="container nav-inner">
         <a href="/" class="nav-item">TRANG CHỦ</a>
-        <a href="/categories" class="nav-item">DANH MỤC <span class="nav-caret">&gt;</span></a>
+        <a href="#" class="nav-item" data-toast="Danh mục sẽ được thêm sau.">DANH MỤC <span class="nav-caret">&gt;</span></a>
 
         <div class="nav-item-wrap">
-          <a href="/nap-tien/nap-the" class="nav-item active">NẠP TIỀN <span class="nav-caret">&gt;</span></a>
+          <a href="/nap-tien/chuyen-khoan" class="nav-item active">NẠP TIỀN <span class="nav-caret">&gt;</span></a>
           <div class="nav-dropdown">
             <a href="/nap-tien/nap-the" class="nav-dropdown-item"><span class="nav-dropdown-icon">🎫</span>NẠP THẺ CÀO</a>
-            <a href="/nap-tien/chuyen-khoan" class="nav-dropdown-item"><span class="nav-dropdown-icon">🏦</span>NẠP NGÂN HÀNG/VÍ ĐIỆN TỬ</a>
+            <a href="/nap-tien/chuyen-khoan" class="nav-dropdown-item"><span class="nav-dropdown-icon">🏦</span>CHUYỂN KHOẢN</a>
           </div>
         </div>
 
-        <a href="/lich-su" class="nav-item" data-toast="Lịch sử giao dịch sẽ được thêm sau.">LỊCH SỬ <span class="nav-caret">&gt;</span></a>
-        <a href="/cap-bac" class="nav-item" data-toast="Hệ thống cấp bậc sẽ được thêm sau.">CẤP BẬC</a>
-        <a href="/guide" class="nav-item" data-toast="Hướng dẫn sẽ được thêm sau.">HƯỚNG DẪN</a>
+        <a href="#" class="nav-item" data-toast="Lịch sử giao dịch sẽ được thêm sau.">LỊCH SỬ <span class="nav-caret">&gt;</span></a>
+        <a href="#" class="nav-item" data-toast="Hệ thống cấp bậc sẽ được thêm sau.">CẤP BẬC</a>
+        <a href="#" class="nav-item" data-toast="Hướng dẫn sẽ được thêm sau.">HƯỚNG DẪN</a>
       </div>
     </nav>
   </header>
@@ -162,7 +162,7 @@
           <button type="button" class="submit-btn" id="submitBankBtn">Xác Nhận Đã Chuyển Khoản</button>
 
           <div class="note-box">
-            ⚠ Vui lòng ghi đúng nội dung chuyển khoản. Sai nội dung có thể khiến giao dịch xử lí chậm.
+            ⚠ Vui lòng ghi đúng nội dung chuyển khoản. Sai nội dung có thể khiến giao dịch bị hủy.
           </div>
         </div>
       </div>
@@ -232,7 +232,6 @@
       depositHeader.querySelector('p').textContent = tabTitles[tab].desc;
     }
 
-    // Chỉ khi CLICK tab mới đổi URL
     tabButtons.forEach(btn => {
       btn.addEventListener('click', () => {
         const tab = btn.dataset.tab;
@@ -248,10 +247,6 @@
       });
     });
 
-    // Khi mở trang:
-    // "/" -> giữ nguyên "/"
-    // "/nap-tien/nap-the" -> tab thẻ
-    // "/nap-tien/chuyen-khoan" -> tab chuyển khoản
     let initialTab = 'the';
 
     if (window.location.pathname === '/nap-tien/chuyen-khoan') {
