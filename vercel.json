@@ -1,3 +1,7 @@
 {
-  "cleanUrls": true
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/nap-tien", "destination": "/nap-tien.html" },
+    { "source": "/nap-tien/:tab", "destination": "/nap-tien.html" }
+  ]
 }
