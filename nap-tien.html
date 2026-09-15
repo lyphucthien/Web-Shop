@@ -56,11 +56,6 @@
 
   <main>
     <div class="container deposit-page">
-      <div class="deposit-header" id="depositHeader">
-        <h1>Nạp Thẻ Cào</h1>
-        <p>Chọn loại thẻ, nhập thông tin và nạp ngay lập tức</p>
-      </div>
-
       <div class="deposit-tabs">
         <button type="button" class="deposit-tab active" data-tab="the">Nạp Thẻ Cào</button>
         <button type="button" class="deposit-tab" data-tab="bank">Chuyển Khoản</button>
@@ -199,7 +194,6 @@
   <script>
     // ===== Chuyển tab NẠP THẺ / NGÂN HÀNG =====
 
-    const depositHeader = document.getElementById('depositHeader');
     const tabButtons = document.querySelectorAll('.deposit-tab');
     const panels = {
       the: document.getElementById('panel-the'),
