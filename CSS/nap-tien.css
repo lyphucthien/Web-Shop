@@ -59,10 +59,21 @@
 }
 
 .deposit-layout{
-  display:grid;
-  grid-template-columns:1.2fr .8fr;
-  gap:22px;
-  align-items:start;
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  width:100%;
+}
+
+.deposit-layout .deposit-panel{
+  width:100%;
+  max-width:620px;
+}
+
+#panel-the,
+#panel-bank{
+  display:flex;
+  justify-content:center;
 }
 
 .deposit-panel{
@@ -298,11 +309,6 @@ select.form-control{
 
 /* ==================== CHUYỂN KHOẢN / VÍ ĐIỆN TỬ ==================== */
 
-#panel-bank{
-  display:flex;
-  justify-content:center;
-}
-
 #panel-bank .deposit-panel{
   width:100%;
   max-width:620px;
@@ -462,9 +468,6 @@ select.form-control{
 /* ==================== RESPONSIVE ==================== */
 
 @media(max-width:860px){
-  .deposit-layout{
-    grid-template-columns:1fr;
-  }
   .card-type-grid{
     grid-template-columns:repeat(3,1fr);
   }

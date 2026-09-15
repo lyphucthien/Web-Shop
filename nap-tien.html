@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LPTSHOP - Nạp Tiền<noscript></noscript></title>
+  <title>LPTSHOP - Nạp Tiền</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -66,10 +66,10 @@
         <button type="button" class="deposit-tab" data-tab="bank">Chuyển Khoản</button>
       </div>
 
-      <!-- TAB: NẠP THẺ CÀO -->
+      <!-- TAB: NẠP THẺ -->
       <div class="deposit-layout deposit-tab-panel" id="panel-the">
         <div class="deposit-panel">
-          <h2>Thông tin thẻ nạp</h2>
+          <h2>Nạp thẻ cào tự động</h2>
 
           <div class="form-group">
             <label>Chọn loại thẻ</label>
@@ -118,20 +118,12 @@
             ⚠ Vui lòng kiểm tra kỹ thông tin thẻ trước khi gửi. Thẻ sai mệnh giá hoặc đã sử dụng sẽ không được đối soát.
           </div>
         </div>
-
-        <div class="deposit-panel">
-          <h2>Tóm tắt</h2>
-          <div class="summary-row"><span>Loại thẻ</span><strong id="summaryCard">Viettel</strong></div>
-          <div class="summary-row"><span>Mệnh giá</span><strong id="summaryAmount">10.000đ</strong></div>
-          <div class="summary-row"><span>Chiết khấu</span><strong>0%</strong></div>
-          <div class="summary-row total"><span>Số tiền nhận</span><strong id="summaryTotal">10.000đ</strong></div>
-        </div>
       </div>
 
-      <!-- TAB: NGÂN HÀNG / VÍ ĐIỆN TỬ -->
+      <!-- TAB: Chuyển Khoảng -->
       <div class="deposit-layout deposit-tab-panel" id="panel-bank" style="display:none;">
         <div class="deposit-panel">
-          <h2>Quét mã để chuyển khoản</h2>
+          <h2>Nạp Tiền Qua Ngân Hàng</h2>
 
           <div class="qr-box">
             <img src="https://res.cloudinary.com/dkui88bcf/image/upload/v1789383251/qr_imvwwn.jpg" alt="QR chuyển khoản" onerror="this.style.display='none'">
@@ -139,16 +131,16 @@
 
           <div class="bank-info-box">
             <div class="bank-info-row">
-              <span>Chủ tài khoản</span>
+              <span>Chủ Tài Khoản</span>
               <b>LY PHUC THIEN</b>
             </div>
             <div class="bank-info-row">
-              <span>Số tài khoản</span>
+              <span>Số Tài Khoản</span>
               <b id="infoAccount">0946518312</b>
               <button type="button" class="copy-btn" id="copyAccountBtn">Sao chép</button>
             </div>
             <div class="bank-info-row">
-              <span>Nội dung CK</span>
+              <span>Nội Dung Chuyển</span>
               <b id="infoContent">NAP LPT12345</b>
               <button type="button" class="copy-btn" id="copyContentBtn">Sao chép</button>
             </div>
@@ -206,16 +198,6 @@
 
   <script>
     // ===== Chuyển tab NẠP THẺ / NGÂN HÀNG =====
-    const tabTitles = {
-      the: {
-        title: 'Nạp Thẻ Cào',
-        desc: 'Chọn loại thẻ, nhập thông tin và nạp ngay lập tức'
-      },
-      bank: {
-        title: 'Chuyển Khoản',
-        desc: 'Chuyển khoản trực tiếp, cộng tiền tự động sau vài phút'
-      }
-    };
 
     const depositHeader = document.getElementById('depositHeader');
     const tabButtons = document.querySelectorAll('.deposit-tab');
@@ -228,8 +210,6 @@
       tabButtons.forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
       panels.the.style.display = tab === 'the' ? '' : 'none';
       panels.bank.style.display = tab === 'bank' ? '' : 'none';
-      depositHeader.querySelector('h1').textContent = tabTitles[tab].title;
-      depositHeader.querySelector('p').textContent = tabTitles[tab].desc;
     }
 
     tabButtons.forEach(btn => {
@@ -271,11 +251,6 @@
       activateTab(tab);
     });
 
-    // ===== Format VNĐ =====
-    function formatVND(n) {
-      return Number(n || 0).toLocaleString('vi-VN') + 'đ';
-    }
-
     // ===== Toast =====
     const toast = document.getElementById('toast');
 
@@ -291,7 +266,6 @@
     const cardTypeToggle = document.getElementById('cardTypeToggle');
     const cardTypeMenu = document.getElementById('cardTypeMenu');
     const cardTypeLabel = document.getElementById('cardTypeLabel');
-    const summaryCard = document.getElementById('summaryCard');
 
     cardTypeToggle.addEventListener('click', () => {
       cardTypeDropdown.classList.toggle('open');
@@ -304,7 +278,6 @@
       cardTypeMenu.querySelectorAll('.dropdown-option').forEach(o => o.classList.remove('active'));
       opt.classList.add('active');
       cardTypeLabel.textContent = opt.textContent.trim();
-      summaryCard.textContent = opt.textContent.trim();
       cardTypeDropdown.classList.remove('open');
     });
 
@@ -316,8 +289,6 @@
 
     // ===== Lưới chọn mệnh giá =====
     const amountGrid = document.getElementById('amountGrid');
-    const summaryAmount = document.getElementById('summaryAmount');
-    const summaryTotal = document.getElementById('summaryTotal');
 
     amountGrid.addEventListener('click', e => {
       const btn = e.target.closest('.amount-btn');
@@ -325,19 +296,10 @@
 
       amountGrid.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-
-      const val = btn.dataset.amount;
-      summaryAmount.textContent = formatVND(val);
-      summaryTotal.textContent = formatVND(val);
     });
 
     // ===== NGÂN HÀNG / VÍ ĐIỆN TỬ =====
     const bankAmount = document.getElementById('bankAmount');
-
-    bankAmount.addEventListener('input', () => {
-      // Không còn cập nhật summaryBankAmount / summaryBankTotal
-      // vì HTML hiện tại không có 2 phần tử đó.
-    });
 
     // ===== Copy =====
     function markCopied(btn) {
