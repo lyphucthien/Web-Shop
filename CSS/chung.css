@@ -219,11 +219,11 @@ button{
   position:absolute;
   top:calc(100% - 6px);
   left:0;
-  min-width:280px;
+  min-width:245px;
   background:#fff;
-  border-radius:8px;
+  border-radius:6px;
   box-shadow:0 10px 24px rgba(0,0,0,.18);
-  padding:8px 0;
+  padding:6px 0;
   opacity:0;
   visibility:hidden;
   transform:translateY(-6px);
@@ -240,13 +240,13 @@ button{
 .nav-dropdown-item{
   display:flex;
   align-items:center;
-  gap:12px;
-  padding:14px 20px;
+  gap:8px;
+  padding:9px 16px;
   color:#222;
   text-decoration:none;
   font-family:"Barlow Condensed",Inter,sans-serif;
-  font-weight:700;
-  font-size:16px;
+  font-weight:600;
+  font-size:14px;
   white-space:nowrap;
   transition:.15s;
 }
@@ -257,7 +257,7 @@ button{
 }
 
 .nav-dropdown-icon{
-  font-size:20px;
+  font-size:15px;
   line-height:1;
 }
 
