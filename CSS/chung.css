@@ -161,6 +161,12 @@ button{
   border:2px solid #fff;
 }
 
+.circle-btn.icon-accent{
+  color:var(--green);
+}
+.circle-btn svg{
+  display:block;
+}
 
 .main-nav{
   height:57px;
