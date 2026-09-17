@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LPTSHOP - Nạp Tiền</title>
+  <title>Nạp Tiền〡LPTSHOP</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -64,7 +64,15 @@
       <!-- TAB: NẠP THẺ -->
       <div class="deposit-layout deposit-tab-panel" id="panel-the">
         <div class="deposit-panel">
-          <h2>Nạp thẻ cào tự động</h2>
+          <div class="section-title">
+            <div class="section-icon">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="2" y="5" width="20" height="14" rx="2.5" stroke="currentColor" stroke-width="1.8"/>
+                <line x1="2" y1="9.5" x2="22" y2="9.5" stroke="currentColor" stroke-width="1.8"/>
+              </svg>
+            </div>
+            <h2>Nạp thẻ cào tự động</h2>
+          </div>
 
           <div class="form-group">
             <label>Chọn loại thẻ</label>
@@ -107,7 +115,7 @@
             <input type="text" class="form-control" id="cardSerial" placeholder="Nhập số serial">
           </div>
 
-          <button type="button" class="submit-btn" id="submitCardBtn">Nạp Thẻ Ngay</button>
+          <button type="button" class="submit-btn" id="submitCardBtn">Nạp Thẻ</button>
 
           <div class="note-box">
             ⚠ Vui lòng kiểm tra kỹ thông tin thẻ trước khi gửi. Thẻ sai mệnh giá hoặc đã sử dụng sẽ không được đối soát.
@@ -117,12 +125,17 @@
 
       <!-- TAB: Chuyển Khoảng -->
       <div class="deposit-layout deposit-tab-panel" id="panel-bank" style="display:none;">
-        <div class="deposit-panel">
-          <h2>Nạp Tiền Qua Ngân Hàng</h2>
-
-          <div class="qr-box">
-            <img src="https://lptshop.vercel.app/Uploads/QR.jpg" alt="QR chuyển khoản" onerror="this.style.display='none'">
-          </div>
+          <div class="deposit-panel">
+            <div class="section-title">
+              <div class="section-icon">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="2" y="6" width="20" height="13" rx="2" stroke="currentColor" stroke-width="1.8"/>
+                  <path d="M2 10h20" stroke="currentColor" stroke-width="1.8"/>
+                  <path d="M6 3l6-2 6 2" stroke="currentColor" stroke-width="1.8" fill="none"/>
+                </svg>
+              </div>
+              <h2>Nạp Tiền Qua Ngân Hàng</h2>
+            </div>
 
           <div class="bank-info-box">
             <div class="bank-info-row">
@@ -141,7 +154,7 @@
             </div>
           </div>
 
-          <button type="button" class="submit-btn" id="submitBankBtn">Xác Nhận Đã Chuyển Khoản</button>
+          <button type="button" class="submit-btn" id="submitBankBtn">Xác Nhận Đã Chuyển</button>
 
           <div class="note-box">
             ⚠ Vui lòng ghi đúng nội dung chuyển khoản. Sai nội dung có thể khiến giao dịch bị hủy.
