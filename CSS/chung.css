@@ -22,7 +22,7 @@ body{
   margin:0;
   color:var(--text);
   background:
-    url("https://res.cloudinary.com/dkui88bcf/image/upload/v1788604333/n%E1%BB%81n_web_shop_mqnfke.jpg") center/cover fixed no-repeat;
+    url("https://lptshop.vercel.app/Uploads/Background.png") center/cover fixed no-repeat;
   font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
   overflow-x:hidden;
 }
