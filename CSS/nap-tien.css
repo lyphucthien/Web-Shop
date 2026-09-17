@@ -434,19 +434,28 @@ select.form-control{
 }
 
 .copy-btn{
-  width:110px;
-  min-width:110px;
+  width:30px;
+  min-width:30px;
   height:30px;
   border:1px solid #cfd7df;
   background:#fff;
   color:#596473;
-  padding:5px 10px;
+  padding:0;
   border-radius:6px;
-  font-size:11px;
-  font-weight:700;
-  text-align:center;
-  white-space:nowrap;
   box-sizing:border-box;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:.2s;
+}
+
+.copy-btn svg{
+  width:16px;
+  height:16px;
+}
+
+.copy-btn .icon-check{
+  display:none;
 }
 
 .copy-btn:hover{
@@ -458,6 +467,14 @@ select.form-control{
   border-color:var(--green);
   background:var(--green);
   color:#fff;
+}
+
+.copy-btn.copied .icon-copy{
+  display:none;
+}
+
+.copy-btn.copied .icon-check{
+  display:block;
 }
 
 .qr-box{
