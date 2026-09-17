@@ -246,7 +246,7 @@ select.form-control{
   border:1px solid #dfe5eb;
   border-radius:9px;
   box-shadow:0 10px 24px rgba(20,30,40,.14);
-  padding:4px 0;
+  padding:6px;
   display:none;
   z-index:30;
   max-height:280px;
@@ -261,17 +261,17 @@ select.form-control{
   width:100%;
   text-align:left;
   padding:13px 16px;
+  margin-bottom:2px;
   border:none;
-  border-bottom:1px solid #eef0f2;
-  border-radius:0;
+  border-radius:8px;
   font-size:14px;
   font-weight:600;
   color:#25313e;
-  background:#fff;
+  background:transparent;
 }
 
 .dropdown-option:last-child{
-  border-bottom:none;
+  margin-bottom:0;
 }
 
 .dropdown-option:hover{
@@ -279,12 +279,12 @@ select.form-control{
   color:#455564;
 }
 
-.dropdown-option.active:hover{
+.dropdown-option.active{
   background:var(--green-soft);
   color:var(--green-dark);
 }
 
-.dropdown-option.active{
+.dropdown-option.active:hover{
   background:var(--green-soft);
   color:var(--green-dark);
 }
