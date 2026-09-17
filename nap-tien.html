@@ -148,12 +148,28 @@
             <div class="bank-info-row">
               <span>Số Tài Khoản</span>
               <b id="infoAccount"> 0946518312</b>
-              <button type="button" class="copy-btn" id="copyAccountBtn">Sao chép</button>
+              <button type="button" class="copy-btn" id="copyAccountBtn" aria-label="Sao chép">
+                <svg class="icon-copy" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="9" y="9" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.8"/>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" stroke="currentColor" stroke-width="1.8"/>
+                </svg>
+                <svg class="icon-check" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M4 12l6 6L20 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
             </div>
             <div class="bank-info-row">
               <span>Nội Dung Chuyển</span>
               <b id="infoContent">LPTSHOP-12345</b>
-              <button type="button" class="copy-btn" id="copyContentBtn">Sao chép</button>
+              <button type="button" class="copy-btn" id="copyContentBtn" aria-label="Sao chép">
+                <svg class="icon-copy" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="9" y="9" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.8"/>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" stroke="currentColor" stroke-width="1.8"/>
+                </svg>
+                <svg class="icon-check" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M4 12l6 6L20 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
             </div>
           </div>
 
@@ -306,16 +322,11 @@
     // ===== NGÂN HÀNG / VÍ ĐIỆN TỬ =====
     const bankAmount = document.getElementById('bankAmount');
 
-    // ===== Copy =====
     function markCopied(btn) {
-      const original = btn.dataset.originalText || btn.textContent;
-      btn.dataset.originalText = original;
-      btn.textContent = 'Đã Sao Chép ✓';
       btn.classList.add('copied');
       clearTimeout(btn._copyTimer);
 
       btn._copyTimer = setTimeout(() => {
-        btn.textContent = original;
         btn.classList.remove('copied');
       }, 2000);
     }
