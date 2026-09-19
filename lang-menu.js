@@ -1,7 +1,7 @@
 (function () {
   const TOOLTIP_DELAY = 250;
 
-  const LANGS = [
+  const COUNTRIES = [
     ['vn','vi','Tiếng Việt'],
     ['us','en','English'],
     ['cn','zh-CN','简体中文'],
@@ -44,42 +44,49 @@
     currentLang = localStorage.getItem('lpt_lang') || 'vi';
   } catch (e) {}
 
+  // nếu mã lưu cũ không nằm trong 12 nước này thì về Việt Nam
+  if (!COUNTRIES.some(c => c[0] === currentCC)) {
+    currentCC = 'vn';
+    currentLang = 'vi';
+  }
+
   function langName(cc) {
-    const f = LANGS.find(l => l[0] === cc);
+    const f = COUNTRIES.find(c => c[0] === cc);
     return f ? f[2] : cc.toUpperCase();
   }
 
+  function render() {
+    const list = COUNTRIES.filter(c => c[0] !== currentCC);
+    const rows = [5, 4, 2];
+    let i = 0, html = '';
+
+    for (const count of rows) {
+      let rowHtml = '';
+      for (let k = 0; k < count && i < list.length; k++, i++) {
+        const [cc, lang, name] = list[i];
+        const jx = ((i * 37) % 5) - 2, jy = ((i * 53) % 5) - 2;
+        rowHtml += `<button type="button" class="lang-flag-btn"
+          data-cc="${cc}" data-lang="${lang}" aria-label="${name}"
+          style="--jx:${jx}px;--jy:${jy}px;--d:${i * 25}ms">
+          <img src="${FLAG_URL(cc)}" alt="" draggable="false"></button>`;
+      }
+      html += `<div class="lang-row">${rowHtml}</div>`;
+    }
+
+    // cờ đang chọn ở mũi nhọn
+    const cur = COUNTRIES.find(c => c[0] === currentCC) || COUNTRIES[0];
+    html += `<div class="lang-row"><button type="button" class="lang-flag-btn active"
+      data-cc="${cur[0]}" data-lang="${cur[1]}" aria-label="${cur[2]}"
+      style="--jx:0px;--jy:0px;--d:${list.length * 25}ms">
+      <img src="${FLAG_URL(cur[0])}" alt="" draggable="false"></button></div>`;
+
+    menu.innerHTML = html;
+  }
+
   function open() {
+    render();
     const r = trigger.getBoundingClientRect();
-    const cx = r.left + r.width / 2;
-    const cy = r.top + r.height / 2;
-
-    const mobile = window.innerWidth < 700;
-    const R = mobile ? 78 : 100;
-    const size = mobile ? 30 : 36;
-    menu.style.setProperty('--fs', size + 'px');
-    
-    const start = -25, end = 205, n = LANGS.length;
-    const pts = LANGS.map((_, i) => {
-      const a = (start + (end - start) * i / (n - 1)) * Math.PI / 180;
-      return { x: R * Math.cos(a), y: R * Math.sin(a) };
-    });
-
-    let dx = 0;
-    const minX = cx + Math.min(...pts.map(p => p.x)) - size / 2 - 6;
-    const maxX = cx + Math.max(...pts.map(p => p.x)) + size / 2 + 6;
-    if (minX < 0) dx = -minX;
-    else if (maxX > window.innerWidth) dx = window.innerWidth - maxX;
-
-    menu.style.left = cx + 'px';
-    menu.style.top = cy + 'px';
-
-    menu.innerHTML = LANGS.map(([cc, lang], i) => `
-      <button type="button" class="lang-flag-btn${cc === currentCC ? ' active' : ''}"
-        data-cc="${cc}" data-lang="${lang}" aria-label="${langName(cc)}"
-        style="--x:${(pts[i].x + dx).toFixed(1)}px;--y:${pts[i].y.toFixed(1)}px;--d:${i * 25}ms">
-        <img src="${FLAG_URL(cc)}" alt="" draggable="false"></button>`).join('');
-
+    menu.style.top = (r.bottom + 10) + 'px';
     requestAnimationFrame(() => requestAnimationFrame(() => menu.classList.add('open')));
   }
 
@@ -121,8 +128,8 @@
     const tw = tip.offsetWidth, th = tip.offsetHeight;
     let left = r.left + r.width / 2 - tw / 2;
     left = Math.max(8, Math.min(left, window.innerWidth - tw - 8));
-    let top = r.bottom + 10;
-    if (top + th > window.innerHeight - 8) top = r.top - th - 10;
+    let top = r.top - th - 10;
+    if (top < 8) top = r.bottom + 10;
     tip.style.left = left + 'px';
     tip.style.top = top + 'px';
   }
