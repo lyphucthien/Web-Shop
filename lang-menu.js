@@ -55,38 +55,46 @@
     return f ? f[2] : cc.toUpperCase();
   }
 
+  // vòng cung: 2 cung tròn quanh nút, mở xuống dưới (cờ đang chọn ở giữa cung trong)
+  const ARCS = [
+    { r: 110, a0: 38, size: 38 },
+    { r: 172, a0: 22, size: 38 },
+  ];
+
   function render() {
-    const list = COUNTRIES.filter(c => c[0] !== currentCC);
-    const rows = [5, 4, 2];
-    let i = 0, html = '';
-
-    for (const count of rows) {
-      let rowHtml = '';
-      for (let k = 0; k < count && i < list.length; k++, i++) {
-        const [cc, lang, name] = list[i];
-        const jx = ((i * 37) % 5) - 2, jy = ((i * 53) % 5) - 2;
-        rowHtml += `<button type="button" class="lang-flag-btn"
-          data-cc="${cc}" data-lang="${lang}" aria-label="${name}"
-          style="--jx:${jx}px;--jy:${jy}px;--d:${i * 25}ms">
-          <img src="${FLAG_URL(cc)}" alt="" draggable="false"></button>`;
-      }
-      html += `<div class="lang-row">${rowHtml}</div>`;
-    }
-
-    // cờ đang chọn ở mũi nhọn
     const cur = COUNTRIES.find(c => c[0] === currentCC) || COUNTRIES[0];
-    html += `<div class="lang-row"><button type="button" class="lang-flag-btn active"
-      data-cc="${cur[0]}" data-lang="${cur[1]}" aria-label="${cur[2]}"
-      style="--jx:0px;--jy:0px;--d:${list.length * 25}ms">
-      <img src="${FLAG_URL(cur[0])}" alt="" draggable="false"></button></div>`;
+    const others = COUNTRIES.filter(c => c[0] !== cur[0]);
+    const inner = others.slice(0, 4);
+    inner.splice(2, 0, cur);                      // cờ đang chọn nằm chính giữa cung trong
+    const groups = [inner, others.slice(4)];
 
+    let html = '', idx = 0;
+    groups.forEach((g, gi) => {
+      const { r, size, a0 } = ARCS[gi];
+      g.forEach((c, k) => {
+        const t = g.length === 1 ? 0.5 : k / (g.length - 1);
+        const deg = (180 - a0) - t * (180 - 2 * a0);   // trái → phải, chỉ mở phía dưới nút
+        const ang = deg * Math.PI / 180;
+        const x = Math.round(Math.cos(ang) * r);
+        const y = Math.round(Math.sin(ang) * r);
+        const isCur = c[0] === cur[0];
+        html += `<button type="button" class="lang-flag-btn${isCur ? ' active' : ''}"
+          data-cc="${c[0]}" data-lang="${c[1]}" aria-label="${c[2]}"
+          style="--s:${isCur ? 48 : size}px;--x:${x}px;--y:${y}px;--d:${idx++ * 25}ms">
+          <img src="${FLAG_URL(c[0])}" alt="" draggable="false"></button>`;
+      });
+    });
     menu.innerHTML = html;
   }
 
   function open() {
     render();
     const r = trigger.getBoundingClientRect();
-    menu.style.top = (r.bottom + 10) + 'px';
+    const reach = ARCS[ARCS.length - 1].r + 28;    // bán kính cung ngoài + nửa cờ
+    let cx = r.left + r.width / 2;
+    cx = Math.max(reach + 8, Math.min(cx, window.innerWidth - reach - 8));
+    menu.style.left = cx + 'px';
+    menu.style.top  = (r.top + r.height / 2) + 'px';
     requestAnimationFrame(() => requestAnimationFrame(() => menu.classList.add('open')));
   }
 
