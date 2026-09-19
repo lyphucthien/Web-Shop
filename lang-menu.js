@@ -1,5 +1,7 @@
 (function () {
   const TOOLTIP_DELAY = 250;
+  const OFFSET_X = 0;
+  const OFFSET_Y = -20;
 
   const COUNTRIES = [
     ['vn','vi','Tiếng Việt'],
@@ -93,8 +95,8 @@
     const reach = ARCS[ARCS.length - 1].r + 28;    // bán kính cung ngoài + nửa cờ
     let cx = r.left + r.width / 2;
     cx = Math.max(reach + 8, Math.min(cx, window.innerWidth - reach - 8));
-    menu.style.left = cx + 'px';
-    menu.style.top  = (r.top + r.height / 2) + 'px';
+    menu.style.left = (cx + OFFSET_X) + 'px';
+    menu.style.top  = (r.top + r.height / 2 + OFFSET_Y) + 'px';
     requestAnimationFrame(() => requestAnimationFrame(() => menu.classList.add('open')));
   }
 
