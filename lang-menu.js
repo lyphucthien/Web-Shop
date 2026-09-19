@@ -1,20 +1,19 @@
-/* ===== LANGUAGE MENU — cờ tròn quốc gia + tooltip tên nước theo ngôn ngữ đã chọn ===== */
 (function () {
-  const TOOLTIP_DELAY = 350; // ms giữ chuột trước khi hiện tên nước (đặt 0 = hiện ngay)
+  const TOOLTIP_DELAY = 250;
 
-  // [mã nước, mã ngôn ngữ]
-  const COUNTRIES = [
-    ['vn','vi'],['us','en'],['gb','en'],['cn','zh-CN'],['tw','zh-TW'],['hk','zh-HK'],['kr','ko'],['jp','ja'],
-    ['th','th'],['kh','km'],['la','lo'],['mm','my'],['ru','ru'],['fr','fr'],['de','de'],['es','es'],
-    ['pt','pt'],['br','pt-BR'],['it','it'],['id','id'],['my','ms'],['sg','en'],['ph','fil'],['in','hi'],
-    ['pk','ur'],['bd','bn'],['lk','si'],['np','ne'],['sa','ar'],['ae','ar'],['eg','ar'],['tr','tr'],
-    ['ir','fa'],['il','he'],['ua','uk'],['pl','pl'],['nl','nl'],['be','nl'],['se','sv'],['no','nb'],
-    ['dk','da'],['fi','fi'],['gr','el'],['cz','cs'],['sk','sk'],['hu','hu'],['ro','ro'],['bg','bg'],
-    ['rs','sr'],['hr','hr'],['si','sl'],['at','de'],['ch','de'],['ie','en'],['au','en'],['nz','en'],
-    ['ca','en'],['mx','es'],['ar','es'],['cl','es'],['co','es'],['pe','es'],['ve','es'],['cu','es'],
-    ['za','en'],['ng','en'],['ke','sw'],['et','am'],['tz','sw'],['gh','en'],['ma','ar'],['dz','ar'],
-    ['tn','ar'],['kz','kk'],['uz','uz'],['mn','mn'],['ge','ka'],['am','hy'],['az','az'],['lt','lt'],
-    ['lv','lv'],['ee','et'],['is','is'],['al','sq'],['mk','mk'],['ba','bs'],['by','be'],['md','ro'],
+  const LANGS = [
+    ['vn','vi','Tiếng Việt'],
+    ['us','en','English'],
+    ['cn','zh-CN','简体中文'],
+    ['tw','zh-TW','繁體中文'],
+    ['kr','ko','한국어'],
+    ['jp','ja','日本語'],
+    ['th','th','ไทย'],
+    ['kh','km','ភាសាខ្មែរ'],
+    ['la','lo','ພາສາລາວ'],
+    ['ru','ru','Русский'],
+    ['fr','fr','Français'],
+    ['de','de','Deutsch'],
   ];
 
   const FLAG_URL = (cc) => `https://hatscripts.github.io/circle-flags/flags/${cc}.svg`;
@@ -45,43 +44,45 @@
     currentLang = localStorage.getItem('lpt_lang') || 'vi';
   } catch (e) {}
 
-  /* Tên nước theo ngôn ngữ đang chọn (trình duyệt tự dịch) */
-  function countryName(cc) {
-    try {
-      return new Intl.DisplayNames([currentLang], { type: 'region' }).of(cc.toUpperCase());
-    } catch (e) {
-      return cc.toUpperCase();
-    }
-  }
-
-  /* Xếp hình phễu: hàng trên đông, hàng dưới ít dần */
-  function render() {
-    const mobile = window.innerWidth < 700;
-    let count = mobile ? 12 : 18;
-    const step = mobile ? 1 : 2;
-    let i = 0, html = '', row = 0;
-    while (i < COUNTRIES.length && count > 0) {
-      let rowHtml = '';
-      for (let k = 0; k < count && i < COUNTRIES.length; k++, i++) {
-        const [cc, lang] = COUNTRIES[i];
-        const jx = ((i * 37) % 7) - 3, jy = ((i * 53) % 7) - 3;      // lệch nhẹ cho tự nhiên
-        rowHtml += `<button type="button" class="lang-flag-btn${cc === currentCC ? ' active' : ''}"
-          data-cc="${cc}" data-lang="${lang}" aria-label="${cc.toUpperCase()}"
-          style="--jx:${jx}px;--jy:${jy}px;--d:${i * 8}ms">
-          <img src="${FLAG_URL(cc)}" alt="" draggable="false"></button>`;
-      }
-      html += `<div class="lang-row">${rowHtml}</div>`;
-      count -= step; row++;
-    }
-    menu.innerHTML = html;
+  function langName(cc) {
+    const f = LANGS.find(l => l[0] === cc);
+    return f ? f[2] : cc.toUpperCase();
   }
 
   function open() {
-    render();
     const r = trigger.getBoundingClientRect();
-    menu.style.top = (r.bottom + 10) + 'px';
-    requestAnimationFrame(() => menu.classList.add('open'));
+    const cx = r.left + r.width / 2;
+    const cy = r.top + r.height / 2;
+
+    const mobile = window.innerWidth < 700;
+    const R = mobile ? 78 : 100;
+    const size = mobile ? 30 : 36;
+    menu.style.setProperty('--fs', size + 'px');
+    
+    const start = -25, end = 205, n = LANGS.length;
+    const pts = LANGS.map((_, i) => {
+      const a = (start + (end - start) * i / (n - 1)) * Math.PI / 180;
+      return { x: R * Math.cos(a), y: R * Math.sin(a) };
+    });
+
+    let dx = 0;
+    const minX = cx + Math.min(...pts.map(p => p.x)) - size / 2 - 6;
+    const maxX = cx + Math.max(...pts.map(p => p.x)) + size / 2 + 6;
+    if (minX < 0) dx = -minX;
+    else if (maxX > window.innerWidth) dx = window.innerWidth - maxX;
+
+    menu.style.left = cx + 'px';
+    menu.style.top = cy + 'px';
+
+    menu.innerHTML = LANGS.map(([cc, lang], i) => `
+      <button type="button" class="lang-flag-btn${cc === currentCC ? ' active' : ''}"
+        data-cc="${cc}" data-lang="${lang}" aria-label="${langName(cc)}"
+        style="--x:${(pts[i].x + dx).toFixed(1)}px;--y:${pts[i].y.toFixed(1)}px;--d:${i * 25}ms">
+        <img src="${FLAG_URL(cc)}" alt="" draggable="false"></button>`).join('');
+
+    requestAnimationFrame(() => requestAnimationFrame(() => menu.classList.add('open')));
   }
+
   function close() { menu.classList.remove('open'); hideTip(); }
 
   trigger.addEventListener('click', (e) => {
@@ -95,7 +96,6 @@
   window.addEventListener('resize', close);
   window.addEventListener('scroll', close, { passive: true });
 
-  /* Chọn quốc gia -> đổi ngôn ngữ */
   menu.addEventListener('click', (e) => {
     const b = e.target.closest('.lang-flag-btn');
     if (!b) return;
@@ -107,23 +107,22 @@
     } catch (err) {}
     document.documentElement.lang = currentLang;
     close();
-    if (typeof showToast === 'function') showToast('Đã chọn: ' + countryName(currentCC));
+    if (typeof showToast === 'function') showToast('Đã chọn: ' + langName(currentCC));
     document.dispatchEvent(new CustomEvent('lptlangchange', { detail: { lang: currentLang, cc: currentCC } }));
   });
 
-  /* Tooltip tên nước */
   let tipTimer;
   function hideTip() { clearTimeout(tipTimer); tip.classList.remove('show'); }
 
   function showTip(b) {
-    tip.textContent = countryName(b.dataset.cc);
+    tip.textContent = langName(b.dataset.cc);
     tip.classList.add('show');
     const r = b.getBoundingClientRect();
     const tw = tip.offsetWidth, th = tip.offsetHeight;
     let left = r.left + r.width / 2 - tw / 2;
     left = Math.max(8, Math.min(left, window.innerWidth - tw - 8));
-    let top = r.top - th - 10;
-    if (top < 8) top = r.bottom + 10;
+    let top = r.bottom + 10;
+    if (top + th > window.innerHeight - 8) top = r.top - th - 10;
     tip.style.left = left + 'px';
     tip.style.top = top + 'px';
   }
