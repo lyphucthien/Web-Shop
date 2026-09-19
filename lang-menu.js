@@ -1,7 +1,7 @@
 (function () {
   const TOOLTIP_DELAY = 250;
   const OFFSET_X = 0;
-  const OFFSET_Y = -20;
+  const OFFSET_Y = -40;
 
   const COUNTRIES = [
     ['vn','vi','Tiếng Việt'],
