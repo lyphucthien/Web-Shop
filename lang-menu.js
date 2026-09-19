@@ -1,113 +1,142 @@
+/* ===== LANGUAGE MENU — cờ tròn quốc gia + tooltip tên nước theo ngôn ngữ đã chọn ===== */
 (function () {
-  const LANGS = [
-    { lang: 'vi',    flag: 'vn', label: 'Tiếng Việt',  country: 'Việt Nam' },
-    { lang: 'en',    flag: 'us', label: 'English',     country: 'United States' },
-    { lang: 'zh-CN', flag: 'cn', label: '简体中文',      country: '中国' },
-    { lang: 'zh-TW', flag: 'tw', label: '繁體中文',      country: '台灣' },
-    { lang: 'ko',    flag: 'kr', label: '한국어',        country: '대한민국' },
-    { lang: 'ja',    flag: 'jp', label: '日本語',        country: '日本' },
-    { lang: 'th',    flag: 'th', label: 'ไทย',          country: 'ประเทศไทย' },
-    { lang: 'km',    flag: 'kh', label: 'ភាសាខ្មែរ',     country: 'កម្ពុជា' },
-    { lang: 'lo',    flag: 'la', label: 'ພາສາລາວ',      country: 'ປະເທດລາວ' },
-    { lang: 'ru',    flag: 'ru', label: 'Русский',     country: 'Россия' },
-    { lang: 'fr',    flag: 'fr', label: 'Français',    country: 'France' },
-    { lang: 'de',    flag: 'de', label: 'Deutsch',     country: 'Deutschland' },
-    { lang: 'es',    flag: 'es', label: 'Español',     country: 'España' },
-    { lang: 'pt',    flag: 'pt', label: 'Português',   country: 'Portugal' },
-    { lang: 'it',    flag: 'it', label: 'Italiano',    country: 'Italia' },
-    { lang: 'id',    flag: 'id', label: 'Indonesia',   country: 'Indonesia' },
-    { lang: 'ms',    flag: 'my', label: 'Melayu',      country: 'Malaysia' },
-    { lang: 'ar',    flag: 'sa', label: 'العربية',      country: 'المملكة العربية السعودية' },
-    { lang: 'hi',    flag: 'in', label: 'हिन्दी',        country: 'भारत' },
-    { lang: 'tr',    flag: 'tr', label: 'Türkçe',      country: 'Türkiye' },
+  const TOOLTIP_DELAY = 350; // ms giữ chuột trước khi hiện tên nước (đặt 0 = hiện ngay)
+
+  // [mã nước, mã ngôn ngữ]
+  const COUNTRIES = [
+    ['vn','vi'],['us','en'],['gb','en'],['cn','zh-CN'],['tw','zh-TW'],['hk','zh-HK'],['kr','ko'],['jp','ja'],
+    ['th','th'],['kh','km'],['la','lo'],['mm','my'],['ru','ru'],['fr','fr'],['de','de'],['es','es'],
+    ['pt','pt'],['br','pt-BR'],['it','it'],['id','id'],['my','ms'],['sg','en'],['ph','fil'],['in','hi'],
+    ['pk','ur'],['bd','bn'],['lk','si'],['np','ne'],['sa','ar'],['ae','ar'],['eg','ar'],['tr','tr'],
+    ['ir','fa'],['il','he'],['ua','uk'],['pl','pl'],['nl','nl'],['be','nl'],['se','sv'],['no','nb'],
+    ['dk','da'],['fi','fi'],['gr','el'],['cz','cs'],['sk','sk'],['hu','hu'],['ro','ro'],['bg','bg'],
+    ['rs','sr'],['hr','hr'],['si','sl'],['at','de'],['ch','de'],['ie','en'],['au','en'],['nz','en'],
+    ['ca','en'],['mx','es'],['ar','es'],['cl','es'],['co','es'],['pe','es'],['ve','es'],['cu','es'],
+    ['za','en'],['ng','en'],['ke','sw'],['et','am'],['tz','sw'],['gh','en'],['ma','ar'],['dz','ar'],
+    ['tn','ar'],['kz','kk'],['uz','uz'],['mn','mn'],['ge','ka'],['am','hy'],['az','az'],['lt','lt'],
+    ['lv','lv'],['ee','et'],['is','is'],['al','sq'],['mk','mk'],['ba','bs'],['by','be'],['md','ro'],
   ];
 
-  const TOOLTIP_DELAY = 500;
+  const FLAG_URL = (cc) => `https://hatscripts.github.io/circle-flags/flags/${cc}.svg`;
 
   const btn = document.querySelector('button[aria-label="Ngôn ngữ"]');
   if (!btn) return;
 
   btn.removeAttribute('data-toast');
-  const clone = btn.cloneNode(true);
-  btn.parentNode.replaceChild(clone, btn);
+  const trigger = btn.cloneNode(true);
+  btn.parentNode.replaceChild(trigger, btn);
 
   const wrap = document.createElement('div');
   wrap.className = 'lang-wrap';
-  clone.parentNode.insertBefore(wrap, clone);
-  wrap.appendChild(clone);
+  trigger.parentNode.insertBefore(wrap, trigger);
+  wrap.appendChild(trigger);
 
   const menu = document.createElement('div');
-  menu.className = 'lang-menu';
-  menu.setAttribute('role', 'listbox');
-  wrap.appendChild(menu);
+  menu.className = 'lang-flags';
+  document.body.appendChild(menu);
 
   const tip = document.createElement('div');
   tip.className = 'lang-tooltip';
   document.body.appendChild(tip);
 
-  let current = 'vi';
-  try { current = localStorage.getItem('lpt_lang') || 'vi'; } catch (e) {}
-  if (!LANGS.some(l => l.lang === current)) current = 'vi';
+  let currentCC = 'vn', currentLang = 'vi';
+  try {
+    currentCC = localStorage.getItem('lpt_cc') || 'vn';
+    currentLang = localStorage.getItem('lpt_lang') || 'vi';
+  } catch (e) {}
 
-  const flagImg = (code) =>
-    `<img class="lang-flag" src="https://flagcdn.com/w40/${code}.png" srcset="https://flagcdn.com/w80/${code}.png 2x" alt="" loading="lazy" draggable="false">`;
-
-  function render() {
-    menu.innerHTML = LANGS.map(l => `
-      <button type="button" class="lang-item${l.lang === current ? ' active' : ''}" role="option"
-              data-lang="${l.lang}" aria-selected="${l.lang === current}">
-        ${flagImg(l.flag)}<span>${l.label}</span>
-      </button>`).join('');
+  /* Tên nước theo ngôn ngữ đang chọn (trình duyệt tự dịch) */
+  function countryName(cc) {
+    try {
+      return new Intl.DisplayNames([currentLang], { type: 'region' }).of(cc.toUpperCase());
+    } catch (e) {
+      return cc.toUpperCase();
+    }
   }
-  render();
 
-  function open()  { menu.classList.add('open'); }
+  /* Xếp hình phễu: hàng trên đông, hàng dưới ít dần */
+  function render() {
+    const mobile = window.innerWidth < 700;
+    let count = mobile ? 12 : 18;
+    const step = mobile ? 1 : 2;
+    let i = 0, html = '', row = 0;
+    while (i < COUNTRIES.length && count > 0) {
+      let rowHtml = '';
+      for (let k = 0; k < count && i < COUNTRIES.length; k++, i++) {
+        const [cc, lang] = COUNTRIES[i];
+        const jx = ((i * 37) % 7) - 3, jy = ((i * 53) % 7) - 3;      // lệch nhẹ cho tự nhiên
+        rowHtml += `<button type="button" class="lang-flag-btn${cc === currentCC ? ' active' : ''}"
+          data-cc="${cc}" data-lang="${lang}" aria-label="${cc.toUpperCase()}"
+          style="--jx:${jx}px;--jy:${jy}px;--d:${i * 8}ms">
+          <img src="${FLAG_URL(cc)}" alt="" draggable="false"></button>`;
+      }
+      html += `<div class="lang-row">${rowHtml}</div>`;
+      count -= step; row++;
+    }
+    menu.innerHTML = html;
+  }
+
+  function open() {
+    render();
+    const r = trigger.getBoundingClientRect();
+    menu.style.top = (r.bottom + 10) + 'px';
+    requestAnimationFrame(() => menu.classList.add('open'));
+  }
   function close() { menu.classList.remove('open'); hideTip(); }
 
-  clone.addEventListener('click', (e) => {
+  trigger.addEventListener('click', (e) => {
     e.stopPropagation();
     menu.classList.contains('open') ? close() : open();
   });
-  document.addEventListener('click', (e) => { if (!wrap.contains(e.target)) close(); });
+  document.addEventListener('click', (e) => {
+    if (!menu.contains(e.target) && !wrap.contains(e.target)) close();
+  });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
-  menu.addEventListener('scroll', hideTip);
+  window.addEventListener('resize', close);
+  window.addEventListener('scroll', close, { passive: true });
 
+  /* Chọn quốc gia -> đổi ngôn ngữ */
   menu.addEventListener('click', (e) => {
-    const item = e.target.closest('.lang-item');
-    if (!item) return;
-    current = item.dataset.lang;
-    try { localStorage.setItem('lpt_lang', current); } catch (err) {}
-    document.documentElement.lang = current;
-    render();
+    const b = e.target.closest('.lang-flag-btn');
+    if (!b) return;
+    currentCC = b.dataset.cc;
+    currentLang = b.dataset.lang;
+    try {
+      localStorage.setItem('lpt_cc', currentCC);
+      localStorage.setItem('lpt_lang', currentLang);
+    } catch (err) {}
+    document.documentElement.lang = currentLang;
     close();
-    const l = LANGS.find(x => x.lang === current);
-    if (typeof showToast === 'function') showToast('Đã chọn: ' + l.label);
-    document.dispatchEvent(new CustomEvent('lptlangchange', { detail: { lang: current } }));
+    if (typeof showToast === 'function') showToast('Đã chọn: ' + countryName(currentCC));
+    document.dispatchEvent(new CustomEvent('lptlangchange', { detail: { lang: currentLang, cc: currentCC } }));
   });
 
+  /* Tooltip tên nước */
   let tipTimer;
   function hideTip() { clearTimeout(tipTimer); tip.classList.remove('show'); }
 
+  function showTip(b) {
+    tip.textContent = countryName(b.dataset.cc);
+    tip.classList.add('show');
+    const r = b.getBoundingClientRect();
+    const tw = tip.offsetWidth, th = tip.offsetHeight;
+    let left = r.left + r.width / 2 - tw / 2;
+    left = Math.max(8, Math.min(left, window.innerWidth - tw - 8));
+    let top = r.top - th - 10;
+    if (top < 8) top = r.bottom + 10;
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+  }
+
   menu.addEventListener('mouseover', (e) => {
-    const item = e.target.closest('.lang-item');
-    if (!item || item.contains(e.relatedTarget)) return;
+    const b = e.target.closest('.lang-flag-btn');
+    if (!b || b.contains(e.relatedTarget)) return;
     hideTip();
-    tipTimer = setTimeout(() => {
-      const l = LANGS.find(x => x.lang === item.dataset.lang);
-      if (!l) return;
-      tip.textContent = l.country;
-      tip.classList.add('show');
-      const r = item.getBoundingClientRect();
-      const tw = tip.offsetWidth, th = tip.offsetHeight;
-      let left = r.left - tw - 10;
-      if (left < 8) left = Math.min(r.right + 10, window.innerWidth - tw - 8);
-      tip.style.left = left + 'px';
-      tip.style.top  = (r.top + r.height / 2 - th / 2) + 'px';
-    }, TOOLTIP_DELAY);
+    tipTimer = setTimeout(() => showTip(b), TOOLTIP_DELAY);
   });
   menu.addEventListener('mouseout', (e) => {
-    const item = e.target.closest('.lang-item');
-    if (item && !item.contains(e.relatedTarget)) hideTip();
+    const b = e.target.closest('.lang-flag-btn');
+    if (b && !b.contains(e.relatedTarget)) hideTip();
   });
   menu.addEventListener('mouseleave', hideTip);
 })();
