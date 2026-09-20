@@ -1174,14 +1174,23 @@ body{
     transition-delay:.3s;
   }
 
-  .top-actions .circle-btn:last-child::after{
+  /* nút cuối sát mép phải: căn tooltip về bên phải cho khỏi tràn */
+  .top-actions > .circle-btn:last-child::after{
     left:auto;
     right:0;
     transform:translate(0,4px);
   }
 
-  .top-actions .circle-btn:last-child:hover::after{
+  .top-actions > .circle-btn:last-child:hover::after{
     transform:translate(0,0);
+  }
+
+  /* đã bấm 1 lần thì ẩn tên cho tới khi rời chuột khỏi nút */
+  .top-actions .circle-btn.tip-off::after,
+  .top-actions .circle-btn.tip-off::before{
+    opacity:0 !important;
+    visibility:hidden;
+    transition:none !important;
   }
 }
 
