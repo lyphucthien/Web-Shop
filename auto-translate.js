@@ -26,11 +26,12 @@
     }
   }
 
-  setCookie(lang);
+  function getCombo() {
+    return document.querySelector('select.goog-te-combo');
+  }
 
-  // dự phòng: nếu Google chưa tự dịch theo cookie thì ép qua ô chọn ngôn ngữ ẩn
   function forceCombo(tries) {
-    const c = document.querySelector('select.goog-te-combo');
+    const c = getCombo();
     if (c) {
       if (c.value !== lang) {
         c.value = lang;
@@ -41,7 +42,10 @@
     }
   }
 
-  if (lang !== SRC) {
+  function loadGoogle() {
+    if (window.__gtLoading) return;
+    window.__gtLoading = true;
+
     const holder = document.createElement('div');
     holder.id = 'google_translate_element';
     document.body.appendChild(holder);
@@ -57,11 +61,27 @@
     const s = document.createElement('script');
     s.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
     s.async = true;
+    s.onerror = () => {
+      if (typeof showToast === 'function') {
+        showToast('Không tải được Google Translate. Hãy kiểm tra mạng hoặc tắt tiện ích chặn quảng cáo.');
+      }
+    };
     document.head.appendChild(s);
   }
 
+  setCookie(lang);
+  if (lang !== SRC) loadGoogle();
+
   document.addEventListener('lptlangchange', (e) => {
-    setCookie(e.detail.lang);
-    setTimeout(() => location.reload(), 350);
+    lang = e.detail.lang;
+    setCookie(lang);
+
+    const c = getCombo();
+    if (lang !== SRC && c) {
+      c.value = lang;
+      c.dispatchEvent(new Event('change'));
+    } else {
+      setTimeout(() => location.reload(), 350);
+    }
   });
 })();
