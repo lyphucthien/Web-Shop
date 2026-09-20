@@ -1132,6 +1132,59 @@ body{
   box-shadow:none !important;
 }
 
+/* ==================== TOOLTIP NÚT HEADER ==================== */
+@media (hover:hover){
+  .top-actions .circle-btn[aria-label]::after{
+    content:attr(aria-label);
+    position:absolute;
+    top:calc(100% + 8px);
+    left:50%;
+    transform:translate(-50%,4px);
+    padding:6px 10px;
+    border-radius:6px;
+    background:#18212c;
+    color:#fff;
+    font:600 12px/1.2 Inter,system-ui,sans-serif;
+    white-space:nowrap;
+    pointer-events:none;
+    opacity:0;
+    transition:opacity .15s ease,transform .15s ease;
+    z-index:50;
+  }
+
+  .top-actions .circle-btn[aria-label]::before{
+    content:"";
+    position:absolute;
+    top:calc(100% + 3px);
+    left:50%;
+    transform:translate(-50%,4px);
+    border-style:solid;
+    border-width:0 5px 5px;
+    border-color:transparent transparent #18212c;
+    pointer-events:none;
+    opacity:0;
+    transition:opacity .15s ease,transform .15s ease;
+    z-index:50;
+  }
+
+  .top-actions .circle-btn[aria-label]:hover::after,
+  .top-actions .circle-btn[aria-label]:hover::before{
+    opacity:1;
+    transform:translate(-50%,0);
+    transition-delay:.3s;
+  }
+
+  .top-actions .circle-btn:last-child::after{
+    left:auto;
+    right:0;
+    transform:translate(0,4px);
+  }
+
+  .top-actions .circle-btn:last-child:hover::after{
+    transform:translate(0,0);
+  }
+}
+
 /* ==================== DARK MODE ==================== */
 .circle-btn .icon-sun{
   display:none;
@@ -1317,7 +1370,6 @@ html[data-theme="dark"] .trust-icon{
   color:var(--muted);
 }
 
-/* footer */
 html[data-theme="dark"] .footer{
   background:#0b1324;
   border-top:1px solid var(--line);
@@ -1325,4 +1377,14 @@ html[data-theme="dark"] .footer{
 
 html[data-theme="dark"] .footer-bottom{
   background:rgba(255,255,255,.03);
+}
+
+@media (hover:hover){
+  html[data-theme="dark"] .top-actions .circle-btn[aria-label]::after{
+    background:#2f3f5c;
+  }
+
+  html[data-theme="dark"] .top-actions .circle-btn[aria-label]::before{
+    border-color:transparent transparent #2f3f5c;
+  }
 }
