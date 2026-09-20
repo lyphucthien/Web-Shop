@@ -1131,3 +1131,198 @@ body{
   background:none !important;
   box-shadow:none !important;
 }
+
+/* ==================== DARK MODE ==================== */
+.circle-btn .icon-sun{
+  display:none;
+}
+
+html[data-theme="dark"] .circle-btn .icon-moon{
+  display:none;
+}
+
+html[data-theme="dark"] .circle-btn .icon-sun{
+  display:block;
+}
+
+html.theme-anim,
+html.theme-anim *{
+  transition:background-color .3s ease,color .3s ease,border-color .3s ease,box-shadow .3s ease !important;
+}
+
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --text:#e2e8f0;
+  --text-strong:#f1f5f9;
+  --muted:#94a3b8;
+  --line:#2a3850;
+  --panel:#172033;
+  --bg:#0f172a;
+  --surface:#172033;
+  --surface-2:#1e2a40;
+  --surface-hover:#26344d;
+  --accent-text:#7cc0f0;
+  --green-soft:#1b2c47;
+  --shadow:0 10px 35px rgba(0,0,0,.45);
+}
+
+html[data-theme="dark"] body{
+  background-color:#0f172a;
+  background-image:
+    linear-gradient(rgba(148,163,184,.1) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(148,163,184,.1) 1px,transparent 1px);
+  background-size:45px 45px;
+  background-position:0 0;
+  background-repeat:repeat;
+  background-attachment:fixed;
+}
+
+/* header */
+html[data-theme="dark"] .site-header,
+html[data-theme="dark"] .topbar{
+  background:var(--surface);
+}
+
+html[data-theme="dark"] .site-header{
+  box-shadow:0 2px 12px rgba(0,0,0,.35);
+}
+
+html[data-theme="dark"] .search-box{
+  background:var(--surface-2);
+  border-color:var(--line);
+}
+
+html[data-theme="dark"] .search-box input{
+  background:transparent;
+  color:var(--text);
+}
+
+html[data-theme="dark"] .search-box input::placeholder{
+  color:#64748b;
+}
+
+html[data-theme="dark"] .circle-btn{
+  background:var(--surface-2);
+  color:#94a3b8;
+}
+
+html[data-theme="dark"] .circle-btn:hover{
+  background:var(--surface-hover);
+}
+
+html[data-theme="dark"] .circle-btn.icon-accent{
+  color:var(--green);
+}
+
+html[data-theme="dark"] .circle-btn.notification i{
+  border-color:var(--surface);
+}
+
+html[data-theme="dark"] .main-nav{
+  background:#143a5c;
+}
+
+html[data-theme="dark"] .nav-dropdown{
+  background:var(--surface-2);
+  box-shadow:0 10px 24px rgba(0,0,0,.5);
+}
+
+html[data-theme="dark"] .nav-dropdown-item{
+  color:var(--text);
+}
+
+html[data-theme="dark"] .nav-dropdown-item:hover{
+  background:var(--surface-hover);
+  color:var(--accent-text);
+}
+
+/* trang chủ */
+html[data-theme="dark"] .login-strip{
+  background:var(--surface);
+}
+
+html[data-theme="dark"] .user-circle{
+  background:var(--surface-2);
+  color:#94a3b8;
+}
+
+html[data-theme="dark"] .login-copy small{
+  color:var(--muted);
+}
+
+html[data-theme="dark"] .register-btn{
+  background:var(--surface-2);
+  border-color:var(--line);
+  color:var(--text);
+}
+
+html[data-theme="dark"] .register-btn:hover{
+  border-color:#475569;
+}
+
+html[data-theme="dark"] .section-head h2{
+  color:var(--text-strong);
+}
+
+html[data-theme="dark"] .section-kicker{
+  color:var(--muted);
+}
+
+html[data-theme="dark"] section#categories,
+html[data-theme="dark"] section.products-section{
+  background:var(--surface);
+}
+
+html[data-theme="dark"] .category-card{
+  background:var(--surface-2);
+  color:var(--text);
+}
+
+html[data-theme="dark"] .category-card:hover,
+html[data-theme="dark"] .product-card:hover{
+  border-color:#3b4d6b;
+}
+
+html[data-theme="dark"] .product-card{
+  background:var(--surface-2);
+}
+
+html[data-theme="dark"] .product-image{
+  background:radial-gradient(circle at 50% 35%,rgba(148,163,184,.12),transparent 48%),#1a2438;
+}
+
+html[data-theme="dark"] .product-bottom strong{
+  color:var(--text-strong);
+}
+
+html[data-theme="dark"] .buy-btn{
+  background:var(--surface);
+  border-color:var(--line);
+  color:var(--text);
+}
+
+html[data-theme="dark"] .buy-btn:hover{
+  background:var(--surface-hover);
+  border-color:var(--green);
+  color:var(--accent-text);
+}
+
+html[data-theme="dark"] .trust-card{
+  background:var(--surface);
+  box-shadow:0 4px 20px rgba(0,0,0,.3);
+}
+
+html[data-theme="dark"] .trust-icon{
+  background:var(--surface-2);
+  color:var(--muted);
+}
+
+/* footer */
+html[data-theme="dark"] .footer{
+  background:#0b1324;
+  border-top:1px solid var(--line);
+}
+
+html[data-theme="dark"] .footer-bottom{
+  background:rgba(255,255,255,.03);
+}

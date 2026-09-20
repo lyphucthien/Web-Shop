@@ -404,3 +404,142 @@
     padding:18px;
   }
 }
+
+/* ==================== DARK MODE ==================== */
+html[data-theme="dark"] .deposit-tab{
+  background:var(--surface);
+  color:var(--muted);
+}
+
+html[data-theme="dark"] .deposit-tab:hover{
+  border-color:var(--green);
+  color:var(--accent-text);
+}
+
+html[data-theme="dark"] .deposit-tab.active{
+  background:var(--green);
+  border-color:var(--green);
+  color:#fff;
+}
+
+html[data-theme="dark"] .deposit-panel{
+  background:var(--surface);
+}
+
+html[data-theme="dark"] .deposit-panel h2,
+html[data-theme="dark"] .section-title-text h2{
+  color:var(--text-strong);
+}
+
+html[data-theme="dark"] .section-icon{
+  background:var(--surface-2);
+}
+
+html[data-theme="dark"] .section-icon img{
+  background:#fff;
+}
+
+html[data-theme="dark"] .section-title-text p{
+  color:var(--muted);
+}
+
+html[data-theme="dark"] .form-group label{
+  color:#cbd5e1;
+}
+
+html[data-theme="dark"] .form-control{
+  background:var(--surface-2);
+  border-color:var(--line);
+  color:var(--text);
+}
+
+html[data-theme="dark"] .form-control::placeholder{
+  color:#64748b;
+}
+
+html[data-theme="dark"] .form-control:focus{
+  border-color:var(--green);
+}
+
+html[data-theme="dark"] .dropdown-toggle{
+  background:var(--surface-2);
+  border-color:var(--line);
+  color:var(--text);
+}
+
+html[data-theme="dark"] .dropdown-toggle:hover{
+  border-color:#3b4d6b;
+}
+
+html[data-theme="dark"] .dropdown-menu{
+  background:var(--surface-2);
+  border-color:var(--line);
+  box-shadow:0 10px 24px rgba(0,0,0,.5);
+}
+
+html[data-theme="dark"] .dropdown-option{
+  color:var(--text);
+}
+
+html[data-theme="dark"] .dropdown-option:hover{
+  background:var(--surface-hover);
+  color:var(--text-strong);
+}
+
+html[data-theme="dark"] .dropdown-option.active,
+html[data-theme="dark"] .dropdown-option.active:hover{
+  background:var(--green-soft);
+  color:var(--accent-text);
+}
+
+html[data-theme="dark"] .amount-btn{
+  background:var(--surface-2);
+  border-color:var(--line);
+  color:var(--text);
+}
+
+html[data-theme="dark"] .amount-btn:hover{
+  border-color:#3b4d6b;
+}
+
+html[data-theme="dark"] .amount-btn.active{
+  background:var(--green-soft);
+  border-color:var(--green);
+  color:var(--accent-text);
+}
+
+html[data-theme="dark"] .bank-info-box{
+  background:var(--surface-2);
+  border-color:#3b4d6b;
+}
+
+html[data-theme="dark"] .bank-info-row{
+  border-bottom-color:var(--line);
+}
+
+html[data-theme="dark"] .bank-info-row b{
+  color:var(--text-strong);
+}
+
+html[data-theme="dark"] .copy-btn{
+  background:var(--surface);
+  border-color:var(--line);
+  color:var(--muted);
+}
+
+html[data-theme="dark"] .copy-btn:hover{
+  border-color:var(--green);
+  color:var(--accent-text);
+}
+
+html[data-theme="dark"] .copy-btn.copied{
+  background:var(--green);
+  border-color:var(--green);
+  color:#fff;
+}
+
+html[data-theme="dark"] .note-box{
+  background:rgba(245,158,11,.1);
+  border-color:rgba(245,158,11,.35);
+  color:#fbbf24;
+}

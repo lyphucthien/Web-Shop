@@ -120,3 +120,17 @@ if (carousel && track) {
 
   startAuto();
 }
+
+(function () {
+  const btn = document.getElementById('themeToggle');
+  if (!btn) return;
+  const root = document.documentElement;
+
+  btn.addEventListener('click', () => {
+    const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.classList.add('theme-anim');
+    root.dataset.theme = next;
+    try { localStorage.setItem('lpt_theme', next); } catch (e) {}
+    setTimeout(() => root.classList.remove('theme-anim'), 400);
+  });
+})();
