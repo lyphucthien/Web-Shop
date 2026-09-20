@@ -28,7 +28,6 @@
 
   setCookie(lang);
 
-  // dự phòng: nếu Google chưa tự dịch theo cookie thì ép qua ô chọn ngôn ngữ ẩn
   function forceCombo(tries) {
     const c = document.querySelector('select.goog-te-combo');
     if (c) {
