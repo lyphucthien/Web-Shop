@@ -28,6 +28,19 @@
 
   setCookie(lang);
 
+  // dự phòng: nếu Google chưa tự dịch theo cookie thì ép qua ô chọn ngôn ngữ ẩn
+  function forceCombo(tries) {
+    const c = document.querySelector('select.goog-te-combo');
+    if (c) {
+      if (c.value !== lang) {
+        c.value = lang;
+        c.dispatchEvent(new Event('change'));
+      }
+    } else if (tries > 0) {
+      setTimeout(() => forceCombo(tries - 1), 300);
+    }
+  }
+
   if (lang !== SRC) {
     const holder = document.createElement('div');
     holder.id = 'google_translate_element';
@@ -38,6 +51,7 @@
         { pageLanguage: SRC, includedLanguages: LANGS, autoDisplay: false },
         'google_translate_element'
       );
+      setTimeout(() => forceCombo(20), 500);
     };
 
     const s = document.createElement('script');
