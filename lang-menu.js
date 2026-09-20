@@ -46,7 +46,6 @@
     currentLang = localStorage.getItem('lpt_lang') || 'vi';
   } catch (e) {}
 
-  // nếu mã lưu cũ không nằm trong 12 nước này thì về Việt Nam
   if (!COUNTRIES.some(c => c[0] === currentCC)) {
     currentCC = 'vn';
     currentLang = 'vi';
@@ -57,10 +56,9 @@
     return f ? f[2] : cc.toUpperCase();
   }
 
-  // vòng cung: 2 cung tròn quanh nút, mở xuống dưới (cờ đang chọn ở giữa cung trong)
   const ARCS = [
-    { r: 110, a0: 38, size: 38 },
-    { r: 172, a0: 22, size: 38 },
+    { r: 100, a0: 38, size: 33 },
+    { r: 158, a0: 22, size: 33 },
   ];
 
   function render() {
@@ -82,7 +80,7 @@
         const isCur = c[0] === cur[0];
         html += `<button type="button" class="lang-flag-btn${isCur ? ' active' : ''}"
           data-cc="${c[0]}" data-lang="${c[1]}" aria-label="${c[2]}"
-          style="--s:${isCur ? 48 : size}px;--x:${x}px;--y:${y}px;--d:${idx++ * 25}ms">
+          style="--s:${isCur ? 40 : size}px;--x:${x}px;--y:${y}px;--d:${idx++ * 25}ms">
           <img src="${FLAG_URL(c[0])}" alt="" draggable="false"></button>`;
       });
     });
@@ -92,7 +90,7 @@
   function open() {
     render();
     const r = trigger.getBoundingClientRect();
-    const reach = ARCS[ARCS.length - 1].r + 28;    // bán kính cung ngoài + nửa cờ
+    const reach = ARCS[ARCS.length - 1].r + 22;    // bán kính cung ngoài + nửa cờ
     let cx = r.left + r.width / 2;
     cx = Math.max(reach + 8, Math.min(cx, window.innerWidth - reach - 8));
     menu.style.left = (cx + OFFSET_X) + 'px';
