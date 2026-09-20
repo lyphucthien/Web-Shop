@@ -2,25 +2,6 @@
   padding:40px 0 70px;
 }
 
-.deposit-header{
-  text-align:center;
-  margin-bottom:30px;
-}
-
-.deposit-header h1{
-  font-family:"Barlow Condensed",sans-serif;
-  font-size:34px;
-  font-weight:800;
-  color:#25313e;
-  margin:0 0 8px;
-}
-
-.deposit-header p{
-  color:var(--muted);
-  font-size:14px;
-  margin:0;
-}
-
 .deposit-tabs{
   display:flex;
   justify-content:center;
@@ -135,7 +116,6 @@
   color:#8a94a0;
 }
 
-
 /* ==================== FORM CHUNG ==================== */
 
 .form-group{
@@ -168,14 +148,6 @@
   box-shadow:0 0 0 3px rgba(79,168,232,.14);
 }
 
-select.form-control{
-  appearance:none;
-  background-image:linear-gradient(45deg,transparent 50%,#8a94a0 50%),linear-gradient(135deg,#8a94a0 50%,transparent 50%);
-  background-position:calc(100% - 20px) center,calc(100% - 15px) center;
-  background-size:5px 5px,5px 5px;
-  background-repeat:no-repeat;
-}
-
 .submit-btn{
   width:100%;
   height:48px;
@@ -198,47 +170,7 @@ select.form-control{
   cursor:not-allowed;
 }
 
-
 /* ==================== NẠP THẺ CÀO ==================== */
-
-.card-type-grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:10px;
-  margin-bottom:18px;
-}
-
-.card-type{
-  height:64px;
-  border:1.5px solid var(--line);
-  border-radius:9px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:4px;
-  font-size:12px;
-  font-weight:700;
-  color:#455564;
-  background:#fff;
-  transition:.2s;
-}
-
-.card-type img{
-  width:26px;
-  height:26px;
-  object-fit:contain;
-}
-
-.card-type:hover{
-  border-color:#b8c8d6;
-}
-
-.card-type.active{
-  border-color:var(--green);
-  background:var(--green-soft);
-  color:var(--green-dark);
-}
 
 /* ===== Dropdown chọn loại thẻ (bấm mở bảng) ===== */
 .dropdown-select{
@@ -362,51 +294,11 @@ select.form-control{
   color:var(--green-dark);
 }
 
-
 /* ==================== CHUYỂN KHOẢN ==================== */
 
 #panel-bank .deposit-panel{
   width:100%;
   max-width:620px;
-}
-
-.bank-method-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:10px;
-  margin-bottom:18px;
-}
-
-.bank-method{
-  border:1.5px solid var(--line);
-  border-radius:9px;
-  padding:12px 8px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:6px;
-  background:#fff;
-  transition:.2s;
-}
-
-.bank-method img{
-  height:26px;
-  object-fit:contain;
-}
-
-.bank-method span{
-  font-size:11.5px;
-  font-weight:700;
-  color:#596473;
-}
-
-.bank-method:hover{
-  border-color:#b8c8d6;
-}
-
-.bank-method.active{
-  border-color:var(--green);
-  background:var(--green-soft);
 }
 
 .bank-info-box{
@@ -491,38 +383,6 @@ select.form-control{
   background:#fff;
 }
 
-.qr-box p{
-  font-size:11.5px;
-  color:var(--muted);
-  margin:10px 0 0;
-}
-
-.summary-row{
-  display:flex;
-  justify-content:space-between;
-  padding:10px 0;
-  border-bottom:1px solid #eef0f2;
-  font-size:13px;
-  color:#596473;
-}
-
-.summary-row:last-of-type{
-  border-bottom:0;
-}
-
-.summary-row.total{
-  margin-top:6px;
-  padding-top:14px;
-  border-top:1.5px solid var(--line);
-  font-weight:800;
-  color:#25313e;
-  font-size:15px;
-}
-
-.summary-row.total strong{
-  color:var(--green-dark);
-}
-
 .note-box{
   margin-top:18px;
   padding:13px 14px;
@@ -534,24 +394,11 @@ select.form-control{
   line-height:1.5;
 }
 
-
 /* ==================== RESPONSIVE ==================== */
 
-@media(max-width:860px){
-  .card-type-grid{
-    grid-template-columns:repeat(3,1fr);
-  }
-}
-
 @media(max-width:560px){
-  .deposit-header h1{
-    font-size:26px;
-  }
   .deposit-tabs{
     flex-wrap:wrap;
-  }
-  .card-type-grid,.bank-method-grid{
-    grid-template-columns:repeat(2,1fr);
   }
   .deposit-panel{
     padding:18px;

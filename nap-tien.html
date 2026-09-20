@@ -11,9 +11,6 @@
   <link rel="stylesheet" href="/CSS/nap-tien.css" />
 </head>
 <body>
-  <div class="bg-glow glow-a"></div>
-  <div class="bg-glow glow-b"></div>
-
   <header class="site-header">
     <div class="topbar">
       <div class="container topbar-inner">
@@ -25,11 +22,27 @@
           <button type="button" data-toast="Tìm kiếm đang ở chế độ demo." aria-label="Tìm kiếm">⌕</button>
         </div>
         <div class="top-actions">
-          <button class="circle-btn" data-toast="Đã bật chế độ sáng/tối." aria-label="Đổi giao diện">◔</button>
-          <button class="circle-btn" data-toast="Đổi ngôn ngữ sẽ được thêm sau." aria-label="Ngôn ngữ">◎</button>
-          <button class="circle-btn" data-toast="Danh sách theo dõi sẽ được thêm sau." aria-label="Theo dõi">◉</button>
-          <button class="circle-btn notification" data-toast="Giỏ hàng đang ở chế độ demo." aria-label="Giỏ hàng">♡<i>0</i></button>
-          <button class="circle-btn" data-toast="Đăng nhập sẽ được thêm sau." aria-label="Tài khoản">♙</button>
+          <button class="circle-btn icon-accent" data-toast="Đã bật chế độ sáng/tối." aria-label="Đổi giao diện">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </button>
+          <button class="circle-btn icon-accent" aria-label="Ngôn ngữ">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          </button>
+          <button class="circle-btn icon-accent" data-toast="Danh sách theo dõi sẽ được thêm sau." aria-label="Theo dõi">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+          <button class="circle-btn notification icon-accent" data-toast="Giỏ hàng đang ở chế độ demo." aria-label="Giỏ hàng">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+            <i>0</i>
+          </button>
+          <button class="circle-btn icon-accent" data-toast="Đăng nhập sẽ được thêm sau." aria-label="Tài khoản">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" 
+              stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </button>
         </div>
       </div>
     </div>
@@ -49,7 +62,7 @@
 
         <a href="#" class="nav-item" data-toast="Lịch sử giao dịch sẽ được thêm sau.">LỊCH SỬ <span class="nav-caret">&gt;</span></a>
         <a href="#" class="nav-item" data-toast="Hệ thống cấp bậc sẽ được thêm sau.">CẤP BẬC</a>
-        <a href="#" class="nav-item" data-toast="Hướng dẫn sẽ được thêm sau.">HƯỚNG DẪN</a>
+        <a href="#" class="nav-item" data-toast="Hệ thống tin tức sẽ được thêm sau.">TIN TỨC</a>
       </div>
     </nav>
   </header>
@@ -216,9 +229,9 @@
   </footer>
 
   <div id="toast" class="toast"></div>
-  <script src="script.js"></script>
-  <script src="lang-menu.js"></script>
-  <script src="auto-translate.js"></script>
+  <script src="/script.js"></script>
+  <script src="/lang-menu.js"></script>
+  <script src="/auto-translate.js"></script>
 
   <script>
     // ===== Chuyển tab NẠP THẺ / NGÂN HÀNG =====
@@ -275,15 +288,6 @@
     });
 
     // ===== Toast =====
-    const toast = document.getElementById('toast');
-
-    function showToast(msg) {
-      toast.textContent = msg;
-      toast.classList.add('show');
-      clearTimeout(window.__toastTimer);
-      window.__toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
-    }
-
     // ===== Dropdown chọn loại thẻ =====
     const cardTypeDropdown = document.getElementById('cardTypeDropdown');
     const cardTypeToggle = document.getElementById('cardTypeToggle');
@@ -322,8 +326,6 @@
     });
 
     // ===== NGÂN HÀNG =====
-    const bankAmount = document.getElementById('bankAmount');
-
     function markCopied(btn) {
       btn.classList.add('copied');
       clearTimeout(btn._copyTimer);
@@ -389,14 +391,6 @@
 
     // ===== Xác nhận chuyển khoản =====
     document.getElementById('submitBankBtn').addEventListener('click', () => {
-      const amount = Number(bankAmount.value || 0);
-
-      if (!amount || amount < 10000) {
-        showToast('Vui lòng nhập số tiền tối thiểu 10.000đ.');
-        bankAmount.focus();
-        return;
-      }
-
       showToast('Chức năng xác nhận đang ở chế độ demo.');
     });
 

@@ -17,6 +17,7 @@ const PAGE_SIZE = 8;
 let visibleCount = PAGE_SIZE;
 
 function showToast(message){
+  if (!toast) return;
   clearTimeout(toastTimer);
   toast.textContent = message;
   toast.classList.add('show');
@@ -24,6 +25,7 @@ function showToast(message){
 }
 
 function renderProducts(filter='Tất cả'){
+  if (!grid) return;
   const fullList = filter === 'Tất cả' ? products : products.filter(p => p.category === filter);
   const list = fullList.slice(0, visibleCount);
 
@@ -63,16 +65,15 @@ function renderProducts(filter='Tất cả'){
 function activateFilter(filter){
   currentFilter = filter;
   visibleCount = PAGE_SIZE;
-  document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.filter === filter));
   renderProducts(filter);
-  document.getElementById('products').scrollIntoView({behavior:'smooth', block:'start'});
+  document.getElementById('products')?.scrollIntoView({behavior:'smooth', block:'start'});
 }
 
   document.querySelectorAll('[data-filter]').forEach(btn => {
     btn.addEventListener('click', () => {
       const filter = btn.dataset.filter;
       if (['Tất cả','Roblox','Minecraft','Discord'].includes(filter)) activateFilter(filter);
-      else if (filter === 'Khác') { currentFilter = filter; document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active')); renderProducts(filter); document.getElementById('products').scrollIntoView({behavior:'smooth'}); }
+      else if (filter === 'Khác') { currentFilter = filter; renderProducts(filter); document.getElementById('products')?.scrollIntoView({behavior:'smooth'}); }
     });
   });
 
@@ -81,7 +82,6 @@ function activateFilter(filter){
 document.querySelectorAll('[data-toast]').forEach(el => el.addEventListener('click', () => showToast(el.dataset.toast)));
 
 document.querySelectorAll('a[href="#"]').forEach(a => a.addEventListener('click', e => e.preventDefault()));
-renderProducts();
 
 const carousel = document.getElementById('heroCarousel');
 const track = document.getElementById('carouselTrack');

@@ -40,7 +40,6 @@ button{
   margin:auto;
 }
 
-
 /* ==================== HEADER ==================== */
 
 .site-header{
@@ -267,17 +266,12 @@ button{
   line-height:1;
 }
 
-
 /* ==================== HERO / TOP AREA ==================== */
 
 .showcase{
   position:relative;
   overflow:hidden;
   background:transparent;
-}
-
-.showcase-bg{
-  display:none;
 }
 
 .showcase-inner{
@@ -287,113 +281,6 @@ button{
   grid-template-columns:1fr;
   gap:9px;
 }
-
-.ranking-card{
-  align-self:start;
-  background:#fff;
-  border:1px solid #dce4eb;
-  border-radius:7px;
-  padding:12px 9px 9px;
-  box-shadow:var(--shadow);
-}
-
-.ranking-tabs{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-  margin-bottom:12px;
-}
-
-.ranking-tab{
-  height:39px;
-  border:0;
-  border-radius:22px;
-  background:#f1f3f6;
-  color:#596473;
-  font-family:"Barlow Condensed",sans-serif;
-  font-size:15px;
-  font-weight:700;
-}
-
-.ranking-tab.active{
-  background:var(--green);
-  color:#fff;
-}
-
-.ranking-list{
-  display:flex;
-  flex-direction:column;
-  gap:7px;
-}
-
-.rank-row{
-  display:grid;
-  grid-template-columns:34px 1fr auto;
-  gap:9px;
-  align-items:center;
-  min-height:39px;
-  padding:5px 7px;
-  border-radius:7px;
-  background:#f7f9fb;
-}
-
-.rank-row b{
-  font-size:13px;
-  font-weight:700;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-
-.rank-row strong{
-  font-size:13px;
-  color:#17b9b0;
-  white-space:nowrap;
-}
-
-.rank-medal{
-  width:29px;
-  height:29px;
-  border-radius:50%;
-  display:grid;
-  place-items:center;
-  border:1px solid #cfd7df;
-  color:#159fa0;
-  background:#fff;
-  font-weight:800;
-}
-
-.rank-medal.gold{
-  border-color:#ffd36a;
-  color:#efad00;
-}
-
-.rank-medal.silver{
-  border-color:#ccd4db;
-  color:#8794a1;
-}
-
-.rank-medal.bronze{
-  border-color:#ff9175;
-  color:#ff6544;
-}
-
-.deposit-btn{
-  width:100%;
-  height:36px;
-  border:0;
-  border-radius:5px;
-  background:var(--green);
-  color:#fff;
-  margin-top:10px;
-  font-size:13px;
-  font-weight:800;
-}
-
-.deposit-btn:hover{
-  background:var(--green-dark);
-}
-
 
 .hero-carousel{
   height:353px;
@@ -432,21 +319,6 @@ button{
   gap:10px;
 }
 
-.promo-badge{
-  display:inline-flex;
-  align-items:center;
-  height:30px;
-  padding:0 12px;
-  border-radius:18px;
-  background:rgba(0,0,0,.35);
-  color:#fff;
-  font-family:"Barlow Condensed",sans-serif;
-  font-size:13px;
-  font-weight:800;
-  letter-spacing:.04em;
-  backdrop-filter:blur(5px);
-}
-
 .promo-cta{
   display:inline-flex;
   align-items:center;
@@ -459,34 +331,6 @@ button{
   text-decoration:none;
   font-size:12px;
   font-weight:800;
-}
-
-.promo-gradient-slide{
-  display:flex;
-  align-items:center;
-  padding:36px 55px;
-  color:#fff;
-  background:linear-gradient(125deg,#6b7178,#9aa0a8 58%,#c3c7cc);
-}
-
-.promo-gradient-slide h3{
-  font-family:"Barlow Condensed",sans-serif;
-  font-size:46px;
-  line-height:.97;
-  margin:14px 0 12px;
-}
-
-.promo-gradient-slide h3 em{
-  font-style:normal;
-  color:#eef0f2;
-}
-
-.promo-gradient-slide p{
-  max-width:360px;
-  margin:0 0 20px;
-  color:rgba(255,255,255,.88);
-  font-size:14px;
-  line-height:1.6;
 }
 
 .carousel-arrow{
@@ -558,7 +402,6 @@ button{
   border-radius:5px;
   background:#fff;
 }
-
 
 .login-strip{
   grid-column:1/-1;
@@ -636,7 +479,6 @@ button{
   border-color:#aab5c0;
 }
 
-
 /* ==================== CONTENT ==================== */
 
 .section{
@@ -665,15 +507,6 @@ button{
   font-family:"Barlow Condensed",sans-serif;
   font-size:14px;
   letter-spacing:.08em;
-  font-weight:800;
-}
-
-.text-btn{
-  background:transparent;
-  border:0;
-  color:#6b7178;
-  padding:7px;
-  font-size:13px;
   font-weight:800;
 }
 
@@ -731,38 +564,6 @@ section.products-section{
   -webkit-line-clamp:2;
   -webkit-box-orient:vertical;
   overflow:hidden;
-}
-
-.category-card small{
-  color:var(--muted);
-  font-size:11px;
-  display:block;
-  margin-top:6px;
-}
-
-
-.filter-wrap{
-  display:flex;
-  gap:5px;
-  padding:4px;
-  border:1px solid #dde4ea;
-  border-radius:9px;
-  background:#fff;
-}
-
-.filter-btn{
-  border:0;
-  background:transparent;
-  color:#74808c;
-  padding:8px 11px;
-  border-radius:7px;
-  font-size:12px;
-  font-weight:700;
-}
-
-.filter-btn.active,.filter-btn:hover{
-  background:#eef0f2;
-  color:#6b7178;
 }
 
 .product-grid{
@@ -870,7 +671,6 @@ section.products-section{
   margin:26px auto 0;
 }
 
-
 .trust-card{
   display:grid;
   grid-template-columns:auto 1fr auto;
@@ -926,7 +726,6 @@ section.products-section{
 .primary-btn:hover{
   background:var(--green-dark);
 }
-
 
 /* ==================== FOOTER ==================== */
 
@@ -1015,7 +814,6 @@ section.products-section{
   padding:0 16px;
 }
 
-
 /* ==================== TOAST ==================== */
 
 .toast{
@@ -1040,7 +838,6 @@ section.products-section{
   opacity:1;
   transform:translate(-50%,0);
 }
-
 
 /* ==================== SCROLLBAR ==================== */
 
@@ -1178,9 +975,6 @@ section.products-section{
   .promo-overlay{
     right:9px;
     bottom:10px;
-  }
-  .promo-badge{
-    font-size:11px;
   }
   .promo-cta{
     height:32px;

@@ -5,7 +5,7 @@
   let lang = SRC;
   try { lang = localStorage.getItem('lpt_lang') || SRC; } catch (e) {}
 
-  ['.lang-flags', '.lang-tooltip', '.brand-image', '.footer-logo'].forEach(sel => {
+  ['.lang-flags', '.lang-tooltip'].forEach(sel => {
     document.querySelectorAll(sel).forEach(el => {
       el.setAttribute('translate', 'no');
       el.classList.add('notranslate');
@@ -28,6 +28,7 @@
 
   setCookie(lang);
 
+  // dự phòng: nếu Google chưa tự dịch theo cookie thì ép qua ô chọn ngôn ngữ ẩn
   function forceCombo(tries) {
     const c = document.querySelector('select.goog-te-combo');
     if (c) {
