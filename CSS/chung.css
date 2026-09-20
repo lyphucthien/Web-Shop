@@ -1318,3 +1318,22 @@ section.products-section{
 .lang-tooltip.show{
   opacity:1;
 }
+
+/* ==================== AUTO TRANSLATE ==================== */
+#google_translate_element,
+.goog-te-banner-frame,
+.goog-te-balloon-frame,
+iframe.skiptranslate,
+.goog-tooltip,
+.goog-te-spinner-pos{
+  display:none !important;
+}
+
+body{
+  top:0 !important;
+}
+
+.goog-text-highlight{
+  background:none !important;
+  box-shadow:none !important;
+}
