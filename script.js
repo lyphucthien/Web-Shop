@@ -121,6 +121,7 @@ if (carousel && track) {
   startAuto();
 }
 
+// ===== Chế độ sáng / tối =====
 (function () {
   const btn = document.getElementById('themeToggle');
   if (!btn) return;
@@ -132,5 +133,20 @@ if (carousel && track) {
     root.dataset.theme = next;
     try { localStorage.setItem('lpt_theme', next); } catch (e) {}
     setTimeout(() => root.classList.remove('theme-anim'), 400);
+  });
+})();
+
+(function () {
+  const bar = document.querySelector('.top-actions');
+  if (!bar) return;
+
+  bar.addEventListener('click', e => {
+    const b = e.target.closest('.circle-btn');
+    if (b) b.classList.add('tip-off');
+  }, true);
+
+  bar.addEventListener('mouseout', e => {
+    const b = e.target.closest('.circle-btn');
+    if (b && !b.contains(e.relatedTarget)) b.classList.remove('tip-off');
   });
 })();
