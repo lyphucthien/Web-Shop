@@ -53,7 +53,13 @@
 
   function langName(cc) {
     const f = COUNTRIES.find(c => c[0] === cc);
-    return f ? f[2] : cc.toUpperCase();
+    if (!f) return cc.toUpperCase();
+    try {
+      const dn = new Intl.DisplayNames([currentLang], { type: 'language' });
+      const name = dn.of(f[1]);
+      if (name) return name.charAt(0).toUpperCase() + name.slice(1);
+    } catch (e) {}
+    return f[2];
   }
 
   const ARCS = [
@@ -65,7 +71,7 @@
     const cur = COUNTRIES.find(c => c[0] === currentCC) || COUNTRIES[0];
     const others = COUNTRIES.filter(c => c[0] !== cur[0]);
     const inner = others.slice(0, 4);
-    inner.splice(2, 0, cur);                      // cờ đang chọn nằm chính giữa cung trong
+    inner.splice(2, 0, cur);
     const groups = [inner, others.slice(4)];
 
     let html = '', idx = 0;
@@ -73,7 +79,7 @@
       const { r, size, a0 } = ARCS[gi];
       g.forEach((c, k) => {
         const t = g.length === 1 ? 0.5 : k / (g.length - 1);
-        const deg = (180 - a0) - t * (180 - 2 * a0);   // trái → phải, chỉ mở phía dưới nút
+        const deg = (180 - a0) - t * (180 - 2 * a0);
         const ang = deg * Math.PI / 180;
         const x = Math.round(Math.cos(ang) * r);
         const y = Math.round(Math.sin(ang) * r);
@@ -90,7 +96,7 @@
   function open() {
     render();
     const r = trigger.getBoundingClientRect();
-    const reach = ARCS[ARCS.length - 1].r + 22;    // bán kính cung ngoài + nửa cờ
+    const reach = ARCS[ARCS.length - 1].r + 22;
     let cx = r.left + r.width / 2;
     cx = Math.max(reach + 8, Math.min(cx, window.innerWidth - reach - 8));
     menu.style.left = (cx + OFFSET_X) + 'px';
