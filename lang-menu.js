@@ -20,7 +20,7 @@
 
   const FLAG_URL = (cc) => `https://hatscripts.github.io/circle-flags/flags/${cc}.svg`;
 
-  const btn = document.querySelector('button[aria-label="Ngôn ngữ"]');
+  const btn = document.querySelector('button[aria-label="Ngôn Ngữ"]');
   if (!btn) return;
 
   btn.removeAttribute('data-toast');
