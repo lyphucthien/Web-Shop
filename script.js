@@ -163,7 +163,7 @@ if (carousel && track) {
       root.animate(
         { clipPath: toDark ? [full, none] : [none, full] },
         {
-          duration: 16000,
+          duration: 1600,
           easing: 'cubic-bezier(.65,0,.35,1)',
           fill: 'forwards',
           pseudoElement: toDark ? '::view-transition-old(root)' : '::view-transition-new(root)'
