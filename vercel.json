@@ -1,6 +1,10 @@
 {
   "cleanUrls": true,
   "rewrites": [
-    { "source": "/nap-tien/:tab", "destination": "/nap-tien" }
+    { "source": "/", "destination": "/HTML/index.html" },
+    { "source": "/nap-tien", "destination": "/HTML/nap-tien.html" },
+    { "source": "/nap-tien/:tab", "destination": "/HTML/nap-tien.html" },
+    { "source": "/tai-khoan", "destination": "/HTML/tai-khoan.html" },
+    { "source": "/tai-khoan/:tab", "destination": "/HTML/tai-khoan.html" }
   ]
 }
