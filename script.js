@@ -125,14 +125,42 @@ if (carousel && track) {
 (function () {
   const btn = document.getElementById('themeToggle');
   if (!btn) return;
+
   const root = document.documentElement;
+  const reduceMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function swap(next) {
+    root.dataset.theme = next;
+    try { localStorage.setItem('lpt_theme', next); } catch (e) {}
+  }
 
   btn.addEventListener('click', () => {
     const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
-    root.classList.add('theme-anim');
-    root.dataset.theme = next;
-    try { localStorage.setItem('lpt_theme', next); } catch (e) {}
-    setTimeout(() => root.classList.remove('theme-anim'), 400);
+
+    root.classList.add('theme-switching');
+    setTimeout(() => root.classList.remove('theme-switching'), 800);
+
+    if (reduceMotion) { swap(next); return; }
+
+    if (!document.startViewTransition) {
+      root.classList.add('theme-anim');
+      swap(next);
+      setTimeout(() => root.classList.remove('theme-anim'), 400);
+      return;
+    }
+
+    const r = btn.getBoundingClientRect();
+    const x = r.left + r.width / 2;
+    const y = r.top + r.height / 2;
+    const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+
+    const transition = document.startViewTransition(() => swap(next));
+    transition.ready.then(() => {
+      root.animate(
+        { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
+        { duration: 650, easing: 'cubic-bezier(.4,0,.2,1)', pseudoElement: '::view-transition-new(root)' }
+      );
+    }).catch(() => {});
   });
 })();
 
