@@ -149,18 +149,28 @@ if (carousel && track) {
       return;
     }
 
-    const r = btn.getBoundingClientRect();
-    const x = r.left + r.width / 2;
-    const y = r.top + r.height / 2;
-    const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+    const toDark = next === 'dark';
+    const cx = innerWidth / 2;
+    const cy = innerHeight / 2;
+    const radius = Math.hypot(cx, cy);
+
+    root.classList.toggle('theme-inward', toDark);
 
     const transition = document.startViewTransition(() => swap(next));
     transition.ready.then(() => {
+      const full = `circle(${radius}px at ${cx}px ${cy}px)`;
+      const none = `circle(0px at ${cx}px ${cy}px)`;
       root.animate(
-        { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
-        { duration: 650, easing: 'cubic-bezier(.4,0,.2,1)', pseudoElement: '::view-transition-new(root)' }
+        { clipPath: toDark ? [full, none] : [none, full] },
+        {
+          duration: 1200,
+          easing: 'cubic-bezier(.65,0,.35,1)',
+          fill: 'forwards',
+          pseudoElement: toDark ? '::view-transition-old(root)' : '::view-transition-new(root)'
+        }
       );
     }).catch(() => {});
+    transition.finished.finally(() => root.classList.remove('theme-inward'));
   });
 })();
 
