@@ -1227,6 +1227,15 @@ html.theme-anim *{
   z-index:2147483646;
 }
 
+/* sáng -> tối: lớp cũ (sáng) nằm trên và thu nhỏ dần về tâm */
+html.theme-inward::view-transition-old(root){
+  z-index:2147483646;
+}
+
+html.theme-inward::view-transition-new(root){
+  z-index:1;
+}
+
 @keyframes themeIconIn{
   from{
     transform:rotate(-90deg) scale(.3);
