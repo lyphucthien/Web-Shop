@@ -1456,11 +1456,11 @@ html[data-theme="dark"] .footer-bottom{
   position:absolute;
   top:calc(100% + 14px);
   right:-6px;
-  width:190px;
+  width:160px;
   background:var(--panel);
   border-radius:12px;
   box-shadow:var(--shadow);
-  padding:16px 14px 14px;
+  padding:16px 12px 14px;
   text-align:center;
   opacity:0;
   visibility:hidden;
