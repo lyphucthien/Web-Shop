@@ -3,15 +3,15 @@
   "rewrites": [
     {
       "source": "/",
-      "destination": "/HTML/index.html"
+      "destination": "/HTML/index"
     },
     {
       "source": "/nap-tien",
-      "destination": "/HTML/nap-tien.html"
+      "destination": "/HTML/nap-tien"
     },
     {
       "source": "/nap-tien/:tab",
-      "destination": "/HTML/nap-tien.html"
+      "destination": "/HTML/nap-tien"
     }
   ]
 }
