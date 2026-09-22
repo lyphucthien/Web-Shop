@@ -1438,3 +1438,115 @@ html[data-theme="dark"] .footer-bottom{
     border-color:transparent transparent #2f3f5c;
   }
 }
+/* ==================== DROPDOWN TÀI KHOẢN (KHÁCH) ==================== */
+
+.acc-wrap{
+  position:relative;
+  display:inline-flex;
+}
+
+.acc-dropdown{
+  position:absolute;
+  top:calc(100% + 14px);
+  right:-6px;
+  width:190px;
+  background:var(--panel);
+  border-radius:12px;
+  box-shadow:var(--shadow);
+  padding:16px 14px 14px;
+  text-align:center;
+  opacity:0;
+  visibility:hidden;
+  transform:translateY(-6px);
+  transition:.18s ease;
+  z-index:999;
+}
+
+.acc-dropdown::before{
+  content:"";
+  position:absolute;
+  top:-6px;
+  right:22px;
+  width:12px;
+  height:12px;
+  background:var(--panel);
+  transform:rotate(45deg);
+  box-shadow:-3px -3px 6px rgba(26,42,55,.06);
+}
+
+.acc-wrap:hover .acc-dropdown,
+.acc-wrap:focus-within .acc-dropdown{
+  opacity:1;
+  visibility:visible;
+  transform:translateY(0);
+}
+
+.acc-avatar{
+  width:44px;
+  height:44px;
+  margin:0 auto 10px;
+  border-radius:50%;
+  background:var(--green-soft);
+  color:var(--green-dark);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.acc-guest-title{
+  margin:0 0 12px;
+  font-family:"Barlow Condensed",sans-serif;
+  font-size:16px;
+  font-weight:700;
+  color:var(--text);
+}
+
+.acc-login-btn,.acc-register-btn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  height:38px;
+  border-radius:8px;
+  font-family:"Barlow Condensed",sans-serif;
+  font-size:14px;
+  font-weight:700;
+  text-decoration:none;
+  transition:.18s;
+  box-sizing:border-box;
+}
+
+.acc-login-btn{
+  background:var(--green);
+  border:1px solid var(--green);
+  color:#fff;
+  margin-bottom:8px;
+}
+
+.acc-login-btn:hover{
+  background:var(--green-dark);
+}
+
+.acc-register-btn{
+  background:transparent;
+  border:1px solid var(--green);
+  color:var(--green-dark);
+}
+
+.acc-register-btn:hover{
+  background:var(--green-soft);
+}
+
+@media (max-width:640px){
+  .acc-dropdown{
+    right:-40px;
+  }
+}
+
+html[data-theme="dark"] .acc-dropdown::before{
+  box-shadow:-3px -3px 6px rgba(0,0,0,.3);
+}
+
+html[data-theme="dark"] .acc-guest-title{
+  color:var(--text);
+}

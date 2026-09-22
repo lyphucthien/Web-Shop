@@ -9,6 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script>try{document.documentElement.dataset.theme=localStorage.getItem("lpt_theme")||"light"}catch(e){}</script>
   <link rel="stylesheet" href="/CSS/chung.css" />
+  <link rel="stylesheet" href="/CSS/modal-auth.css" />
   <link rel="stylesheet" href="/CSS/nap-tien.css" />
 </head>
 <body>
@@ -42,10 +43,21 @@
               stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>
             <i>0</i>
           </button>
-          <button class="circle-btn icon-accent" onclick="location.href='/tai-khoan/dang-nhap'" aria-label="Tài khoản">
+          <div class="acc-wrap">
+          <button class="circle-btn icon-accent" aria-label="Tài khoản">
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" 
               stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
           </button>
+          <div class="acc-dropdown">
+            <div class="acc-avatar">
+              <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <p class="acc-guest-title">Khách truy cập</p>
+            <button type="button" class="acc-login-btn" data-modal="login">↪ &nbsp; Đăng Nhập</button>
+            <button type="button" class="acc-register-btn" data-modal="register">♙ &nbsp; Đăng Ký</button>
+          </div>
+        </div>
         </div>
       </div>
     </div>
@@ -209,7 +221,7 @@
 
         <div>
           <h4>LIÊN KẾT NHANH</h4>
-          <a href="/tai-khoan/dang-nhap">Tài khoản của tôi</a>
+          <a href="#" data-modal="login">Tài khoản của tôi</a>
           <a href="/favorites">Danh sách yêu thích</a>
           <a href="/new">Sản phẩm mới</a>
         </div>
@@ -229,6 +241,7 @@
 
   <div id="toast" class="toast"></div>
   <script src="/JS/script.js"></script>
+  <script src="/JS/modal-auth.js"></script>
   <script src="/JS/lang-menu.js"></script>
   <script src="/JS/auto-translate.js"></script>
 
