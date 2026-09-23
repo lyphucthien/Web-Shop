@@ -452,6 +452,10 @@ button{
 }
 
 .login-btn,.register-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
   height:38px;
   border-radius:7px;
   padding:0 18px;
