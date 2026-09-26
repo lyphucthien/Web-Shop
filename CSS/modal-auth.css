@@ -307,3 +307,99 @@ html[data-theme="dark"] .auth-social-btn:hover{
   background:var(--surface-hover);
   border-color:var(--green);
 }
+
+/* ==================== ĐĂNG NHẬP BẰNG QR ==================== */
+
+.auth-qr-box{
+  position:relative;
+  width:200px;
+  height:200px;
+  margin:0 auto 16px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:10px;
+  background:#fff;
+  box-sizing:content-box;
+}
+
+.auth-qr-box img{
+  width:200px;
+  height:200px;
+  display:block;
+}
+
+.auth-qr-overlay{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:12px;
+  background:rgba(255,255,255,.92);
+  border-radius:12px;
+  font-size:13px;
+  font-weight:700;
+  color:var(--text);
+}
+
+.auth-qr-hint{
+  margin:0 0 6px;
+  text-align:center;
+  font-size:13px;
+  color:var(--muted);
+  line-height:1.5;
+}
+
+.auth-qr-timer{
+  margin:0 0 18px;
+  text-align:center;
+  font-size:12px;
+  color:var(--green-dark);
+  font-weight:700;
+}
+
+.auth-qr-cancel{
+  display:block;
+  width:100%;
+  border:0;
+  background:none;
+  color:var(--muted);
+  font:inherit;
+  font-size:13px;
+  font-weight:600;
+  text-align:center;
+  cursor:pointer;
+  padding:8px 0 0;
+}
+
+.auth-qr-cancel:hover{
+  color:var(--green-dark);
+  text-decoration:underline;
+}
+
+html[data-theme="dark"] .auth-qr-box{
+  background:#fff;
+}
+
+html[data-theme="dark"] .auth-qr-overlay{
+  background:rgba(23,32,51,.92);
+  color:var(--text);
+}
+
+/* ==================== TRẠNG THÁI ĐÃ ĐĂNG NHẬP (dropdown + login-strip) ==================== */
+
+.acc-dropdown [data-el="userBox"] .acc-guest-title{
+  word-break:break-word;
+}
+
+.acc-dropdown [data-el="userBox"] .acc-login-btn{
+  background:transparent;
+  border:1px solid #e5484d;
+  color:#e5484d;
+  margin-bottom:0;
+}
+
+.acc-dropdown [data-el="userBox"] .acc-login-btn:hover{
+  background:rgba(229,72,77,.08);
+}

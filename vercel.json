@@ -12,6 +12,10 @@
     {
       "source": "/nap-tien/:tab",
       "destination": "/HTML/nap-tien"
+    },
+    {
+      "source": "/xac-nhan-dang-nhap",
+      "destination": "/HTML/xac-nhan-dang-nhap"
     }
   ]
 }

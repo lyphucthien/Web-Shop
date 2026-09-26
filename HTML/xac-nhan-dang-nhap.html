@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Xác Nhận Đăng Nhập〡LPTSHOP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>try{document.documentElement.dataset.theme=localStorage.getItem("lpt_theme")||"light"}catch(e){}</script>
+  <link rel="stylesheet" href="/CSS/chung.css" />
+  <style>
+    body{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-height:100vh;
+      padding:20px;
+    }
+    .qc-card{
+      width:100%;
+      max-width:380px;
+      background:var(--panel);
+      color:var(--text);
+      border-radius:16px;
+      box-shadow:0 24px 60px rgba(0,0,0,.2);
+      padding:28px 26px;
+      text-align:center;
+    }
+    .qc-icon{
+      width:56px;
+      height:56px;
+      margin:0 auto 14px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      background:var(--green-soft);
+      color:var(--green-dark);
+      font-size:26px;
+    }
+    .qc-title{
+      margin:0 0 6px;
+      font-family:"Barlow Condensed",sans-serif;
+      font-size:22px;
+      font-weight:800;
+    }
+    .qc-text{
+      margin:0 0 20px;
+      font-size:13.5px;
+      color:var(--muted);
+      line-height:1.55;
+    }
+    .qc-user{
+      display:inline-block;
+      margin:0 0 20px;
+      padding:6px 14px;
+      border-radius:999px;
+      background:var(--green-soft);
+      color:var(--green-dark);
+      font-weight:700;
+      font-size:13.5px;
+    }
+    .qc-btn{
+      width:100%;
+      height:46px;
+      border:0;
+      border-radius:9px;
+      font:inherit;
+      font-size:14.5px;
+      font-weight:800;
+      cursor:pointer;
+      transition:.18s;
+      margin-bottom:10px;
+    }
+    .qc-btn.primary{
+      background:var(--green);
+      color:#fff;
+    }
+    .qc-btn.primary:hover{
+      background:var(--green-dark);
+    }
+    .qc-btn.ghost{
+      background:none;
+      border:1px solid var(--line);
+      color:var(--muted);
+      margin-bottom:0;
+    }
+    .qc-field{
+      text-align:left;
+      margin-bottom:14px;
+    }
+    .qc-field label{
+      display:block;
+      margin-bottom:6px;
+      font-size:12.5px;
+      font-weight:700;
+    }
+    .qc-field input{
+      width:100%;
+      box-sizing:border-box;
+      height:44px;
+      padding:0 14px;
+      border:1px solid var(--line);
+      border-radius:8px;
+      background:var(--bg);
+      color:var(--text);
+      font:inherit;
+      font-size:14px;
+      outline:none;
+    }
+    .qc-field input:focus{
+      border-color:var(--green);
+      box-shadow:0 0 0 3px var(--green-soft);
+    }
+    .qc-error{
+      min-height:16px;
+      margin:-4px 0 10px;
+      font-size:12.5px;
+      color:#e5484d;
+    }
+    .qc-success .qc-icon{
+      background:#e6f7ec;
+      color:#1a9e4e;
+    }
+    .qc-hidden{ display:none !important; }
+  </style>
+</head>
+<body>
+  <div class="qc-card" id="qcCard">
+    <div id="qcLoading">
+      <div class="qc-icon">⏳</div>
+      <h1 class="qc-title">Đang kiểm tra...</h1>
+      <p class="qc-text">Vui lòng chờ trong giây lát.</p>
+    </div>
+
+    <!-- Trạng thái: chưa đăng nhập -->
+    <div id="qcLoginForm" class="qc-hidden">
+      <div class="qc-icon">🔒</div>
+      <h1 class="qc-title">Đăng Nhập Để Tiếp Tục</h1>
+      <p class="qc-text">Đăng nhập tài khoản LPTSHOP của bạn để xác nhận phiên đăng nhập trên thiết bị khác.</p>
+
+      <form id="qcForm">
+        <div class="qc-field">
+          <label for="qcUser">Tên đăng nhập</label>
+          <input id="qcUser" type="text" autocomplete="username" required>
+        </div>
+        <div class="qc-field">
+          <label for="qcPass">Mật khẩu</label>
+          <input id="qcPass" type="password" autocomplete="current-password" required>
+        </div>
+        <div class="qc-error" id="qcLoginError"></div>
+        <button type="submit" class="qc-btn primary">Đăng Nhập</button>
+      </form>
+    </div>
+
+    <!-- Trạng thái: đã đăng nhập, chờ xác nhận -->
+    <div id="qcConfirm" class="qc-hidden">
+      <div class="qc-icon">📱</div>
+      <h1 class="qc-title">Xác Nhận Đăng Nhập</h1>
+      <p class="qc-text">Bạn đang xác nhận đăng nhập cho một thiết bị khác bằng tài khoản:</p>
+      <div class="qc-user" id="qcUsername"></div>
+      <div class="qc-error" id="qcConfirmError"></div>
+      <button type="button" class="qc-btn primary" id="qcConfirmBtn">Xác Nhận Đăng Nhập</button>
+      <button type="button" class="qc-btn ghost" id="qcCancelBtn">Huỷ Bỏ</button>
+    </div>
+
+    <!-- Trạng thái: thành công -->
+    <div id="qcSuccess" class="qc-hidden qc-success">
+      <div class="qc-icon">✅</div>
+      <h1 class="qc-title">Xác Nhận Thành Công</h1>
+      <p class="qc-text">Thiết bị kia đã được đăng nhập. Bạn có thể đóng trang này.</p>
+    </div>
+
+    <!-- Trạng thái: lỗi / link hỏng -->
+    <div id="qcInvalid" class="qc-hidden">
+      <div class="qc-icon">⚠️</div>
+      <h1 class="qc-title">Liên Kết Không Hợp Lệ</h1>
+      <p class="qc-text">Mã QR đã hết hạn hoặc không tồn tại. Vui lòng quét lại mã mới trên máy tính.</p>
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(location.search);
+    const sid = params.get('sid');
+
+    const views = {
+      loading: document.getElementById('qcLoading'),
+      loginForm: document.getElementById('qcLoginForm'),
+      confirm: document.getElementById('qcConfirm'),
+      success: document.getElementById('qcSuccess'),
+      invalid: document.getElementById('qcInvalid'),
+    };
+
+    function show(name) {
+      Object.values(views).forEach(v => v.classList.add('qc-hidden'));
+      views[name].classList.remove('qc-hidden');
+    }
+
+    async function apiCall(url, opts) {
+      const res = await fetch(url, {
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        ...opts,
+      });
+      let data = {};
+      try { data = await res.json(); } catch (e) {}
+      if (!res.ok) throw new Error(data.error || 'Đã có lỗi xảy ra.');
+      return data;
+    }
+
+    async function checkStatus() {
+      if (!sid) { show('invalid'); return; }
+      try {
+        const me = await apiCall('/api/auth/me', { method: 'GET' });
+        document.getElementById('qcUsername').textContent = me.username;
+        show('confirm');
+      } catch (e) {
+        show('loginForm');
+      }
+    }
+
+    document.getElementById('qcForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const errBox = document.getElementById('qcLoginError');
+      errBox.textContent = '';
+      const username = document.getElementById('qcUser').value.trim();
+      const password = document.getElementById('qcPass').value;
+
+      try {
+        await apiCall('/api/auth/login', {
+          method: 'POST',
+          body: JSON.stringify({ username, password }),
+        });
+        checkStatus();
+      } catch (err) {
+        errBox.textContent = err.message;
+      }
+    });
+
+    document.getElementById('qcConfirmBtn').addEventListener('click', async () => {
+      const errBox = document.getElementById('qcConfirmError');
+      errBox.textContent = '';
+      try {
+        await apiCall('/api/auth/qr/confirm', {
+          method: 'POST',
+          body: JSON.stringify({ sid }),
+        });
+        show('success');
+      } catch (err) {
+        errBox.textContent = err.message;
+      }
+    });
+
+    document.getElementById('qcCancelBtn').addEventListener('click', () => {
+      show('invalid');
+    });
+
+    show('loading');
+    checkStatus();
+  </script>
+</body>
+</html>
