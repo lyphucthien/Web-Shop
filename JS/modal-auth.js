@@ -51,9 +51,13 @@
           <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.8 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 8 3l5.7-5.7C34.5 6 29.5 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.7-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.9 18.9 13 24 13c3.1 0 5.8 1.1 8 3l5.7-5.7C34.5 6 29.5 4 24 4c-7.7 0-14.3 4.3-17.7 10.7z"/><path fill="#4CAF50" d="M24 44c5.4 0 10.3-1.9 14-5.3l-6.5-5.5C29.4 34.8 26.8 36 24 36c-5.3 0-9.7-3.3-11.3-8l-6.6 5.1C9.6 39.6 16.3 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.9 2.6-2.6 4.8-4.8 6.2l6.5 5.5C40.8 36.9 44 31 44 24c0-1.3-.1-2.7-.4-3.5z"/></svg>
           Google
         </button>
-        <button type="button" class="auth-social-btn" data-social="discord">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="#5865F2"><path d="M20.3 5.3A17.6 17.6 0 0 0 15.9 4l-.3.5a13 13 0 0 1 4 1.6 15.6 15.6 0 0 0-13.2 0A13 13 0 0 1 8.4 4.5L8.1 4a17.5 17.5 0 0 0-4.4 1.3C1.3 9 .6 12.6 1 16.2a17.7 17.7 0 0 0 5.3 2.6l.7-1.2a11.4 11.4 0 0 1-1.9-.9l.5-.4a12.6 12.6 0 0 0 10.8 0l.5.4c-.6.4-1.2.6-1.9.9l.7 1.2a17.6 17.6 0 0 0 5.3-2.6c.5-4.2-.6-7.7-2.7-10.9zM8.5 14c-.8 0-1.5-.8-1.5-1.7s.7-1.7 1.5-1.7 1.5.8 1.5 1.7-.7 1.7-1.5 1.7zm7 0c-.8 0-1.5-.8-1.5-1.7s.7-1.7 1.5-1.7 1.5.8 1.5 1.7-.7 1.7-1.5 1.7z"/></svg>
-          Discord
+        <button type="button" class="auth-social-btn" data-social="qr">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+            <line x1="14" y1="14" x2="14" y2="14.01"/><line x1="17.5" y1="14" x2="17.5" y2="17.5"/><line x1="14" y1="17.5" x2="17.5" y2="17.5"/>
+            <line x1="14" y1="21" x2="17.5" y2="21"/><line x1="21" y1="14" x2="21" y2="17.5"/><line x1="21" y1="21" x2="21" y2="21.01"/>
+          </svg>
+          Quét Mã QR
         </button>
       </div>
 
@@ -137,7 +141,10 @@
 
   el('forgotBtn').addEventListener('click', () => toast('Tính năng khôi phục mật khẩu sẽ được thêm sau.'));
   overlay.querySelectorAll('[data-social]').forEach(b =>
-    b.addEventListener('click', () => toast('Đăng nhập bằng ' + b.dataset.social + ' sẽ được thêm sau.'))
+    b.addEventListener('click', () => {
+      const label = b.dataset.social === 'qr' ? 'Quét Mã QR' : 'Google';
+      toast('Đăng nhập bằng ' + label + ' sẽ được thêm sau.');
+    })
   );
 
   form.addEventListener('submit', e => {
@@ -159,7 +166,7 @@
     setTimeout(() => {
       submitBtn.disabled = false;
       close();
-      toast(reg ? 'Giao diện demo — chưa kết nối server.' : 'Giao diện demo — chưa kết nối server.');
+      toast('Giao diện demo — chưa kết nối server.');
     }, 300);
   });
 

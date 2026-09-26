@@ -411,24 +411,102 @@
       showToast('Chức năng xác nhận đang ở chế độ demo.');
     });
 
-    // ===== Nạp thẻ =====
-    document.getElementById('submitCardBtn').addEventListener('click', () => {
-      const cardCode = document.getElementById('cardCode').value.trim();
-      const cardSerial = document.getElementById('cardSerial').value.trim();
+    // ===== Nạp thẻ (API thật, không cần đăng nhập) =====
+    async function apiCall(url, opts) {
+      const res = await fetch(url, {
+        headers: { 'Content-Type': 'application/json' },
+        ...opts,
+      });
+      let data = {};
+      try { data = await res.json(); } catch (e) {}
+      if (!res.ok) throw new Error(data.error || 'Đã có lỗi xảy ra.');
+      return data;
+    }
 
-      if (!cardCode) {
+    function formatVND(n) {
+      return Number(n || 0).toLocaleString('vi-VN') + 'đ';
+    }
+
+    let cardPollTimer = null;
+
+    function stopCardPolling() {
+      if (cardPollTimer) { clearInterval(cardPollTimer); cardPollTimer = null; }
+    }
+
+    function pollCardResult(requestId, submitBtn) {
+      stopCardPolling();
+      let tries = 0;
+      cardPollTimer = setInterval(async () => {
+        tries += 1;
+        try {
+          const data = await apiCall(`/api/napthe/status?requestId=${requestId}`, { method: 'GET' });
+          if (data.status === 'success' || data.status === 'success_wrong_amount') {
+            stopCardPolling();
+            submitBtn.disabled = false;
+            showToast(`Nạp thẻ thành công! Giá trị thực nhận: ${formatVND(data.realAmount)}.`);
+          } else if (data.status === 'failed') {
+            stopCardPolling();
+            submitBtn.disabled = false;
+            showToast(data.message || 'Thẻ không hợp lệ hoặc sai thông tin.');
+          } else if (data.status === 'expired' || tries >= 40) {
+            stopCardPolling();
+            submitBtn.disabled = false;
+            showToast('Thẻ đang xử lý lâu hơn bình thường, vui lòng thử kiểm tra lại sau.');
+          }
+        } catch (err) {
+          // lỗi mạng tạm thời khi poll thì bỏ qua, thử lại lượt sau
+        }
+      }, 3000);
+    }
+
+    document.getElementById('submitCardBtn').addEventListener('click', async () => {
+      const telco = cardTypeLabel.textContent.trim();
+      const code = document.getElementById('cardCode').value.trim();
+      const serial = document.getElementById('cardSerial').value.trim();
+      const activeAmountBtn = amountGrid.querySelector('.amount-btn.active');
+      const amount = activeAmountBtn ? Number(activeAmountBtn.dataset.amount) : 0;
+      const submitBtn = document.getElementById('submitCardBtn');
+
+      if (!code) {
         showToast('Vui lòng nhập mã thẻ.');
         document.getElementById('cardCode').focus();
         return;
       }
-
-      if (!cardSerial) {
+      if (!serial) {
         showToast('Vui lòng nhập số serial.');
         document.getElementById('cardSerial').focus();
         return;
       }
+      if (!amount) {
+        showToast('Vui lòng chọn mệnh giá.');
+        return;
+      }
 
-      showToast('Chức năng nạp thẻ đang ở chế độ demo.');
+      submitBtn.disabled = true;
+
+      try {
+        const data = await apiCall('/api/napthe/submit', {
+          method: 'POST',
+          body: JSON.stringify({ telco, code, serial, amount }),
+        });
+
+        if (data.status === 'pending') {
+          showToast('Thẻ đang được xử lý, vui lòng đợi trong giây lát...');
+          pollCardResult(data.requestId, submitBtn);
+        } else if (data.status === 'success' || data.status === 'success_wrong_amount') {
+          submitBtn.disabled = false;
+          showToast(`Nạp thẻ thành công! Giá trị thực nhận: ${formatVND(data.realAmount)}.`);
+        } else {
+          submitBtn.disabled = false;
+          showToast(data.message || 'Thẻ không hợp lệ.');
+        }
+
+        document.getElementById('cardCode').value = '';
+        document.getElementById('cardSerial').value = '';
+      } catch (err) {
+        submitBtn.disabled = false;
+        showToast(err.message);
+      }
     });
   </script>
 </body>
