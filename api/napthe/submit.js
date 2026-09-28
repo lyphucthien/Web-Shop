@@ -50,9 +50,7 @@ module.exports = async (req, res) => {
       }, { ex: TX_TTL_SECONDS });
       return res.status(502).json({ error: 'Không kết nối được cổng nạp thẻ, vui lòng thử lại.' });
     }
-
-    // Code=1: gateway đã NHẬN thẻ để xử lý (chưa phải kết quả cuối) — chờ callback báo thật
-    // Code=0: gateway TỪ CHỐI ngay (sai định dạng, ApiKey sai, loại thẻ không hỗ trợ...)
+    
     if (Number(gatewayData.Code) === 1) {
       await redis.set(txKey, {
         telco, code: String(code).trim(), serial: String(serial).trim(),

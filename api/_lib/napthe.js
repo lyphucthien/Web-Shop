@@ -38,6 +38,8 @@ async function submitCard({ telco, code, serial, amount, requestId }) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       ApiKey: API_KEY,
+      // Tài liệu ghi APIPin nhưng server báo thiếu "Pin" -> gửi cả 2 tên cho chắc
+      Pin: String(code).trim(),
       APIPin: String(code).trim(),
       Seri: String(serial).trim(),
       CardType: cardType,
