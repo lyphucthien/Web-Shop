@@ -14,6 +14,10 @@
       "destination": "/HTML/nap-tien"
     },
     {
+      "source": "/cap-bac",
+      "destination": "/HTML/cap-bac"
+    },
+    {
       "source": "/xac-nhan-dang-nhap",
       "destination": "/HTML/xac-nhan-dang-nhap"
     }
