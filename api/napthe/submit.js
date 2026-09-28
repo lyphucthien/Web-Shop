@@ -3,13 +3,7 @@ const redis = require('../_lib/redis');
 const { submitCard } = require('../_lib/napthe');
 
 const TX_TTL_SECONDS = 60 * 60 * 24; // giữ log giao dịch 24h để đối soát
-const VALID_TELCO = ['Viettel', 'Vinaphone', 'Mobifone', 'Garena', 'Zing', 'Vcoin', 'Scoin'];
-
-function pickRealAmount(gatewayData, declaredAmount) {
-  const candidates = [gatewayData.value, gatewayData.real_amount, gatewayData.amount_real, gatewayData.declared_value];
-  const found = candidates.find(v => v !== undefined && v !== null && !Number.isNaN(Number(v)));
-  return found !== undefined ? Number(found) : Number(declaredAmount);
-}
+const VALID_TELCO = ['Viettel', 'Vinaphone', 'Mobifone', 'Garena', 'Zing', 'Gate', 'Vietnamobile', 'Vcoin'];
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
@@ -22,7 +16,7 @@ module.exports = async (req, res) => {
     if (!VALID_TELCO.includes(telco)) {
       return res.status(400).json({ error: 'Loại thẻ không hợp lệ.' });
     }
-    if (!code || !/^[0-9]{6,20}$/.test(String(code).trim())) {
+    if (!code || !/^[0-9A-Za-z]{6,30}$/.test(String(code).trim())) {
       return res.status(400).json({ error: 'Mã thẻ không hợp lệ.' });
     }
     if (!serial || !/^[0-9A-Za-z]{6,20}$/.test(String(serial).trim())) {
@@ -57,39 +51,32 @@ module.exports = async (req, res) => {
       return res.status(502).json({ error: 'Không kết nối được cổng nạp thẻ, vui lòng thử lại.' });
     }
 
-    const gwStatus = Number(gatewayData.status);
-
-    if (gwStatus === 99) {
-      return res.status(200).json({ requestId, status: 'pending', message: gatewayData.message || 'Thẻ đang được xử lý.' });
-    }
-
-    if (gwStatus === 1 || gwStatus === 2) {
-      const realAmount = pickRealAmount(gatewayData, amount);
-
+    // Code=1: gateway đã NHẬN thẻ để xử lý (chưa phải kết quả cuối) — chờ callback báo thật
+    // Code=0: gateway TỪ CHỐI ngay (sai định dạng, ApiKey sai, loại thẻ không hỗ trợ...)
+    if (Number(gatewayData.Code) === 1) {
       await redis.set(txKey, {
         telco, code: String(code).trim(), serial: String(serial).trim(),
-        declaredAmount: Number(amount), realAmount, status: 'success',
-        message: gatewayData.message || '', createdAt: Date.now(), updatedAt: Date.now(),
+        declaredAmount: Number(amount), status: 'pending',
+        taskId: gatewayData.TaskId, createdAt: Date.now(), updatedAt: Date.now(),
       }, { ex: TX_TTL_SECONDS });
 
       return res.status(200).json({
         requestId,
-        status: gwStatus === 1 ? 'success' : 'success_wrong_amount',
-        realAmount,
-        message: gatewayData.message || (gwStatus === 1 ? 'Nạp thẻ thành công.' : 'Thẻ đúng nhưng sai mệnh giá.'),
+        status: 'pending',
+        message: gatewayData.Message || 'Thẻ đã được gửi, đang chờ xử lý.',
       });
     }
 
     await redis.set(txKey, {
       telco, code: String(code).trim(), serial: String(serial).trim(),
       declaredAmount: Number(amount), status: 'failed',
-      message: gatewayData.message || '', createdAt: Date.now(), updatedAt: Date.now(),
+      message: gatewayData.Message || '', createdAt: Date.now(), updatedAt: Date.now(),
     }, { ex: TX_TTL_SECONDS });
 
     return res.status(200).json({
       requestId,
       status: 'failed',
-      message: gatewayData.message || 'Thẻ không hợp lệ hoặc hệ thống đang bảo trì.',
+      message: gatewayData.Message || 'Gửi thẻ thất bại, vui lòng kiểm tra lại thông tin.',
     });
   } catch (err) {
     console.error('[napthe/submit]', err);
