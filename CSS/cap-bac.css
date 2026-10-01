@@ -104,3 +104,4 @@
     padding:16px;
   }
 }
+@media(max-width:560px){.rank-grid{grid-template-columns:1fr;}}
