@@ -7,16 +7,12 @@
 }
 .rank-head p{margin:0;color:var(--muted);font-size:14px;}
 
-.rank-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;}
-.rank-card{
 /* Single Combined Card for all 4 Ranks */
 .rank-combined-card{
   background:var(--panel);
   border:1px solid var(--line);
-  border-radius:14px;
   border-radius:20px;
   box-shadow:var(--shadow);
-  padding:26px 20px;
   padding:24px 16px;
   display:grid;
   grid-template-columns:repeat(4, 1fr);
@@ -26,16 +22,12 @@
 
 .rank-item{
   text-align:center;
-  transition:.25s;
   padding:24px 16px;
   border-radius:14px;
   background:transparent;
   transition:background .25s ease, transform .25s ease;
   position:relative;
 }
-.rank-card:hover{transform:translateY(-4px);}
-.rank-icon{font-size:42px;margin-bottom:8px;}
-.rank-card h3{
 
 /* Divider lines between items on desktop */
 .rank-item:not(:last-child)::after{
@@ -68,16 +60,11 @@
 .rank-item h3{
   margin:0 0 6px;
   font-family:"Barlow Condensed",sans-serif;
-  font-size:22px;font-weight:800;color:var(--text);
   font-size:24px;
   font-weight:800;
   color:var(--text);
 }
-.rank-need{margin:0 0 14px;color:var(--green-dark);font-weight:700;font-size:13px;}
-.rank-card ul{list-style:none;margin:0;padding:0;font-size:13px;color:var(--muted);line-height:1.9;}
 
-@media(max-width:860px){.rank-grid{grid-template-columns:repeat(2,1fr);}}
-@media(max-width:560px){.rank-grid{grid-template-columns:1fr;}}
 .rank-need{
   margin:0 0 16px;
   color:var(--green-dark);
@@ -116,4 +103,4 @@
     gap:12px;
     padding:16px;
   }
-}}}
+}
