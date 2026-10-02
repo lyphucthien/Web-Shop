@@ -47,10 +47,18 @@
 }
 
 .rank-icon{
-  font-size:44px;
+  height:90px;
   margin-bottom:10px;
-  display:inline-block;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   transition:transform .3s ease;
+}
+.rank-icon img{
+  height:100%;
+  width:auto;
+  object-fit:contain;
+  filter:drop-shadow(0 4px 6px rgba(0,0,0,.18));
 }
 
 .rank-item:hover .rank-icon{
