@@ -1,5 +1,5 @@
 .rank-page{padding:40px 0 70px;}
-.rank-head{grid-column:1 / -1;text-align:left;margin:0 0 14px;padding:0 8px;}
+.rank-head{grid-column:1 / -1;text-align:center;margin:8px 0 14px;}
 .rank-head h1{
   margin:0 0 8px;
   font-family:"Barlow Condensed",sans-serif;
