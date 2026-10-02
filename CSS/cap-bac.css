@@ -1,5 +1,5 @@
 .rank-page{padding:40px 0 70px;}
-.rank-head{text-align:center;margin-bottom:30px;}
+.rank-head{grid-column:1 / -1;text-align:left;margin:0 0 14px;padding:0 8px;}
 .rank-head h1{
   margin:0 0 8px;
   font-family:"Barlow Condensed",sans-serif;
@@ -13,7 +13,7 @@
   border:1px solid var(--line);
   border-radius:20px;
   box-shadow:var(--shadow);
-  padding:24px 16px;
+  padding:28px 16px 24px;
   display:grid;
   grid-template-columns:repeat(5, 1fr);
   gap:12px;
