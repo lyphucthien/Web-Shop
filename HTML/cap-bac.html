@@ -71,17 +71,17 @@
     <nav class="main-nav">
       <div class="container nav-inner">
         <a href="/" class="nav-item">TRANG CHỦ</a>
-        <a href="#" class="nav-item" data-toast="Danh mục sẽ được thêm sau.">DANH MỤC <span class="nav-caret">&gt;</span></a>
+        <a href="#" class="nav-item" data-toast="Danh mục sẽ được thêm sau.">DANH MỤC <span class="nav-caret"></span></a>
 
         <div class="nav-item-wrap">
-          <a href="/nap-tien/chuyen-khoan" class="nav-item">NẠP TIỀN <span class="nav-caret">&gt;</span></a>
+          <a href="/nap-tien/chuyen-khoan" class="nav-item">NẠP TIỀN <span class="nav-caret"></span></a>
           <div class="nav-dropdown">
             <a href="/nap-tien/nap-the" class="nav-dropdown-item"><span class="nav-dropdown-icon">🎫</span>NẠP THẺ CÀO</a>
             <a href="/nap-tien/chuyen-khoan" class="nav-dropdown-item"><span class="nav-dropdown-icon">🏦</span>CHUYỂN KHOẢN</a>
           </div>
         </div>
 
-        <a href="#" class="nav-item" data-toast="Lịch sử giao dịch sẽ được thêm sau.">LỊCH SỬ <span class="nav-caret">&gt;</span></a>
+        <a href="#" class="nav-item" data-toast="Lịch sử giao dịch sẽ được thêm sau.">LỊCH SỬ <span class="nav-caret"></span></a>
         <a href="/cap-bac" class="nav-item active">CẤP BẬC</a>
         <a href="#" class="nav-item" data-toast="Hệ thống tin tức sẽ được thêm sau.">TIN TỨC</a>
       </div>
@@ -144,11 +144,12 @@
   <script>
 (function(){
   var RANKS=[
-    {name:"Đồng",     need:0,        img:"/Uploads/Logo Vip/Vip 1.png", perks:["Huy hiệu VIP 1","Voucher Giảm 1% (Đơn Đầu Tiên Khi Lên Hạng)"]},
-    {name:"Bạc",      need:500000,   img:"/Uploads/Logo Vip/Vip 2.png", perks:["Giảm 1% Khi Mua","Nhận Thông Báo Khi Có Hàng Mới","Xem Acc/Hàng Mới Sớm Hơn 2 Giờ","Voucher Giảm 2% (Đơn Đầu Tiên Khi Lên Hạng)"]},
-    {name:"Vàng",     need:2000000,  img:"/Uploads/Logo Vip/Vip 3.png", perks:["Mã Giảm Giá 5k Khi Đến Sinh Nhật","Nhận Thông Báo Khi Có Khuyến Mãi","Giảm 2% Khi Mua","Voucher Giảm 3% (Đơn Đầu Tiên Khi Lên Hạng)"]},
-    {name:"Kim Cương",need:5000000,  img:"/Uploads/Logo Vip/Vip 4.png", perks:["Đặt Trước Hàng (Không Quá 7 Món)","Giảm 3% Khi Mua","Voucher Giảm 4% (Đơn Đầu Tiên Khi Lên Hạng)"]},
-    {name:"Cao Cấp",  need:10000000, img:"/Uploads/Logo Vip/Vip 5.png", perks:["Hỗ Trợ Riêng","Giá Sỉ Cho Đơn Lớn","Quà Tặng Mỗi 2 Tuần","Giảm 4% Khi Mua","Voucher Giảm 5% (Đơn Đầu Tiên Khi Lên Hạng)"]}
+    {name:"Thành Viên",need:0,        img:"/Uploads/Logo Vip/Vip 0.png", perks:["Mua Hàng Với Giá Niêm Yết","Nạp 100.000VND Để Lên VIP 1 Và Nhận Voucher"]},
+    {name:"Đồng",      need:100000,   img:"/Uploads/Logo Vip/Vip 1.png", perks:["Huy hiệu VIP 1","Voucher Giảm 1% (Đơn Đầu Tiên Khi Lên Hạng)"]},
+    {name:"Bạc",       need:500000,   img:"/Uploads/Logo Vip/Vip 2.png", perks:["Giảm 1% Khi Mua","Nhận Thông Báo Khi Có Hàng Mới","Xem Acc/Hàng Mới Sớm Hơn 2 Giờ","Voucher Giảm 2% (Đơn Đầu Tiên Khi Lên Hạng)"]},
+    {name:"Vàng",      need:2000000,  img:"/Uploads/Logo Vip/Vip 3.png", perks:["Mã Giảm Giá 5k Khi Đến Sinh Nhật","Nhận Thông Báo Khi Có Khuyến Mãi","Giảm 2% Khi Mua","Voucher Giảm 3% (Đơn Đầu Tiên Khi Lên Hạng)"]},
+    {name:"Kim Cương", need:5000000,  img:"/Uploads/Logo Vip/Vip 4.png", perks:["Đặt Trước Hàng (Không Quá 7 Món)","Giảm 3% Khi Mua","Voucher Giảm 4% (Đơn Đầu Tiên Khi Lên Hạng)","Ưu Tiên Xử Lý Đơn Và Bảo Hành"]},
+    {name:"Cao Cấp",   need:10000000, img:"/Uploads/Logo Vip/Vip 5.png", perks:["Hỗ Trợ Riêng","Giá Sỉ Cho Đơn Lớn","Quà Tặng Mỗi 2 Tuần","Giảm 4% Khi Mua","Voucher Giảm 5% (Đơn Đầu Tiên Khi Lên Hạng)"]}
   ];
 
   var total=Number(window.LPT_TOTAL_DEPOSIT);
