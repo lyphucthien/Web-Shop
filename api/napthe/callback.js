@@ -19,9 +19,8 @@ module.exports = async (req, res) => {
       return res.status(200).json({ ok: true });
     }
 
-    // Xác thực: Hash phải bằng MD5(ApiKey + Pin + Seri)
-    const expectedHash = signCallback(Pin || tx.code, Seri || tx.serial);
-    if (Hash && Hash !== expectedHash) {
+    const expectedHash = signCallback(tx.code, tx.serial);
+    if (!Hash || Hash !== expectedHash) {
       console.error('[napthe/callback] SAI HASH — có thể là request giả mạo. requestid:', requestId);
       return res.status(403).json({ error: 'Chữ ký không hợp lệ.' });
     }
