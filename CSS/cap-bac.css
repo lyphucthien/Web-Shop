@@ -153,10 +153,38 @@
 
 .rank-bar i {
   display: block;
+  position: relative;
+  overflow: hidden;
   height: 100%;
-  background: var(--green-dark);
+  background: linear-gradient(90deg, #1f6fd6, #3b9cff);
   border-radius: 99px;
   transition: width 0.3s ease;
+}
+
+.rank-bar i::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 60%;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0),
+    rgba(255, 255, 255, 0.75),
+    rgba(255, 255, 255, 0)
+  );
+  transform: translateX(170%);
+  animation: rank-bar-shine 1s linear infinite;
+}
+
+@keyframes rank-bar-shine {
+  from { transform: translateX(170%); }
+  to   { transform: translateX(-170%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rank-bar i::after { animation: none; display: none; }
 }
 
 .rank-bar-row {
