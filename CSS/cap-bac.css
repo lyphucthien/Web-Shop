@@ -167,20 +167,20 @@
   top: 0;
   bottom: 0;
   left: 0;
-  width: 60%;
+  width: 40%;
   background: linear-gradient(
     90deg,
     rgba(255, 255, 255, 0),
-    rgba(255, 255, 255, 0.75),
+    rgba(255, 255, 255, 0.8),
     rgba(255, 255, 255, 0)
   );
-  transform: translateX(170%);
+  transform: translateX(300%) skewX(-25deg);
   animation: rank-bar-shine 1s linear infinite;
 }
 
 @keyframes rank-bar-shine {
-  from { transform: translateX(170%); }
-  to   { transform: translateX(-170%); }
+  from { transform: translateX(300%) skewX(-25deg); }
+  to   { transform: translateX(-150%) skewX(-25deg); }
 }
 
 @media (prefers-reduced-motion: reduce) {
