@@ -91,20 +91,19 @@
   <main>
     <div class="container rank-page">
       <div class="rank-card">
-        <div class="rank-head">
-          <h1>Hệ Thống Cấp Bậc</h1>
-          <p>Nạp càng nhiều, cấp bậc càng cao, ưu đãi càng lớn.</p>
+
+        <div class="rank-top">
+          <div class="rank-side rank-side-cur" id="rankLogoCur"></div>
+          <div class="rank-progress" id="rankProgress"></div>
+          <div class="rank-side rank-side-next" id="rankLogoNext"></div>
         </div>
 
         <div class="rank-split">
-          <!-- Cấp bậc hiện tại -->
           <section class="rank-panel rank-current" id="rankCurrent"></section>
-
-          <div class="rank-arrow" aria-hidden="true">➜</div>
-
-          <!-- Cấp bậc tiếp theo -->
           <section class="rank-panel rank-next" id="rankNext"></section>
         </div>
+
+        <p class="rank-sub">Nạp càng nhiều, cấp bậc càng cao, ưu đãi càng lớn.</p>
       </div>
     </div>
   </main>
@@ -144,7 +143,6 @@
   <div id="toast" class="toast"></div>
   <script>
 (function(){
-  // Danh sách cấp bậc (sửa quyền lợi tại đây)
   var RANKS=[
     {name:"Đồng",     need:0,        img:"/Uploads/Logo Vip/Vip 1.png", perks:["Quyền lợi 1","Quyền lợi 2"]},
     {name:"Bạc",      need:500000,   img:"/Uploads/Logo Vip/Vip 2.png", perks:["Quyền lợi 1","Quyền lợi 2"]},
@@ -153,8 +151,6 @@
     {name:"Cao Cấp",  need:10000000, img:"/Uploads/Logo Vip/Vip 5.png", perks:["Quyền lợi 1","Quyền lợi 2"]}
   ];
 
-  // Tổng tiền đã nạp của người dùng: gán window.LPT_TOTAL_DEPOSIT từ dữ liệu tài khoản.
-  // Chưa đăng nhập / chưa có dữ liệu = 0 (tính là Đồng).
   var total=Number(window.LPT_TOTAL_DEPOSIT);
   if(!isFinite(total)){
     try{ total=Number(localStorage.getItem("lpt_total_deposit")); }catch(e){}
@@ -167,47 +163,64 @@
 
   var cur=0;
   RANKS.forEach(function(r,i){ if(total>=r.need) cur=i; });
-  var higher=RANKS.slice(cur+1);   // chỉ các cấp cao hơn cấp hiện tại
+  var higher=RANKS.slice(cur+1);
   var idx=0;
-
-  var elCur=document.getElementById("rankCurrent");
-  var elNext=document.getElementById("rankNext");
   var r=RANKS[cur];
 
-  elCur.innerHTML=
-    '<span class="rank-tag rank-tag-cur">CẤP BẬC HIỆN TẠI</span>'+
+  var elLogoCur=document.getElementById("rankLogoCur");
+  var elLogoNext=document.getElementById("rankLogoNext");
+  var elProgress=document.getElementById("rankProgress");
+  var elCur=document.getElementById("rankCurrent");
+  var elNext=document.getElementById("rankNext");
+
+  elLogoCur.innerHTML=
     '<div class="rank-icon"><img src="'+r.img+'" alt="'+esc(r.name)+'"></div>'+
-    '<h3>'+esc(r.name)+'</h3>'+
-    '<p class="rank-need">Tổng nạp từ '+money(r.need)+'</p>'+
+    '<h3>'+esc(r.name)+'</h3>';
+
+  elCur.innerHTML=
+    '<span class="rank-tag rank-tag-cur">QUYỀN LỢI HIỆN TẠI</span>'+
     perks(r)+
     '<div class="rank-note">Tổng đã nạp của bạn: <b>'+money(total)+'</b></div>';
 
   function renderNext(){
     if(!higher.length){
-      document.querySelector(".rank-arrow").style.display="none";
+      elLogoNext.innerHTML=
+        '<div class="rank-icon rank-icon-max">🏆</div>'+
+        '<h3>Cao nhất</h3>'+
+        '<p class="rank-need">Bạn đã đạt tối đa</p>';
+      elProgress.innerHTML=
+        '<div class="rank-progress-top">Bạn đã đạt <b>cấp bậc cao nhất</b></div>'+
+        '<div class="rank-bar"><i style="width:100%"></i></div>'+
+        '<div class="rank-bar-row"><span>'+money(total)+'</span><span></span></div>';
       elNext.classList.add("rank-max");
       elNext.innerHTML=
-        '<span class="rank-tag rank-tag-next">CẤP BẬC TIẾP THEO</span>'+
-        '<div class="rank-max-box"><div class="rank-max-ico">🏆</div><h3>Bạn đã đạt cấp bậc cao nhất</h3>'+
+        '<span class="rank-tag rank-tag-next">QUYỀN LỢI VIP TIẾP THEO</span>'+
+        '<div class="rank-max-box"><div class="rank-max-ico">🏆</div>'+
         '<p class="rank-need">Cảm ơn bạn đã đồng hành cùng LPTSHOP!</p></div>';
       return;
     }
     var n=higher[idx];
-    var pct=Math.max(0,Math.min(100,Math.round(total/n.need*100)));
     var multi=higher.length>1;
-    var dots=multi?'<div class="rank-dots">'+higher.map(function(_,i){return '<i class="'+(i===idx?"on":"")+'"></i>';}).join("")+'</div>':"";
-    elNext.innerHTML=
-      '<span class="rank-tag rank-tag-next">CẤP BẬC TIẾP THEO</span>'+
-      '<div class="rank-slider">'+
-        (multi?'<button type="button" class="rank-nav" data-dir="-1" aria-label="Cấp trước"'+(idx===0?' disabled':'')+'>‹</button>':'')+
-        '<div class="rank-icon rank-icon-next"><img src="'+n.img+'" alt="'+esc(n.name)+'"></div>'+
-        (multi?'<button type="button" class="rank-nav" data-dir="1" aria-label="Cấp sau"'+(idx===higher.length-1?' disabled':'')+'>›</button>':'')+
-      '</div>'+
-      '<h3>'+esc(n.name)+'</h3>'+
-      '<p class="rank-need">Tổng nạp từ '+money(n.need)+'</p>'+
+    var pct=Math.max(0,Math.min(100,Math.round(total/n.need*100)));
+
+    elLogoNext.innerHTML=
+      '<div class="rank-icon rank-icon-next"><img src="'+n.img+'" alt="'+esc(n.name)+'"></div>'+
+      '<h3>'+esc(n.name)+'</h3>';
+
+    elProgress.innerHTML=
+      '<div class="rank-progress-top">Cần nạp thêm <b>'+money(n.need-total)+'</b> để lên <b>'+esc(n.name)+'</b></div>'+
       '<div class="rank-bar"><i style="width:'+pct+'%"></i></div>'+
-      '<div class="rank-bar-row"><span>'+money(total)+'</span><span>'+money(n.need)+'</span></div>'+
-      '<div class="rank-note">Cần nạp thêm <b>'+money(n.need-total)+'</b> để lên <b>'+esc(n.name)+'</b></div>'+
+      '<div class="rank-bar-row"><span>'+money(total)+'</span><span>'+money(n.need)+'</span></div>';
+
+    var dots=multi?'<div class="rank-dots">'+higher.map(function(_,i){return '<i class="'+(i===idx?"on":"")+'"></i>';}).join("")+'</div>':"";
+
+    var title=idx===0?"QUYỀN LỢI VIP TIẾP THEO":"QUYỀN LỢI VIP "+(RANKS.indexOf(n)+1);
+    elNext.innerHTML=
+      '<div class="rank-tag-row">'+
+        (multi?'<button type="button" class="rank-nav" data-dir="-1" aria-label="Xem quyền lợi cấp trước"'+(idx===0?' disabled':'')+'>‹</button>':'')+
+        '<span class="rank-tag rank-tag-next">'+title+'</span>'+
+        (multi?'<button type="button" class="rank-nav" data-dir="1" aria-label="Xem quyền lợi cấp sau"'+(idx===higher.length-1?' disabled':'')+'>›</button>':'')+
+      '</div>'+
       perks(n)+dots;
   }
 
