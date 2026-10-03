@@ -261,7 +261,8 @@
   display: flex;
   justify-content: center;
   gap: 6px;
-  margin-top: 12px;
+  margin-top: auto;
+  padding-top: 14px;
 }
 
 .rank-dots i {
@@ -280,6 +281,8 @@
 
 .rank-next {
   position: relative;
+  display: flex;
+  flex-direction: column;
   padding-left: 64px;
   padding-right: 64px;
 }
