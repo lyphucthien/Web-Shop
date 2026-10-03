@@ -1,5 +1,3 @@
-/* LPTSHOP - header / footer dùng chung cho mọi trang.
-   Sửa menu, footer, nút trên header... CHỈ CẦN SỬA FILE NÀY. */
 (function(){
   var HEADER = `
   <header class="site-header">
@@ -109,7 +107,6 @@
 
   <div id="toast" class="toast"></div>`;
 
-  // Các file JS dùng chung (chạy theo đúng thứ tự này)
   var SCRIPTS = ["/JS/script.js", "/JS/modal-auth.js", "/JS/lang-menu.js", "/JS/auto-translate.js"];
 
   function fill(id, html){
@@ -119,7 +116,6 @@
   fill("site-header", HEADER);
   fill("site-footer", FOOTER);
 
-  // Tự tô sáng mục menu của trang hiện tại
   var p = location.pathname.replace(/\/+$/, "") || "/";
   var key = p === "/" || p === "/index.html" ? "home"
           : p.indexOf("/nap-tien") === 0     ? "nap-tien"
@@ -129,7 +125,6 @@
     if(a) a.classList.add("active");
   }
 
-  // Nạp các script chung (giữ đúng thứ tự như khi viết tay)
   SCRIPTS.forEach(function(src){
     document.write('<script src="' + src + '"><\/script>');
   });
