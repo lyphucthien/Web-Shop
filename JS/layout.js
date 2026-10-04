@@ -2,16 +2,11 @@
   var I = function(d){ return '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + d + '</svg>'; };
   var ICON_HISTORY = I('<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><polyline points="3 3 3 8 8 8"/><polyline points="12 7 12 12 15 14"/>');
   var HISTORY_ITEMS = [
-    { icon: ICON_HISTORY, text: "Lịch sử mua tài khoản", href: "#" },
-    { icon: I('<line x1="9" y1="6" x2="21" y2="6"/><line x1="9" y1="12" x2="21" y2="12"/><line x1="9" y1="18" x2="21" y2="18"/><line x1="3.5" y1="6" x2="3.51" y2="6"/><line x1="3.5" y1="12" x2="3.51" y2="12"/><line x1="3.5" y1="18" x2="3.51" y2="18"/>'), text: "Lịch sử dịch vụ", href: "#" },
-    { icon: I('<line x1="6" y1="11" x2="10" y2="11"/><line x1="8" y1="9" x2="8" y2="13"/><line x1="15" y1="12" x2="15.01" y2="12"/><line x1="18" y1="10" x2="18.01" y2="10"/><path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258A4 4 0 0 0 17.32 5z"/>'), text: "Lịch sử chơi game", href: "#" },
-    { icon: I('<rect x="5" y="2" width="14" height="20" rx="2"/><path d="M9 7h.01M15 7h.01M9 11h.01M15 11h.01M9 15h.01M15 15h.01"/>'), text: "Lịch sử nạp Bank", href: "#" },
-    { icon: I('<rect x="2" y="5" width="20" height="14" rx="2"/><line x1="6" y1="10" x2="10" y2="10"/><line x1="6" y1="14" x2="12" y2="14"/>'), text: "Lịch sử nạp Thẻ", href: "#" },
-    { icon: I('<rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.8 8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5"/>'), text: "Rút vật phẩm", href: "#" },
-    { icon: ICON_HISTORY, text: "Lịch sử mua thẻ", href: "#" },
-    { icon: ICON_HISTORY, text: "Lịch sử nạp topup", href: "#" },
-    { icon: ICON_HISTORY, text: "Lịch sử code genplay", href: "#" },
-    { icon: I('<ellipse cx="12" cy="8" rx="9" ry="4"/><path d="M3 8v4c0 2.2 4 4 9 4s9-1.8 9-4V8"/><path d="M3 12v4c0 2.2 4 4 9 4s9-1.8 9-4v-4"/>'), text: "Lịch sử mua vàng NRO", href: "#" }
+    { icon: ICON_HISTORY, text: "Lịch Sử Mua Tài Khoản", href: "#" },
+    { icon: I('<line x1="9" y1="6" x2="21" y2="6"/><line x1="9" y1="12" x2="21" y2="12"/><line x1="9" y1="18" x2="21" y2="18"/><line x1="3.5" y1="6" x2="3.51" y2="6"/><line x1="3.5" y1="12" x2="3.51" y2="12"/><line x1="3.5" y1="18" x2="3.51" y2="18"/>'), text: "Lịch Sử Dùng Dịch Vụ", href: "#" },
+    { icon: I('<line x1="6" y1="11" x2="10" y2="11"/><line x1="8" y1="9" x2="8" y2="13"/><line x1="15" y1="12" x2="15.01" y2="12"/><line x1="18" y1="10" x2="18.01" y2="10"/><path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258A4 4 0 0 0 17.32 5z"/>'), text: "Lịch Sử Chơi Minigame", href: "#" },
+    { icon: I('<rect x="5" y="2" width="14" height="20" rx="2"/><path d="M9 7h.01M15 7h.01M9 11h.01M15 11h.01M9 15h.01M15 15h.01"/>'), text: "Lịch Sử Nạp Tiền", href: "#" },
+    { icon: I('<rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.8 8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5"/>'), text: "Lịch Sử Rút Vật Phẩm", href: "#" },
   ];
   var HISTORY_HTML = HISTORY_ITEMS.map(function(it){
     return '<a href="' + it.href + '" class="nav-dropdown-item" data-toast="' + it.text + ' sẽ được thêm sau.">' + it.icon + it.text + '</a>';
