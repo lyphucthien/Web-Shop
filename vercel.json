@@ -18,6 +18,10 @@
       "destination": "/HTML/cap-bac"
     },
     {
+      "source": "/tin-tuc",
+      "destination": "/HTML/tin-tuc"
+    },
+    {
       "source": "/xac-nhan-dang-nhap",
       "destination": "/HTML/xac-nhan-dang-nhap"
     }
