@@ -563,11 +563,6 @@ button{
   flex:0 0 auto;
 }
 
-.nav-dropdown-history .nav-dropdown-item:hover{
-  background:rgba(79,168,232,.14);
-  color:var(--green-dark);
-}
-
 /* ==================== 5. TRANG CHỦ - BANNER & KHUNG ĐĂNG NHẬP ==================== */
 
 .showcase{
@@ -1319,19 +1314,6 @@ html[data-theme="dark"] .nav-dropdown-item{
 }
 
 html[data-theme="dark"] .nav-dropdown-item:hover{
-  background:var(--surface-hover);
-  color:var(--accent-text);
-}
-
-html[data-theme="dark"] .nav-dropdown-history{
-  background:var(--surface-2);
-}
-
-html[data-theme="dark"] .nav-dropdown-history .nav-dropdown-item{
-  color:var(--text);
-}
-
-html[data-theme="dark"] .nav-dropdown-history .nav-dropdown-item:hover{
   background:var(--surface-hover);
   color:var(--accent-text);
 }
