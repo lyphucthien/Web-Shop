@@ -1,3 +1,5 @@
+/* ==================== 1. BIẾN MÀU & NỀN TẢNG ==================== */
+
 :root{
   --green:#4fa8e8;
   --green-dark:#2f86c9;
@@ -39,7 +41,31 @@ button{
   margin:auto;
 }
 
-/* ==================== HEADER ==================== */
+::-webkit-scrollbar{
+  width:10px;
+  height:10px;
+}
+
+::-webkit-scrollbar-track{
+  background:var(--green-soft);
+}
+
+::-webkit-scrollbar-thumb{
+  background:linear-gradient(180deg,var(--green),var(--green-dark));
+  border-radius:6px;
+  border:2px solid var(--green-soft);
+}
+
+::-webkit-scrollbar-thumb:hover{
+  background:var(--green-dark);
+}
+
+* {
+  scrollbar-width:thin;
+  scrollbar-color:var(--green-dark) var(--green-soft);
+}
+
+/* ==================== 2. HEADER ==================== */
 
 .site-header{
   position:sticky;
@@ -162,9 +188,253 @@ button{
 .circle-btn.icon-accent{
   color:var(--green);
 }
+
 .circle-btn svg{
   display:block;
 }
+
+@media (hover:hover){
+  .top-actions .circle-btn[aria-label]::after{
+    content:attr(aria-label);
+    position:absolute;
+    top:calc(100% + 8px);
+    left:50%;
+    transform:translate(-50%,4px);
+    padding:6px 10px;
+    border-radius:6px;
+    background:#18212c;
+    color:#fff;
+    font:600 12px/1.2 Inter,system-ui,sans-serif;
+    white-space:nowrap;
+    pointer-events:none;
+    opacity:0;
+    transition:opacity .15s ease,transform .15s ease;
+    z-index:50;
+  }
+
+  .top-actions .circle-btn[aria-label]::before{
+    content:"";
+    position:absolute;
+    top:calc(100% + 3px);
+    left:50%;
+    transform:translate(-50%,4px);
+    border-style:solid;
+    border-width:0 5px 5px;
+    border-color:transparent transparent #18212c;
+    pointer-events:none;
+    opacity:0;
+    transition:opacity .15s ease,transform .15s ease;
+    z-index:50;
+  }
+
+  .top-actions .circle-btn[aria-label]:hover::after,
+  .top-actions .circle-btn[aria-label]:hover::before{
+    opacity:1;
+    transform:translate(-50%,0);
+    transition-delay:.3s;
+  }
+
+  .top-actions > .circle-btn:last-child::after{
+    left:auto;
+    right:0;
+    transform:translate(0,4px);
+  }
+
+  .top-actions > .circle-btn:last-child:hover::after{
+    transform:translate(0,0);
+  }
+
+  .top-actions .circle-btn.tip-off::after,
+  .top-actions .circle-btn.tip-off::before{
+    opacity:0 !important;
+    visibility:hidden;
+    transition:none !important;
+  }
+
+  .top-actions .circle-btn.no-tip::after,
+  .top-actions .circle-btn.no-tip::before{
+    content:none !important;
+    display:none !important;
+    opacity:0 !important;
+    visibility:hidden !important;
+  }
+}
+
+/* ==================== 3. DROPDOWN TÀI KHOẢN & MENU NGÔN NGỮ ==================== */
+
+.acc-wrap{
+  position:relative;
+  display:inline-flex;
+}
+
+.acc-dropdown{
+  position:absolute;
+  top:calc(100% + 14px);
+  right:-6px;
+  width:160px;
+  background:var(--panel);
+  border-radius:12px;
+  box-shadow:var(--shadow);
+  padding:16px 12px 14px;
+  text-align:center;
+  opacity:0;
+  visibility:hidden;
+  transform:translateY(-6px);
+  transition:.18s ease;
+  z-index:999;
+}
+
+.acc-dropdown::before{
+  content:"";
+  position:absolute;
+  top:-6px;
+  right:22px;
+  width:12px;
+  height:12px;
+  background:var(--panel);
+  transform:rotate(45deg);
+  box-shadow:-3px -3px 6px rgba(26,42,55,.06);
+}
+
+.acc-wrap:hover .acc-dropdown,
+.acc-wrap:focus-within .acc-dropdown{
+  opacity:1;
+  visibility:visible;
+  transform:translateY(0);
+}
+
+.acc-avatar{
+  width:44px;
+  height:44px;
+  margin:0 auto 10px;
+  border-radius:50%;
+  background:var(--green-soft);
+  color:var(--green-dark);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.acc-guest-title{
+  margin:0 0 12px;
+  font-family:"Barlow Condensed",sans-serif;
+  font-size:16px;
+  font-weight:700;
+  color:var(--text);
+}
+
+.acc-login-btn,.acc-register-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:auto;
+  min-width:120px;
+  padding:0 18px;
+  height:38px;
+  border-radius:8px;
+  font-family:"Barlow Condensed",sans-serif;
+  font-size:14px;
+  font-weight:700;
+  text-decoration:none;
+  transition:.18s;
+  box-sizing:border-box;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+.acc-login-btn{
+  background:var(--green);
+  border:1px solid var(--green);
+  color:#fff;
+  margin-bottom:8px;
+}
+
+.acc-login-btn:hover{
+  background:var(--green-dark);
+}
+
+.acc-register-btn{
+  background:transparent;
+  border:1px solid var(--green);
+  color:var(--green-dark);
+}
+
+.acc-register-btn:hover{
+  background:var(--green-soft);
+}
+
+.lang-wrap{
+  position:relative;
+}
+
+.lang-flags{
+  position:fixed;
+  width:0;
+  height:0;
+  z-index:1000;
+  pointer-events:none;
+}
+
+.lang-flag-btn{
+  position:absolute;
+  left:0;
+  top:0;
+  width:var(--s,40px);
+  height:var(--s,40px);
+  padding:0;
+  border:0;
+  border-radius:50%;
+  background:#fff;
+  cursor:pointer;
+  pointer-events:none;
+  box-shadow:0 3px 10px rgba(0,0,0,.28);
+  opacity:0;
+  transform:translate(-50%,calc(-50% + 40px)) scale(.2);
+  transition:transform .35s cubic-bezier(.2,.9,.3,1.3) var(--d), opacity .2s var(--d);
+}
+
+.lang-flag-btn img{
+  width:100%;
+  height:100%;
+  display:block;
+  border-radius:50%;
+}
+
+.lang-flags.open .lang-flag-btn{
+  opacity:1;
+  pointer-events:auto;
+  transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(1);
+}
+
+.lang-flags.open .lang-flag-btn:hover{
+  transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(1.25);
+  z-index:5;
+  transition-delay:0s;
+}
+
+.lang-flag-btn.active{
+  box-shadow:0 0 0 3px var(--green),0 8px 22px rgba(0,0,0,.4);
+}
+
+.lang-tooltip{
+  position:fixed;
+  z-index:2000;
+  padding:7px 12px;
+  background:#18212c;
+  color:#fff;
+  font:600 13px/1.2 Inter,system-ui,sans-serif;
+  border-radius:8px;
+  white-space:nowrap;
+  pointer-events:none;
+  opacity:0;
+  transition:opacity .15s;
+}
+
+.lang-tooltip.show{
+  opacity:1;
+}
+
+/* ==================== 4. MENU CHÍNH & DROPDOWN ==================== */
 
 .main-nav{
   height:57px;
@@ -217,6 +487,10 @@ button{
 }
 
 .nav-item:hover .nav-caret{
+  transform:rotate(0deg);
+}
+
+.nav-item-wrap:hover .nav-caret{
   transform:rotate(0deg);
 }
 
@@ -273,7 +547,30 @@ button{
   line-height:1;
 }
 
-/* ==================== HERO / TOP AREA ==================== */
+.nav-dropdown-history{
+  min-width:268px;
+  padding:8px 0;
+  background:#fffddf;
+}
+
+.nav-dropdown-history .nav-dropdown-item{
+  gap:14px;
+  padding:9px 22px;
+  color:#3d3e44;
+  font-size:15px;
+  font-weight:500;
+}
+
+.nav-dropdown-history .nav-dropdown-item svg{
+  flex:0 0 auto;
+}
+
+.nav-dropdown-history .nav-dropdown-item:hover{
+  background:rgba(79,168,232,.14);
+  color:var(--green-dark);
+}
+
+/* ==================== 5. TRANG CHỦ - BANNER & KHUNG ĐĂNG NHẬP ==================== */
 
 .showcase{
   position:relative;
@@ -364,6 +661,7 @@ button{
   left:12px;
   transform:translate(-14px,-50%);
 }
+
 .arrow-next{
   right:12px;
   transform:translate(14px,-50%);
@@ -377,6 +675,7 @@ button{
 .hero-carousel:hover .arrow-prev{
   transform:translate(0,-50%);
 }
+
 .hero-carousel:hover .arrow-next{
   transform:translate(0,-50%);
 }
@@ -446,6 +745,7 @@ button{
 .login-copy strong{
   font-size:13px;
 }
+
 .login-copy small{
   font-size:11px;
   color:#7a8490;
@@ -490,7 +790,7 @@ button{
   border-color:#aab5c0;
 }
 
-/* ==================== CONTENT ==================== */
+/* ==================== 6. TRANG CHỦ - DANH MỤC, SẢN PHẨM ==================== */
 
 .section{
   padding:62px 0;
@@ -739,7 +1039,7 @@ section.products-section{
   background:var(--green-dark);
 }
 
-/* ==================== FOOTER ==================== */
+/* ==================== 7. FOOTER ==================== */
 
 .footer{
   margin-top:25px;
@@ -826,7 +1126,7 @@ section.products-section{
   padding:0 16px;
 }
 
-/* ==================== TOAST ==================== */
+/* ==================== 8. TOAST ==================== */
 
 .toast{
   position:fixed;
@@ -851,33 +1151,291 @@ section.products-section{
   transform:translate(-50%,0);
 }
 
-/* ==================== SCROLLBAR ==================== */
+/* ==================== 9. GOOGLE TRANSLATE ==================== */
 
-::-webkit-scrollbar{
-  width:10px;
-  height:10px;
+#google_translate_element,
+.goog-te-banner-frame,
+.goog-te-balloon-frame,
+iframe.skiptranslate,
+.goog-tooltip,
+.goog-te-spinner-pos{
+  display:none !important;
 }
 
-::-webkit-scrollbar-track{
-  background:var(--green-soft);
+body{
+  top:0 !important;
 }
 
-::-webkit-scrollbar-thumb{
-  background:linear-gradient(180deg,var(--green),var(--green-dark));
-  border-radius:6px;
-  border:2px solid var(--green-soft);
+.goog-text-highlight{
+  background:none !important;
+  box-shadow:none !important;
 }
 
-::-webkit-scrollbar-thumb:hover{
-  background:var(--green-dark);
+/* ==================== 10. NÚT ĐỔI SÁNG/TỐI & HIỆU ỨNG CHUYỂN ==================== */
+
+.circle-btn .icon-sun{
+  display:none;
 }
 
-* {
-  scrollbar-width:thin;
-  scrollbar-color:var(--green-dark) var(--green-soft);
+html[data-theme="dark"] .circle-btn .icon-moon{
+  display:none;
 }
 
-/* ==================== RESPONSIVE ==================== */
+html[data-theme="dark"] .circle-btn .icon-sun{
+  display:block;
+}
+
+html.theme-anim,
+html.theme-anim *{
+  transition:background-color .3s ease,color .3s ease,border-color .3s ease,box-shadow .3s ease !important;
+}
+
+::view-transition-old(root),
+::view-transition-new(root){
+  animation:none;
+  mix-blend-mode:normal;
+}
+
+::view-transition-old(root){
+  z-index:1;
+}
+
+::view-transition-new(root){
+  z-index:2147483646;
+}
+
+html.theme-inward::view-transition-old(root){
+  z-index:2147483646;
+}
+
+html.theme-inward::view-transition-new(root){
+  z-index:1;
+}
+
+@keyframes themeIconIn{
+  from{
+    transform:rotate(-90deg) scale(.3);
+    opacity:0;
+  }
+  to{
+    transform:none;
+    opacity:1;
+  }
+}
+
+html.theme-switching .circle-btn .icon-sun,
+html.theme-switching .circle-btn .icon-moon{
+  animation:themeIconIn .5s cubic-bezier(.2,.9,.3,1.3);
+}
+
+/* ==================== 11. GIAO DIỆN TỐI (DARK MODE) ==================== */
+
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --text:#e2e8f0;
+  --text-strong:#f1f5f9;
+  --muted:#94a3b8;
+  --line:#2a3850;
+  --panel:#172033;
+  --bg:#0f172a;
+  --surface:#172033;
+  --surface-2:#1e2a40;
+  --surface-hover:#26344d;
+  --accent-text:#7cc0f0;
+  --green-soft:#1b2c47;
+  --shadow:0 10px 35px rgba(0,0,0,.45);
+}
+
+html[data-theme="dark"] body{
+  background-color:#0f172a;
+  background-image:
+    linear-gradient(rgba(148,163,184,.1) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(148,163,184,.1) 1px,transparent 1px);
+  background-size:45px 45px;
+  background-position:0 0;
+  background-repeat:repeat;
+  background-attachment:fixed;
+}
+
+html[data-theme="dark"] .site-header,
+html[data-theme="dark"] .topbar{
+  background:var(--surface);
+}
+
+html[data-theme="dark"] .site-header{
+  box-shadow:0 2px 12px rgba(0,0,0,.35);
+}
+
+html[data-theme="dark"] .search-box{
+  background:var(--surface-2);
+  border-color:var(--line);
+}
+
+html[data-theme="dark"] .search-box input{
+  background:transparent;
+  color:var(--text);
+}
+
+html[data-theme="dark"] .search-box input::placeholder{
+  color:#64748b;
+}
+
+html[data-theme="dark"] .circle-btn{
+  background:var(--surface-2);
+  color:#94a3b8;
+}
+
+html[data-theme="dark"] .circle-btn:hover{
+  background:var(--surface-hover);
+}
+
+html[data-theme="dark"] .circle-btn.icon-accent{
+  color:var(--green);
+}
+
+html[data-theme="dark"] .circle-btn.notification i{
+  border-color:var(--surface);
+}
+
+@media (hover:hover){
+  html[data-theme="dark"] .top-actions .circle-btn[aria-label]::after{
+    background:#2f3f5c;
+  }
+
+  html[data-theme="dark"] .top-actions .circle-btn[aria-label]::before{
+    border-color:transparent transparent #2f3f5c;
+  }
+}
+
+html[data-theme="dark"] .main-nav{
+  background:#143a5c;
+}
+
+html[data-theme="dark"] .nav-dropdown{
+  background:var(--surface-2);
+  box-shadow:0 10px 24px rgba(0,0,0,.5);
+}
+
+html[data-theme="dark"] .nav-dropdown-item{
+  color:var(--text);
+}
+
+html[data-theme="dark"] .nav-dropdown-item:hover{
+  background:var(--surface-hover);
+  color:var(--accent-text);
+}
+
+html[data-theme="dark"] .nav-dropdown-history{
+  background:var(--surface-2);
+}
+
+html[data-theme="dark"] .nav-dropdown-history .nav-dropdown-item{
+  color:var(--text);
+}
+
+html[data-theme="dark"] .nav-dropdown-history .nav-dropdown-item:hover{
+  background:var(--surface-hover);
+  color:var(--accent-text);
+}
+
+html[data-theme="dark"] .acc-dropdown::before{
+  box-shadow:-3px -3px 6px rgba(0,0,0,.3);
+}
+
+html[data-theme="dark"] .acc-guest-title{
+  color:var(--text);
+}
+
+html[data-theme="dark"] .login-strip{
+  background:var(--surface);
+}
+
+html[data-theme="dark"] .user-circle{
+  background:var(--surface-2);
+  color:#94a3b8;
+}
+
+html[data-theme="dark"] .login-copy small{
+  color:var(--muted);
+}
+
+html[data-theme="dark"] .register-btn{
+  background:var(--surface-2);
+  border-color:var(--line);
+  color:var(--text);
+}
+
+html[data-theme="dark"] .register-btn:hover{
+  border-color:#475569;
+}
+
+html[data-theme="dark"] .section-head h2{
+  color:var(--text-strong);
+}
+
+html[data-theme="dark"] .section-kicker{
+  color:var(--muted);
+}
+
+html[data-theme="dark"] section#categories,
+html[data-theme="dark"] section.products-section{
+  background:var(--surface);
+}
+
+html[data-theme="dark"] .category-card{
+  background:var(--surface-2);
+  color:var(--text);
+}
+
+html[data-theme="dark"] .category-card:hover,
+html[data-theme="dark"] .product-card:hover{
+  border-color:#3b4d6b;
+}
+
+html[data-theme="dark"] .product-card{
+  background:var(--surface-2);
+}
+
+html[data-theme="dark"] .product-image{
+  background:radial-gradient(circle at 50% 35%,rgba(148,163,184,.12),transparent 48%),#1a2438;
+}
+
+html[data-theme="dark"] .product-bottom strong{
+  color:var(--text-strong);
+}
+
+html[data-theme="dark"] .buy-btn{
+  background:var(--surface);
+  border-color:var(--line);
+  color:var(--text);
+}
+
+html[data-theme="dark"] .buy-btn:hover{
+  background:var(--surface-hover);
+  border-color:var(--green);
+  color:var(--accent-text);
+}
+
+html[data-theme="dark"] .trust-card{
+  background:var(--surface);
+  box-shadow:0 4px 20px rgba(0,0,0,.3);
+}
+
+html[data-theme="dark"] .trust-icon{
+  background:var(--surface-2);
+  color:var(--muted);
+}
+
+html[data-theme="dark"] .footer{
+  background:#0b1324;
+  border-top:1px solid var(--line);
+}
+
+html[data-theme="dark"] .footer-bottom{
+  background:rgba(255,255,255,.03);
+}
+
+/* ==================== 12. RESPONSIVE (luôn để cuối cùng) ==================== */
 
 @media(max-width:1050px){
   .topbar-inner{
@@ -1053,523 +1611,8 @@ section.products-section{
   }
 }
 
-/* ==================== LANGUAGE MENU ==================== */
-.lang-wrap{
-  position:relative;
-}
-
-.lang-flags{
-  position:fixed;
-  width:0;
-  height:0;
-  z-index:1000;
-  pointer-events:none;
-}
-
-.lang-flag-btn{
-  position:absolute;
-  left:0;
-  top:0;
-  width:var(--s,40px);
-  height:var(--s,40px);
-  padding:0;
-  border:0;
-  border-radius:50%;
-  background:#fff;
-  cursor:pointer;
-  pointer-events:none;
-  box-shadow:0 3px 10px rgba(0,0,0,.28);
-  opacity:0;
-  transform:translate(-50%,calc(-50% + 40px)) scale(.2);
-  transition:transform .35s cubic-bezier(.2,.9,.3,1.3) var(--d), opacity .2s var(--d);
-}
-
-.lang-flag-btn img{
-  width:100%;
-  height:100%;
-  display:block;
-  border-radius:50%;
-}
-
-.lang-flags.open .lang-flag-btn{
-  opacity:1;
-  pointer-events:auto;
-  transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(1);
-}
-
-.lang-flags.open .lang-flag-btn:hover{
-  transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(1.25);
-  z-index:5;
-  transition-delay:0s;
-}
-
-.lang-flag-btn.active{
-  box-shadow:0 0 0 3px var(--green),0 8px 22px rgba(0,0,0,.4);
-}
-
-.lang-tooltip{
-  position:fixed;
-  z-index:2000;
-  padding:7px 12px;
-  background:#18212c;
-  color:#fff;
-  font:600 13px/1.2 Inter,system-ui,sans-serif;
-  border-radius:8px;
-  white-space:nowrap;
-  pointer-events:none;
-  opacity:0;
-  transition:opacity .15s;
-}
-
-.lang-tooltip.show{
-  opacity:1;
-}
-
-/* ==================== AUTO TRANSLATE ==================== */
-#google_translate_element,
-.goog-te-banner-frame,
-.goog-te-balloon-frame,
-iframe.skiptranslate,
-.goog-tooltip,
-.goog-te-spinner-pos{
-  display:none !important;
-}
-
-body{
-  top:0 !important;
-}
-
-.goog-text-highlight{
-  background:none !important;
-  box-shadow:none !important;
-}
-
-/* ==================== TOOLTIP NÚT HEADER ==================== */
-@media (hover:hover){
-  .top-actions .circle-btn[aria-label]::after{
-    content:attr(aria-label);
-    position:absolute;
-    top:calc(100% + 8px);
-    left:50%;
-    transform:translate(-50%,4px);
-    padding:6px 10px;
-    border-radius:6px;
-    background:#18212c;
-    color:#fff;
-    font:600 12px/1.2 Inter,system-ui,sans-serif;
-    white-space:nowrap;
-    pointer-events:none;
-    opacity:0;
-    transition:opacity .15s ease,transform .15s ease;
-    z-index:50;
-  }
-
-  .top-actions .circle-btn[aria-label]::before{
-    content:"";
-    position:absolute;
-    top:calc(100% + 3px);
-    left:50%;
-    transform:translate(-50%,4px);
-    border-style:solid;
-    border-width:0 5px 5px;
-    border-color:transparent transparent #18212c;
-    pointer-events:none;
-    opacity:0;
-    transition:opacity .15s ease,transform .15s ease;
-    z-index:50;
-  }
-
-  .top-actions .circle-btn[aria-label]:hover::after,
-  .top-actions .circle-btn[aria-label]:hover::before{
-    opacity:1;
-    transform:translate(-50%,0);
-    transition-delay:.3s;
-  }
-
-  .top-actions > .circle-btn:last-child::after{
-    left:auto;
-    right:0;
-    transform:translate(0,4px);
-  }
-
-  .top-actions > .circle-btn:last-child:hover::after{
-    transform:translate(0,0);
-  }
-
-  /* đã bấm 1 lần thì ẩn tên */
-  .top-actions .circle-btn.tip-off::after,
-  .top-actions .circle-btn.tip-off::before{
-    opacity:0 !important;
-    visibility:hidden;
-    transition:none !important;
-  }
-
-  .top-actions .circle-btn.no-tip::after,
-  .top-actions .circle-btn.no-tip::before{
-    content:none !important;
-    display:none !important;
-    opacity:0 !important;
-    visibility:hidden !important;
-  }
-}
-
-/* ==================== DARK MODE ==================== */
-.circle-btn .icon-sun{
-  display:none;
-}
-
-html[data-theme="dark"] .circle-btn .icon-moon{
-  display:none;
-}
-
-html[data-theme="dark"] .circle-btn .icon-sun{
-  display:block;
-}
-
-html.theme-anim,
-html.theme-anim *{
-  transition:background-color .3s ease,color .3s ease,border-color .3s ease,box-shadow .3s ease !important;
-}
-
-/* hiệu ứng loang tròn khi đổi giao diện (View Transition) */
-::view-transition-old(root),
-::view-transition-new(root){
-  animation:none;
-  mix-blend-mode:normal;
-}
-
-::view-transition-old(root){
-  z-index:1;
-}
-
-::view-transition-new(root){
-  z-index:2147483646;
-}
-
-/* sáng -> tối: lớp cũ (sáng) nằm trên và thu nhỏ dần về tâm */
-html.theme-inward::view-transition-old(root){
-  z-index:2147483646;
-}
-
-html.theme-inward::view-transition-new(root){
-  z-index:1;
-}
-
-@keyframes themeIconIn{
-  from{
-    transform:rotate(-90deg) scale(.3);
-    opacity:0;
-  }
-  to{
-    transform:none;
-    opacity:1;
-  }
-}
-
-html.theme-switching .circle-btn .icon-sun,
-html.theme-switching .circle-btn .icon-moon{
-  animation:themeIconIn .5s cubic-bezier(.2,.9,.3,1.3);
-}
-
-html[data-theme="dark"]{
-  color-scheme:dark;
-  --text:#e2e8f0;
-  --text-strong:#f1f5f9;
-  --muted:#94a3b8;
-  --line:#2a3850;
-  --panel:#172033;
-  --bg:#0f172a;
-  --surface:#172033;
-  --surface-2:#1e2a40;
-  --surface-hover:#26344d;
-  --accent-text:#7cc0f0;
-  --green-soft:#1b2c47;
-  --shadow:0 10px 35px rgba(0,0,0,.45);
-}
-
-html[data-theme="dark"] body{
-  background-color:#0f172a;
-  background-image:
-    linear-gradient(rgba(148,163,184,.1) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(148,163,184,.1) 1px,transparent 1px);
-  background-size:45px 45px;
-  background-position:0 0;
-  background-repeat:repeat;
-  background-attachment:fixed;
-}
-
-/* header */
-html[data-theme="dark"] .site-header,
-html[data-theme="dark"] .topbar{
-  background:var(--surface);
-}
-
-html[data-theme="dark"] .site-header{
-  box-shadow:0 2px 12px rgba(0,0,0,.35);
-}
-
-html[data-theme="dark"] .search-box{
-  background:var(--surface-2);
-  border-color:var(--line);
-}
-
-html[data-theme="dark"] .search-box input{
-  background:transparent;
-  color:var(--text);
-}
-
-html[data-theme="dark"] .search-box input::placeholder{
-  color:#64748b;
-}
-
-html[data-theme="dark"] .circle-btn{
-  background:var(--surface-2);
-  color:#94a3b8;
-}
-
-html[data-theme="dark"] .circle-btn:hover{
-  background:var(--surface-hover);
-}
-
-html[data-theme="dark"] .circle-btn.icon-accent{
-  color:var(--green);
-}
-
-html[data-theme="dark"] .circle-btn.notification i{
-  border-color:var(--surface);
-}
-
-html[data-theme="dark"] .main-nav{
-  background:#143a5c;
-}
-
-html[data-theme="dark"] .nav-dropdown{
-  background:var(--surface-2);
-  box-shadow:0 10px 24px rgba(0,0,0,.5);
-}
-
-html[data-theme="dark"] .nav-dropdown-item{
-  color:var(--text);
-}
-
-html[data-theme="dark"] .nav-dropdown-item:hover{
-  background:var(--surface-hover);
-  color:var(--accent-text);
-}
-
-/* trang chủ */
-html[data-theme="dark"] .login-strip{
-  background:var(--surface);
-}
-
-html[data-theme="dark"] .user-circle{
-  background:var(--surface-2);
-  color:#94a3b8;
-}
-
-html[data-theme="dark"] .login-copy small{
-  color:var(--muted);
-}
-
-html[data-theme="dark"] .register-btn{
-  background:var(--surface-2);
-  border-color:var(--line);
-  color:var(--text);
-}
-
-html[data-theme="dark"] .register-btn:hover{
-  border-color:#475569;
-}
-
-html[data-theme="dark"] .section-head h2{
-  color:var(--text-strong);
-}
-
-html[data-theme="dark"] .section-kicker{
-  color:var(--muted);
-}
-
-html[data-theme="dark"] section#categories,
-html[data-theme="dark"] section.products-section{
-  background:var(--surface);
-}
-
-html[data-theme="dark"] .category-card{
-  background:var(--surface-2);
-  color:var(--text);
-}
-
-html[data-theme="dark"] .category-card:hover,
-html[data-theme="dark"] .product-card:hover{
-  border-color:#3b4d6b;
-}
-
-html[data-theme="dark"] .product-card{
-  background:var(--surface-2);
-}
-
-html[data-theme="dark"] .product-image{
-  background:radial-gradient(circle at 50% 35%,rgba(148,163,184,.12),transparent 48%),#1a2438;
-}
-
-html[data-theme="dark"] .product-bottom strong{
-  color:var(--text-strong);
-}
-
-html[data-theme="dark"] .buy-btn{
-  background:var(--surface);
-  border-color:var(--line);
-  color:var(--text);
-}
-
-html[data-theme="dark"] .buy-btn:hover{
-  background:var(--surface-hover);
-  border-color:var(--green);
-  color:var(--accent-text);
-}
-
-html[data-theme="dark"] .trust-card{
-  background:var(--surface);
-  box-shadow:0 4px 20px rgba(0,0,0,.3);
-}
-
-html[data-theme="dark"] .trust-icon{
-  background:var(--surface-2);
-  color:var(--muted);
-}
-
-/* footer */
-html[data-theme="dark"] .footer{
-  background:#0b1324;
-  border-top:1px solid var(--line);
-}
-
-html[data-theme="dark"] .footer-bottom{
-  background:rgba(255,255,255,.03);
-}
-
-@media (hover:hover){
-  html[data-theme="dark"] .top-actions .circle-btn[aria-label]::after{
-    background:#2f3f5c;
-  }
-
-  html[data-theme="dark"] .top-actions .circle-btn[aria-label]::before{
-    border-color:transparent transparent #2f3f5c;
-  }
-}
-/* ==================== DROPDOWN TÀI KHOẢN (KHÁCH) ==================== */
-
-.acc-wrap{
-  position:relative;
-  display:inline-flex;
-}
-
-.acc-dropdown{
-  position:absolute;
-  top:calc(100% + 14px);
-  right:-6px;
-  width:160px;
-  background:var(--panel);
-  border-radius:12px;
-  box-shadow:var(--shadow);
-  padding:16px 12px 14px;
-  text-align:center;
-  opacity:0;
-  visibility:hidden;
-  transform:translateY(-6px);
-  transition:.18s ease;
-  z-index:999;
-}
-
-.acc-dropdown::before{
-  content:"";
-  position:absolute;
-  top:-6px;
-  right:22px;
-  width:12px;
-  height:12px;
-  background:var(--panel);
-  transform:rotate(45deg);
-  box-shadow:-3px -3px 6px rgba(26,42,55,.06);
-}
-
-.acc-wrap:hover .acc-dropdown,
-.acc-wrap:focus-within .acc-dropdown{
-  opacity:1;
-  visibility:visible;
-  transform:translateY(0);
-}
-
-.acc-avatar{
-  width:44px;
-  height:44px;
-  margin:0 auto 10px;
-  border-radius:50%;
-  background:var(--green-soft);
-  color:var(--green-dark);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.acc-guest-title{
-  margin:0 0 12px;
-  font-family:"Barlow Condensed",sans-serif;
-  font-size:16px;
-  font-weight:700;
-  color:var(--text);
-}
-
-.acc-login-btn,.acc-register-btn{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  width:auto;
-  min-width:120px;
-  padding:0 18px;
-  height:38px;
-  border-radius:8px;
-  font-family:"Barlow Condensed",sans-serif;
-  font-size:14px;
-  font-weight:700;
-  text-decoration:none;
-  transition:.18s;
-  box-sizing:border-box;
-  margin-left:auto;
-  margin-right:auto;
-}
-
-.acc-login-btn{
-  background:var(--green);
-  border:1px solid var(--green);
-  color:#fff;
-  margin-bottom:8px;
-}
-
-.acc-login-btn:hover{
-  background:var(--green-dark);
-}
-
-.acc-register-btn{
-  background:transparent;
-  border:1px solid var(--green);
-  color:var(--green-dark);
-}
-
-.acc-register-btn:hover{
-  background:var(--green-soft);
-}
-
 @media (max-width:640px){
   .acc-dropdown{
     right:-40px;
   }
-}
-
-html[data-theme="dark"] .acc-dropdown::before{
-  box-shadow:-3px -3px 6px rgba(0,0,0,.3);
-}
-
-html[data-theme="dark"] .acc-guest-title{
-  color:var(--text);
 }
