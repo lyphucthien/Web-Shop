@@ -70,7 +70,7 @@
         </div>
         <a href="#" class="nav-item" data-toast="Lịch sử giao dịch sẽ được thêm sau.">LỊCH SỬ <span class="nav-caret"></span></a>
         <a href="/cap-bac" class="nav-item" data-nav="cap-bac">CẤP BẬC</a>
-        <a href="#" class="nav-item" data-toast="Hệ thống tin tức sẽ được thêm sau.">TIN TỨC</a>
+        <a href="/tin-tuc" class="nav-item" data-nav="tin-tuc">TIN TỨC</a>
       </div>
     </nav>
   </header>`;
@@ -119,7 +119,8 @@
   var p = location.pathname.replace(/\/+$/, "") || "/";
   var key = p === "/" || p === "/index.html" ? "home"
           : p.indexOf("/nap-tien") === 0     ? "nap-tien"
-          : p.indexOf("/cap-bac") === 0      ? "cap-bac" : "";
+          : p.indexOf("/cap-bac") === 0      ? "cap-bac"
+          : p.indexOf("/tin-tuc") === 0      ? "tin-tuc" : "";
   if(key){
     var a = document.querySelector('.nav-item[data-nav="' + key + '"]');
     if(a) a.classList.add("active");
