@@ -550,13 +550,11 @@ button{
 .nav-dropdown-history{
   min-width:268px;
   padding:8px 0;
-  background:#fffddf;
 }
 
 .nav-dropdown-history .nav-dropdown-item{
   gap:14px;
   padding:9px 22px;
-  color:#3d3e44;
   font-size:15px;
   font-weight:500;
 }
