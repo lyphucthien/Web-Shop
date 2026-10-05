@@ -555,8 +555,9 @@ button{
 
 .nav-dropdown-category{
   display:grid;
-  grid-template-columns:repeat(2,1fr);
-  min-width:500px;
+  grid-template-columns:repeat(2,max-content);
+  column-gap:6px;
+  min-width:0;
   padding:8px 6px;
 }
 
