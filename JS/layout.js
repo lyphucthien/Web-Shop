@@ -12,6 +12,18 @@
     return '<a href="' + it.href + '" class="nav-dropdown-item" data-toast="' + it.text + ' sẽ được thêm sau.">' + it.icon + it.text + '</a>';
   }).join("\n            ");
 
+  var CATEGORY_ITEMS = [
+    { icon: I('<path d="m21 2-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0 3 3L22 7l-3-3m-3.5 3.5L19 4"/>'), text: "Key System", href: "#" },
+    { icon: I('<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/>'), text: "Reset HWID", href: "#" },
+    { icon: I('<path fill="currentColor" stroke="none" fill-rule="evenodd" transform="translate(2.9 2.9) scale(.76)" d="M18.926 23.998 0 18.892 5.075.002 24 5.108ZM15.348 10.09l-5.282-1.453-1.414 5.273 5.282 1.453 1.414-5.273Z"/>'), text: "Roblox", href: "#" },
+    { icon: I('<rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.8 8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5"/>'), text: "Túi Mù", href: "/#products" },
+    { icon: I('<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 12h18"/><path d="M12 3v18"/>'), text: "Other", href: "#" },
+  ];
+  var CATEGORY_HTML = CATEGORY_ITEMS.map(function(it){
+    var toast = it.href === "#" ? ' data-toast="' + it.text + ' sẽ được thêm sau."' : '';
+    return '<a href="' + it.href + '" class="nav-dropdown-item"' + toast + '>' + it.icon + it.text + '</a>';
+  }).join("\n            ");
+
   var HEADER = `
   <header class="site-header">
     <div class="topbar">
@@ -73,7 +85,12 @@
     <nav class="main-nav">
       <div class="container nav-inner">
         <a href="/" class="nav-item" data-nav="home">TRANG CHỦ</a>
-        <a href="#" class="nav-item" data-toast="Danh mục sẽ được thêm sau.">DANH MỤC <span class="nav-caret"></span></a>
+        <div class="nav-item-wrap">
+          <a href="#" class="nav-item" data-toast="Danh mục sẽ được thêm sau.">DANH MỤC <span class="nav-caret"></span></a>
+          <div class="nav-dropdown nav-dropdown-category">
+            ${CATEGORY_HTML}
+          </div>
+        </div>
         <div class="nav-item-wrap">
           <a href="/nap-tien/chuyen-khoan" class="nav-item" data-nav="nap-tien">NẠP TIỀN <span class="nav-caret"></span></a>
           <div class="nav-dropdown">
