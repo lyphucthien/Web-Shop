@@ -142,7 +142,7 @@
 
   <div id="toast" class="toast"></div>`;
 
-  var SCRIPTS = ["/JS/script.js", "/JS/modal-auth.js", "/JS/lang-menu.js", "/JS/auto-translate.js"];
+  var SCRIPTS = ["/JS/float.js","/JS/script.js", "/JS/modal-auth.js", "/JS/lang-menu.js", "/JS/auto-translate.js"];
 
   function fill(id, html){
     var el = document.getElementById(id);
