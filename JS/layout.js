@@ -125,12 +125,12 @@
         <div>
           <h4>LIÊN KẾT NHANH</h4>
           <a href="#" data-modal="login">Tài khoản của tôi</a>
-          <a href="/favorites">Danh sách yêu thích</a>
-          <a href="/new">Sản phẩm mới</a>
+          <a href="#" data-toast="Danh sách yêu thích sẽ được thêm sau.">Danh sách yêu thích</a>
+          <a href="#" data-toast="Sản phẩm mới sẽ được thêm sau.">Sản phẩm mới</a>
         </div>
         <div>
           <h4>LIÊN HỆ</h4>
-          <p class="contact-line notranslate" translate="no">Hotline: facebook.com/lyphucthien180312</p>
+          <p class="contact-line notranslate" translate="no">Hotline: facebook.com/lyphucthien1803</p>
           <p class="contact-line notranslate" translate="no">Email: lythien180312@gmail.com</p>
         </div>
       </div>
