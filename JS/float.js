@@ -24,7 +24,6 @@
   @keyframes fb-eq2{0%,100%{height:5px}50%{height:20px}}
   .fb-music.playing::before,.fb-music.playing::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:2px solid #59b4f0;opacity:.7;animation:fb-pulse 2s ease-out infinite;pointer-events:none}
   .fb-music.playing::after{animation-delay:1s}
-  @keyframes fb-spin{to{transform:rotate(360deg)}}
   @keyframes fb-pulse{0%{transform:scale(1);opacity:.7}100%{transform:scale(1.5);opacity:0}}
 
   .fb-panel{--fb-bg:none;--fb-ac:#4da6e8;position:fixed;right:88px;bottom:20px;width:340px;max-width:calc(100vw - 112px);z-index:9998;overflow:hidden;
@@ -113,6 +112,8 @@
   .fb-prog input:hover::-webkit-slider-thumb{transform:scale(1.25)}
   .fb-time{display:flex;justify-content:space-between;margin-top:7px;font-size:11px;font-weight:600;color:var(--muted,#6b7280);font-variant-numeric:tabular-nums}
 
+  .fb-open{display:inline-block;margin-top:8px;font-size:11.5px;font-weight:700;color:var(--fb-ac);text-decoration:none;opacity:.85}
+  .fb-open:hover{opacity:1;text-decoration:underline}
   .fb-ctrl{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;margin-top:12px}
   .fb-vol{display:flex;align-items:center;gap:6px;min-width:0}
   .fb-ib{width:30px;height:30px;flex:none;border:none;border-radius:50%;background:none;color:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:.8;transition:background .2s,opacity .2s}
@@ -171,7 +172,7 @@
           <button type="button" class="fb-go" id="fbGo">Enter <svg viewBox="0 0 24 24"><polyline points="9 10 4 15 9 20"/><path d="M20 4v7a4 4 0 0 1-4 4H4"/></svg></button>
         </div>
         <div class="fb-chips">
-          <i style="--c:#ff3b3b">YouTube</i><i style="--c:#ff7a1a">SoundCloud</i><i style="--c:#1ed760">Spotify</i><i style="--c:#59b4f0">MP3</i>
+          <i style="--c:#ff3b3b">YouTube</i><i style="--c:#ff7a1a">SoundCloud</i><i style="--c:#1ed760">Spotify</i><i style="--c:#59b4f0">MP3</i><i style="--c:#fa2d48">Apple Music</i><i style="--c:#a855f7">Zing MP3</i><i style="--c:#f59e0b">NhacCuaTui</i>
         </div>
         <div class="fb-hist" id="fbHist"></div>
         <button type="button" class="fb-back" id="fbBack">← Quay lại bài đang phát</button>
@@ -251,6 +252,7 @@
     return (h ? h + ':' + String(m).padStart(2, '0') : m) + ':' + String(r).padStart(2, '0');
   };
 
+  // ----- lịch sử phát gần đây -----
   function histGet() { try { return JSON.parse(localStorage.getItem(HIST_KEY)) || []; } catch (e) { return []; } }
   function histPut(list) { try { localStorage.setItem(HIST_KEY, JSON.stringify(list.slice(0, HIST_MAX))); } catch (e) {} }
   function histSet(url, patch) {
@@ -303,7 +305,6 @@
     histSet(curUrl, { title: t || undefined, sub: sub || undefined });
   }
 
-  // ----- ảnh bìa -----
   function applyCover(url) {
     panel.style.setProperty('--fb-bg', 'url("' + url + '")');
     panel.classList.add('has-art');
@@ -407,6 +408,30 @@
     const m = url.match(/open\.spotify\.com\/(?:intl-[a-z]+\/)?(track|album|playlist|episode|show|artist)\/([A-Za-z0-9]+)/);
     return m ? { type: m[1], id: m[2] } : null;
   }
+
+  function extInfo(url) {
+    let m = url.match(/^https?:\/\/(?:classical\.)?music\.apple\.com\/([a-z]{2})\/(album|playlist|song|station)\/([^/?#]+)/i);
+    if (m) {
+      const song = /[?&]i=\d+/.test(url) || m[2] === 'song';
+      return {
+        site: 'Apple Music', cc: m[1], name: m[3],
+        src: url.replace(/^(https?:\/\/)(?:classical\.)?music\.apple\.com/i, '$1embed.music.apple.com'),
+        h: song ? 175 : 450,
+        sandbox: 'allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation'
+      };
+    }
+    m = url.match(/^https?:\/\/(?:www\.|m\.)?zingmp3\.vn\/(bai-hat|album|playlist)\/([^/]+)\/([A-Za-z0-9]{8})(?:\.html)?/i);
+    if (m) {
+      const kind = m[1] === 'bai-hat' ? 'song' : 'playlist';
+      return { site: 'Zing MP3', name: m[2], src: 'https://zingmp3.vn/embed/' + kind + '/' + m[3] + '?start=false', h: kind === 'song' ? 150 : 300 };
+    }
+    m = url.match(/^https?:\/\/(?:www\.|m\.)?nhaccuatui\.com\/(bai-hat|playlist)\/([^/?#]*?)\.([A-Za-z0-9]{8,14})\.html/i);
+    if (m) {
+      return { site: 'NhacCuaTui', name: m[2], src: 'https://www.nhaccuatui.com/mh/auto/' + m[3], h: m[1] === 'bai-hat' ? 150 : 300 };
+    }
+    return null;
+  }
+
   function loadScript(id, src, ready, cb) {
     if (ready()) return cb();
     let s = $(id);
@@ -520,6 +545,42 @@
       .catch(() => { if (token === session) setTitle('Spotify', 'Spotify'); });
   }
 
+
+  // ===== Apple Music / Zing MP3 / NhacCuaTui =====
+  function playExt(info, url, token) {
+    let nice = info.name;
+    try { nice = decodeURIComponent(info.name).replace(/-/g, ' '); } catch (e) {}
+    setTitle(nice, info.site);
+
+    const f = document.createElement('iframe');
+    f.src = info.src;
+    f.height = info.h;
+    f.loading = 'lazy';
+    f.allow = 'autoplay *; encrypted-media *; fullscreen *; clipboard-write';
+    if (info.sandbox) f.setAttribute('sandbox', info.sandbox);
+    embed.innerHTML = '';
+    embed.appendChild(f);
+    const a = document.createElement('a');
+    a.className = 'fb-open'; a.href = url; a.target = '_blank'; a.rel = 'noopener';
+    a.textContent = 'Không hiện? Mở link gốc ↗';
+    embed.appendChild(a);
+    say('Bấm ▶ trong khung để nghe (' + info.site + ' không cho tự phát).');
+
+    if (info.site === 'Apple Music') {
+      const idm = url.match(/[?&]i=(\d+)/) || url.match(/\/(\d{5,})(?:[?#]|$)/);
+      if (!idm) return;
+      fetch('https://itunes.apple.com/lookup?id=' + idm[1] + '&country=' + info.cc)
+        .then((r) => r.json())
+        .then((d) => {
+          const it = d.results && d.results[0];
+          if (!it || token !== session) return;
+          setTitle(it.trackName || it.collectionName, (it.artistName ? it.artistName + ' · ' : '') + 'Apple Music');
+          if (it.artworkUrl100) setCover([it.artworkUrl100.replace(/\d+x\d+bb/, '600x600bb')], token);
+        })
+        .catch(() => {});
+    }
+  }
+
   // ===== Link nhạc trực tiếp =====
   function playAudio(url) {
     let name = url;
@@ -528,7 +589,7 @@
     audio.src = url;
     audio.play()
       .then(() => { setPlaying(true); say(''); })
-      .catch(() => { setPlaying(false); say('Không phát được link này. Chỉ hỗ trợ YouTube, SoundCloud, Spotify và link nhạc trực tiếp. Bấm "Đổi bài".', true); });
+      .catch(() => { setPlaying(false); say('Không phát được link này. Chỉ hỗ trợ YouTube, SoundCloud, Spotify, Apple Music, Zing MP3, NhacCuaTui và link nhạc trực tiếp. Bấm "Đổi bài".', true); });
   }
 
   // ===== Nhận link, đổi giao diện =====
@@ -539,13 +600,13 @@
     stopAll();
     clearCover();
     const token = ++session;
-    const id = ytId(url), spot = spInfo(url);
+    const id = ytId(url), spot = spInfo(url), ext = extInfo(url);
     curUrl = url;
     histTouch(url);
 
     if (id) mode = 'yt';
     else if (isSC(url)) mode = 'sc';
-    else if (spot) mode = 'sp';
+    else if (spot || ext) mode = 'sp';
     else mode = 'audio';
 
     wantId = id;
@@ -556,7 +617,7 @@
 
     if (mode === 'yt') playYT(id, token);
     else if (mode === 'sc') playSC(url, token);
-    else if (mode === 'sp') playSP(spot, url, token);
+    else if (mode === 'sp') (spot ? playSP(spot, url, token) : playExt(ext, url, token));
     else playAudio(url);
   }
 
