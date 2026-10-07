@@ -130,7 +130,7 @@
         </div>
         <div>
           <h4>LIÊN HỆ</h4>
-          <p class="contact-line notranslate" translate="no">Hotline: facebook.com/lyphucthien1803</p>
+          <p class="contact-line notranslate" translate="no">Hotline: facebook.com/lyphucthien180312</p>
           <p class="contact-line notranslate" translate="no">Email: lythien180312@gmail.com</p>
         </div>
       </div>
@@ -142,7 +142,7 @@
 
   <div id="toast" class="toast"></div>`;
 
-  var SCRIPTS = ["/JS/float.js","/JS/script.js", "/JS/modal-auth.js", "/JS/lang-menu.js", "/JS/auto-translate.js"];
+  var SCRIPTS = ["/JS/auto-translate.js","/JS/float.js","/JS/lang-menu.js","/JS/script.js","/JS/modal-auth.js","/JS/user-menu.js"];
 
   function fill(id, html){
     var el = document.getElementById(id);
