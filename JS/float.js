@@ -172,7 +172,9 @@
           <button type="button" class="fb-go" id="fbGo">Enter <svg viewBox="0 0 24 24"><polyline points="9 10 4 15 9 20"/><path d="M20 4v7a4 4 0 0 1-4 4H4"/></svg></button>
         </div>
         <div class="fb-chips">
-          <i style="--c:#ff3b3b">YouTube</i><i style="--c:#ff7a1a">SoundCloud</i><i style="--c:#1ed760">Spotify</i><i style="--c:#59b4f0">MP3</i><i style="--c:#fa2d48">Apple Music</i><i style="--c:#a855f7">Zing MP3</i><i style="--c:#f59e0b">NhacCuaTui</i>
+          <i style="--c:#ff3b3b">YouTube</i><i style="--c:#ff5500">SoundCloud</i>
+          <i style="--c:#1ed760">Spotify</i><i style="--c:#fa2d48">Apple Music</i>
+          <i style="--c:#a855f7">Zing MP3</i><i style="--c:#f59e0b">Link File Nhạc</i>
         </div>
         <div class="fb-hist" id="fbHist"></div>
         <button type="button" class="fb-back" id="fbBack">← Quay lại bài đang phát</button>
@@ -411,24 +413,32 @@
 
   function extInfo(url) {
     let m = url.match(/^https?:\/\/(?:classical\.)?music\.apple\.com\/([a-z]{2})\/(album|playlist|song|station)\/([^/?#]+)/i);
+
     if (m) {
       const song = /[?&]i=\d+/.test(url) || m[2] === 'song';
+
       return {
-        site: 'Apple Music', cc: m[1], name: m[3],
-        src: url.replace(/^(https?:\/\/)(?:classical\.)?music\.apple\.com/i, '$1embed.music.apple.com'),
+        site: 'Apple Music',
+        cc: m[1],
+        name: m[3],
+        src: url.replace(/^(https?:\/\/)(?:classical\.)?music\.apple\.com/i,'$1embed.music.apple.com'),
         h: song ? 175 : 450,
-        sandbox: 'allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation'
-      };
+        sandbox:'allow-forms allow-popups allow-same-origin allow-scripts allow-storage-access-by-user-activation allow-top-navigation-by-user-activation'};
     }
+
     m = url.match(/^https?:\/\/(?:www\.|m\.)?zingmp3\.vn\/(bai-hat|album|playlist)\/([^/]+)\/([A-Za-z0-9]{8})(?:\.html)?/i);
+
     if (m) {
       const kind = m[1] === 'bai-hat' ? 'song' : 'playlist';
-      return { site: 'Zing MP3', name: m[2], src: 'https://zingmp3.vn/embed/' + kind + '/' + m[3] + '?start=false', h: kind === 'song' ? 150 : 300 };
+
+      return {
+        site: 'Zing MP3',
+        name: m[2],
+        src: 'https://zingmp3.vn/embed/' + kind + '/' + m[3] + '?start=false',
+        h: kind === 'song' ? 150 : 300
+      };
     }
-    m = url.match(/^https?:\/\/(?:www\.|m\.)?nhaccuatui\.com\/(bai-hat|playlist)\/([^/?#]*?)\.([A-Za-z0-9]{8,14})\.html/i);
-    if (m) {
-      return { site: 'NhacCuaTui', name: m[2], src: 'https://www.nhaccuatui.com/mh/auto/' + m[3], h: m[1] === 'bai-hat' ? 150 : 300 };
-    }
+
     return null;
   }
 
@@ -546,7 +556,7 @@
   }
 
 
-  // ===== Apple Music / Zing MP3 / NhacCuaTui =====
+  // ===== Apple Music / Zing MP3 =====
   function playExt(info, url, token) {
     let nice = info.name;
     try { nice = decodeURIComponent(info.name).replace(/-/g, ' '); } catch (e) {}
@@ -589,7 +599,7 @@
     audio.src = url;
     audio.play()
       .then(() => { setPlaying(true); say(''); })
-      .catch(() => { setPlaying(false); say('Không phát được link này. Chỉ hỗ trợ YouTube, SoundCloud, Spotify, Apple Music, Zing MP3, NhacCuaTui và link nhạc trực tiếp. Bấm "Đổi bài".', true); });
+      .catch(() => { setPlaying(false); say('Không phát được link này. Hỗ trợ YouTube, SoundCloud, Spotify, Apple Music, Zing MP3 và link file nhạc trực tiếp.',true);});
   }
 
   // ===== Nhận link, đổi giao diện =====
