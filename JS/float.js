@@ -3,6 +3,7 @@
   window.__floatLoaded = true;
 
   const MESSENGER_URL = 'https://m.me/lyphucthien1803';
+  const HINT = 'Hỗ trợ: YouTube, SoundCloud, Spotify và link nhạc trực tiếp (.mp3, .ogg, .wav, .m4a)';
 
   const css = `
   .fb-wrap{position:fixed;right:20px;bottom:20px;z-index:9999;display:flex;flex-direction:column;gap:12px;align-items:flex-end}
@@ -17,15 +18,31 @@
   @keyframes fb-spin{to{transform:rotate(360deg)}}
   @keyframes fb-pulse{0%{transform:scale(1);opacity:.6}100%{transform:scale(1.35);opacity:0}}
 
-  .fb-panel{position:fixed;right:84px;bottom:20px;width:320px;max-width:calc(100vw - 110px);z-index:9998;
+  /* ===== Panel ===== */
+  .fb-panel{--fb-bg:none;position:fixed;right:84px;bottom:20px;width:320px;max-width:calc(100vw - 110px);z-index:9998;overflow:hidden;
     background:var(--panel,#fff);color:var(--text,#222);border:1px solid var(--line,#e5e9ee);border-radius:14px;
     box-shadow:0 10px 30px rgba(0,0,0,.25);padding:14px;font-family:Inter,system-ui,sans-serif;
     transform:translateX(40px);opacity:0;visibility:hidden;pointer-events:none;
-    transition:transform .3s ease,opacity .3s ease,visibility .3s}
+    transition:transform .3s ease,opacity .3s ease,visibility .3s,color .4s,border-color .4s}
   .fb-panel.open{transform:translateX(0);opacity:1;visibility:visible;pointer-events:auto}
+  .fb-panel>*{position:relative;z-index:1}
+
+  .fb-panel::before{content:"";position:absolute;inset:-24px;z-index:0;opacity:0;transition:opacity .6s;pointer-events:none;
+    background:linear-gradient(rgba(10,15,25,.45),rgba(10,15,25,.75)),var(--fb-bg) center/cover no-repeat;
+    filter:blur(16px) saturate(1.25)}
+  .fb-panel.has-art::before{opacity:1}
+  .fb-panel.has-art{color:#fff;border-color:rgba(255,255,255,.2)}
+  .fb-panel.has-art .fb-sub,.fb-panel.has-art .fb-msg,.fb-panel.has-art h4 span{color:rgba(255,255,255,.78)}
+  .fb-panel.has-art .fb-msg.err{color:#ff8a80}
+  .fb-panel.has-art input[type=text]{background:rgba(255,255,255,.14);color:#fff;border-color:rgba(255,255,255,.3)}
+  .fb-panel.has-art input[type=text]::placeholder{color:rgba(255,255,255,.65)}
+  .fb-panel.has-art .fb-toggle{background:rgba(255,255,255,.2);color:#fff}
+  .fb-panel.has-art .fb-change{border-color:rgba(255,255,255,.4);color:#fff}
+  .fb-panel.has-art .fb-back{color:#9bd0ff}
+
   .fb-panel h4{margin:0 0 10px;font-size:14px;display:flex;justify-content:space-between;align-items:center}
   .fb-panel h4 span{cursor:pointer;font-size:20px;line-height:1;color:var(--muted,#888)}
-  .fb-panel h4 span:hover{color:var(--text,#222)}
+  .fb-panel h4 span:hover{color:inherit}
 
   .fb-view{display:none}
   .fb-view.show{display:block;animation:fb-in .25s ease}
@@ -41,14 +58,18 @@
   .fb-back.show{display:inline-block}
 
   .fb-now{display:flex;gap:10px;align-items:center}
-  .fb-thumb{width:72px;height:72px;border-radius:10px;object-fit:cover;flex:none;background:linear-gradient(135deg,#4da6e8,#2b7fd1);
-    display:flex;align-items:center;justify-content:center}
+  .fb-thumb{width:72px;height:72px;border-radius:10px;flex:none;background:linear-gradient(135deg,#4da6e8,#2b7fd1) center/cover no-repeat;
+    display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,.3)}
   .fb-thumb svg{width:30px;height:30px;fill:#fff}
-  img.fb-thumb{display:block}
+  .fb-thumb.has-img svg{display:none}
   .fb-info{min-width:0;flex:1}
   .fb-title{font-weight:700;font-size:13px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:break-word}
   .fb-sub{font-size:11px;color:var(--muted,#777);margin-top:3px}
+  .fb-embed{margin-top:12px}
+  .fb-embed:empty{display:none}
+  .fb-embed iframe{display:block;width:100%;border:0;border-radius:12px}
   .fb-ctrl{display:flex;align-items:center;gap:10px;margin-top:12px}
+  .fb-view.sp .fb-ctrl{display:none}
   .fb-toggle{background:var(--green-soft,#eef3f8);color:var(--text,#222);border:none;border-radius:8px;padding:7px 12px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
   .fb-ctrl input[type=range]{flex:1;min-width:0;accent-color:#4da6e8}
   .fb-change{margin-top:10px;width:100%;background:none;border:1px dashed var(--line,#cfd6dd);color:var(--text,#222);border-radius:8px;padding:7px;font-size:12px;font-weight:600;cursor:pointer}
@@ -78,7 +99,7 @@
 
       <div class="fb-view show" id="fbViewInput">
         <div class="fb-row">
-          <input type="text" id="fbUrl" placeholder="Dán link YouTube hoặc .mp3..." autocomplete="off">
+          <input type="text" id="fbUrl" placeholder="Dán link YouTube, SoundCloud, Spotify, .mp3..." autocomplete="off">
           <button class="fb-go" id="fbGo">Enter</button>
         </div>
         <button class="fb-back" id="fbBack">← Quay lại bài đang phát</button>
@@ -86,12 +107,13 @@
 
       <div class="fb-view" id="fbViewPlayer">
         <div class="fb-now">
-          <div class="fb-thumb" id="fbThumbBox">${NOTE}</div>
+          <div class="fb-thumb" id="fbThumb">${NOTE}</div>
           <div class="fb-info">
             <div class="fb-title" id="fbTitle">Đang tải...</div>
             <div class="fb-sub" id="fbSub">YouTube</div>
           </div>
         </div>
+        <div class="fb-embed" id="fbEmbed"></div>
         <div class="fb-ctrl">
           <button class="fb-toggle" id="fbToggle">⏸ Dừng</button>
           <input type="range" id="fbVol" min="0" max="100" value="40" aria-label="Âm lượng">
@@ -99,11 +121,14 @@
         <button class="fb-change" id="fbChange">Đổi bài khác</button>
       </div>
 
-      <div class="fb-msg" id="fbMsg">Hỗ trợ link YouTube và link nhạc trực tiếp (.mp3, .ogg, .wav, .m4a)</div>
+      <div class="fb-msg" id="fbMsg">${HINT}</div>
     </div>
 
     <audio id="fbAudio" loop preload="none"></audio>
-    <div style="position:fixed;right:0;bottom:0;width:200px;height:200px;overflow:hidden;opacity:0;pointer-events:none;z-index:-1"><div id="fbYT"></div></div>
+    <div style="position:fixed;right:0;bottom:0;width:200px;height:200px;overflow:hidden;opacity:0;pointer-events:none;z-index:-1">
+      <div id="fbYT"></div>
+      <div id="fbSC"></div>
+    </div>
   `;
   document.body.appendChild(root);
 
@@ -114,10 +139,13 @@
         msg = $('fbMsg'), audio = $('fbAudio'),
         viewInput = $('fbViewInput'), viewPlayer = $('fbViewPlayer'),
         backBtn = $('fbBack'), changeBtn = $('fbChange'),
-        titleEl = $('fbTitle'), subEl = $('fbSub');
+        thumb = $('fbThumb'), titleEl = $('fbTitle'), subEl = $('fbSub'),
+        embed = $('fbEmbed');
 
   let mode = null;
+  let session = 0;
   let yt = null, ytReady = false, wantId = null;
+  let sc = null, scReady = false;
   let volume = 0.4;
   audio.volume = volume;
 
@@ -127,6 +155,34 @@
     toggle.textContent = on ? '⏸ Dừng' : '▶ Phát';
   }
 
+  function applyCover(url) {
+    panel.style.setProperty('--fb-bg', 'url("' + url + '")');
+    panel.classList.add('has-art');
+    thumb.style.backgroundImage = 'url("' + url + '")';
+    thumb.classList.add('has-img');
+  }
+  function clearCover() {
+    panel.classList.remove('has-art');
+    panel.style.removeProperty('--fb-bg');
+    thumb.style.backgroundImage = '';
+    thumb.classList.remove('has-img');
+  }
+
+  function setCover(urls, token) {
+    const list = urls.filter(Boolean);
+    (function next(i) {
+      if (i >= list.length) return;
+      const im = new Image();
+      im.onload = () => {
+        if (token !== session) return;
+        if (im.naturalWidth < 200) return next(i + 1);
+        applyCover(list[i]);
+      };
+      im.onerror = () => next(i + 1);
+      im.src = list[i];
+    })(0);
+  }
+
   function showView(name) {
     viewInput.classList.toggle('show', name === 'input');
     viewPlayer.classList.toggle('show', name === 'player');
@@ -134,7 +190,7 @@
       backBtn.classList.toggle('show', !!mode);
       input.value = '';
       setTimeout(() => input.focus(), 50);
-      say('Hỗ trợ link YouTube và link nhạc trực tiếp (.mp3, .ogg, .wav, .m4a)');
+      say(HINT);
     }
   }
 
@@ -148,86 +204,169 @@
     const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/))([\w-]{11})/);
     return m ? m[1] : null;
   }
+  const isSC = (url) => /^https?:\/\/(?:www\.|m\.|on\.)?(?:soundcloud\.com|snd\.sc)\//i.test(url);
+  function spInfo(url) {
+    const m = url.match(/open\.spotify\.com\/(?:intl-[a-z]+\/)?(track|album|playlist|episode|show|artist)\/([A-Za-z0-9]+)/);
+    return m ? { type: m[1], id: m[2] } : null;
+  }
 
+  function loadScript(id, src, ready, cb) {
+    if (ready()) return cb();
+    let s = $(id);
+    if (!s) { s = document.createElement('script'); s.id = id; s.src = src; document.head.appendChild(s); }
+    s.addEventListener('load', cb);
+  }
   function loadYTApi(cb) {
     if (window.YT && YT.Player) return cb();
     const prev = window.onYouTubeIframeAPIReady;
     window.onYouTubeIframeAPIReady = () => { if (prev) prev(); cb(); };
-    if (!document.getElementById('fbYTapi')) {
+    if (!$('fbYTapi')) {
       const s = document.createElement('script');
       s.id = 'fbYTapi';
       s.src = 'https://www.youtube.com/iframe_api';
       document.head.appendChild(s);
     }
   }
+  function loadSCApi(cb) {
+    loadScript('fbSCapi', 'https://w.soundcloud.com/player/api.js', () => window.SC && SC.Widget, cb);
+  }
 
   function stopAll() {
     audio.pause();
     if (yt && ytReady && yt.pauseVideo) yt.pauseVideo();
+    if (sc && scReady) sc.pause();
+    embed.innerHTML = '';
     setPlaying(false);
   }
 
-  function setNowPlaying(kind, url, id) {
-    if (kind === 'yt') {
-      document.getElementById('fbThumbBox').outerHTML = '<img class="fb-thumb" id="fbThumbBox" alt="" src="https://img.youtube.com/vi/' + id + '/mqdefault.jpg">';
-      subEl.textContent = 'YouTube';
-      titleEl.textContent = 'Đang tải tên bài...';
-      fetch('https://www.youtube.com/oembed?format=json&url=' + encodeURIComponent('https://www.youtube.com/watch?v=' + id))
-        .then((r) => r.json())
-        .then((d) => { if (wantId === id && d.title) titleEl.textContent = d.title; })
-        .catch(() => { titleEl.textContent = 'Video YouTube'; });
-    } else {
-      document.getElementById('fbThumbBox').outerHTML = '<div class="fb-thumb" id="fbThumbBox">' + NOTE + '</div>';
-      let name = url;
-      try { name = decodeURIComponent(new URL(url).pathname.split('/').filter(Boolean).pop() || url); } catch (e) {}
-      titleEl.textContent = name;
-      subEl.textContent = 'Link nhạc trực tiếp';
-    }
+  // ===== YouTube =====
+  function playYT(id, token) {
+    subEl.textContent = 'YouTube';
+    titleEl.textContent = 'Đang tải tên bài...';
+    setCover([
+      'https://img.youtube.com/vi/' + id + '/maxresdefault.jpg',
+      'https://img.youtube.com/vi/' + id + '/hqdefault.jpg'
+    ], token);
+    fetch('https://www.youtube.com/oembed?format=json&url=' + encodeURIComponent('https://www.youtube.com/watch?v=' + id))
+      .then((r) => r.json())
+      .then((d) => { if (token === session && d.title) { titleEl.textContent = d.title; if (d.author_name) subEl.textContent = d.author_name + ' · YouTube'; } })
+      .catch(() => { if (token === session) titleEl.textContent = 'Video YouTube'; });
+
+    loadYTApi(() => {
+      if (token !== session) return;
+      if (yt && ytReady) {
+        yt.loadVideoById(id);
+      } else if (!yt) {
+        yt = new YT.Player('fbYT', {
+          width: 200, height: 200,
+          playerVars: { autoplay: 1, playsinline: 1 },
+          events: {
+            onReady: (e) => { ytReady = true; e.target.setVolume(volume * 100); if (mode === 'yt') e.target.loadVideoById(wantId); },
+            onStateChange: (e) => {
+              if (mode !== 'yt') return;
+              if (e.data === 1) { setPlaying(true); say('Đang phát'); }
+              else if (e.data === 2) setPlaying(false);
+              else if (e.data === 0) { e.target.seekTo(0); e.target.playVideo(); }
+            },
+            onError: () => { if (mode === 'yt') { setPlaying(false); say('Video này không phát được (bị chặn nhúng hoặc link sai). Bấm "Đổi bài khác".', true); } }
+          }
+        });
+      }
+    });
+  }
+
+  // ===== SoundCloud =====
+  function scSound(token) {
+    if (!sc) return;
+    sc.getCurrentSound((s) => {
+      if (!s || token !== session || mode !== 'sc') return;
+      titleEl.textContent = s.title || 'Bài SoundCloud';
+      subEl.textContent = (s.user && s.user.username ? s.user.username + ' · ' : '') + 'SoundCloud';
+      const big = (u) => u ? u.replace('-large', '-t500x500') : null;
+      setCover([big(s.artwork_url), big(s.user && s.user.avatar_url)], token);
+    });
+  }
+  function playSC(url, token) {
+    subEl.textContent = 'SoundCloud';
+    titleEl.textContent = 'Đang tải tên bài...';
+    loadSCApi(() => {
+      if (token !== session) return;
+      if (sc && scReady) {
+        sc.load(url, { auto_play: true, callback: () => { scSound(token); sc.setVolume(volume * 100); sc.play(); } });
+        return;
+      }
+      if (sc) return;
+      const f = document.createElement('iframe');
+      f.width = 200; f.height = 200; f.allow = 'autoplay';
+      f.src = 'https://w.soundcloud.com/player/?url=' + encodeURIComponent(url) +
+              '&auto_play=true&hide_related=true&show_comments=false&visual=false';
+      $('fbSC').appendChild(f);
+      sc = SC.Widget(f);
+      sc.bind(SC.Widget.Events.READY, () => {
+        scReady = true;
+        sc.setVolume(volume * 100);
+        if (mode === 'sc') { scSound(session); sc.play(); }
+      });
+      sc.bind(SC.Widget.Events.PLAY, () => { if (mode === 'sc') { setPlaying(true); say('Đang phát'); } });
+      sc.bind(SC.Widget.Events.PAUSE, () => { if (mode === 'sc') setPlaying(false); });
+      sc.bind(SC.Widget.Events.FINISH, () => { if (mode === 'sc') { sc.seekTo(0); sc.play(); } });
+      sc.bind(SC.Widget.Events.ERROR, () => { if (mode === 'sc') { setPlaying(false); say('Không phát được bài SoundCloud này (riêng tư hoặc bị chặn). Bấm "Đổi bài khác".', true); } });
+    });
+  }
+
+  // ===== Spotify =====
+  function playSP(info, url, token) {
+    subEl.textContent = 'Spotify';
+    titleEl.textContent = 'Đang tải tên bài...';
+    const h = (info.type === 'track' || info.type === 'episode') ? 152 : 232;
+    embed.innerHTML = '<iframe src="https://open.spotify.com/embed/' + info.type + '/' + info.id + '?theme=0" height="' + h +
+      '" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>';
+    say('Bấm ▶ trong khung Spotify để nghe (Spotify không cho tự phát; chưa đăng nhập thì chỉ nghe thử 30 giây).');
+    fetch('https://open.spotify.com/oembed?url=' + encodeURIComponent(url))
+      .then((r) => r.json())
+      .then((d) => {
+        if (token !== session) return;
+        if (d.title) titleEl.textContent = d.title;
+        if (d.thumbnail_url) setCover([d.thumbnail_url], token);
+      })
+      .catch(() => { if (token === session) titleEl.textContent = 'Spotify'; });
+  }
+
+  // ===== Link nhạc trực tiếp =====
+  function playAudio(url) {
+    let name = url;
+    try { name = decodeURIComponent(new URL(url).pathname.split('/').filter(Boolean).pop() || url); } catch (e) {}
+    titleEl.textContent = name;
+    subEl.textContent = 'Link nhạc trực tiếp';
+    audio.src = url;
+    audio.play()
+      .then(() => { setPlaying(true); say('Đang phát'); })
+      .catch(() => { setPlaying(false); say('Không phát được link này. Chỉ hỗ trợ YouTube, SoundCloud, Spotify và link nhạc trực tiếp. Bấm "Đổi bài khác".', true); });
   }
 
   function play(url) {
     url = (url || '').trim();
-    if (!/^https?:\/\//i.test(url)) return say('Link phải bắt đầu bằng http:// hoặc https://', true);
+    if (!/^https?:\/\//i.test(url)) return say('Link phải bắt đầu bằng https://', true);
 
     stopAll();
-    const id = ytId(url);
+    clearCover();
+    const token = ++session;
+    const id = ytId(url), spot = spInfo(url);
 
-    if (id) {
-      mode = 'yt';
-      wantId = id;
-      setNowPlaying('yt', url, id);
-      showView('player');
-      say('Đang tải video...');
-      loadYTApi(() => {
-        if (yt && ytReady) {
-          yt.loadVideoById(id);
-        } else if (!yt) {
-          yt = new YT.Player('fbYT', {
-            width: 200, height: 200,
-            playerVars: { autoplay: 1, playsinline: 1 },
-            events: {
-              onReady: (e) => { ytReady = true; e.target.setVolume(volume * 100); e.target.loadVideoById(wantId); },
-              onStateChange: (e) => {
-                if (e.data === 1) { setPlaying(true); say('Đang phát'); }
-                else if (e.data === 2) setPlaying(false);
-                else if (e.data === 0) { e.target.seekTo(0); e.target.playVideo(); }
-              },
-              onError: () => { setPlaying(false); say('Video này không phát được (bị chặn nhúng hoặc link sai). Bấm "Đổi bài khác".', true); }
-            }
-          });
-        }
-      });
-    } else {
-      mode = 'audio';
-      wantId = null;
-      setNowPlaying('audio', url);
-      showView('player');
-      audio.src = url;
-      audio.play()
-        .then(() => { setPlaying(true); say('Đang phát'); })
-        .catch(() => { setPlaying(false); say('Không phát được link này, kiểm tra lại URL. Bấm "Đổi bài khác".', true); });
-    }
-    try { localStorage.setItem('fbMusicUrl', url); } catch (e) {}
+    if (id) mode = 'yt';
+    else if (isSC(url)) mode = 'sc';
+    else if (spot) mode = 'sp';
+    else mode = 'audio';
+
+    wantId = id;
+    viewPlayer.classList.toggle('sp', mode === 'sp');
+    showView('player');
+    say('Đang tải...');
+
+    if (mode === 'yt') playYT(id, token);
+    else if (mode === 'sc') playSC(url, token);
+    else if (mode === 'sp') playSP(spot, url, token);
+    else playAudio(url);
   }
 
   go.addEventListener('click', () => play(input.value));
@@ -238,6 +377,8 @@
       if (audio.paused) audio.play().then(() => setPlaying(true)); else { audio.pause(); setPlaying(false); }
     } else if (mode === 'yt' && yt && ytReady) {
       if (yt.getPlayerState() === 1) yt.pauseVideo(); else yt.playVideo();
+    } else if (mode === 'sc' && sc && scReady) {
+      sc.toggle();
     }
   });
 
@@ -248,5 +389,6 @@
     volume = vol.value / 100;
     audio.volume = volume;
     if (yt && ytReady && yt.setVolume) yt.setVolume(vol.value);
+    if (sc && scReady) sc.setVolume(vol.value);
   });
 })();
