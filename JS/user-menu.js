@@ -189,21 +189,34 @@
   function preShow() {
     var h = hintGet();
     if (!h || !h.u) return;
+
+    var dd = document.querySelector('.acc-dropdown');
+    if (dd && !dd.querySelector('[data-el="userBox"]')) {
+      var box = document.createElement('div');
+      box.setAttribute('data-el', 'userBox');
+      var t = document.createElement('p');
+      t.className = 'acc-guest-title';
+      t.textContent = h.u;
+      box.appendChild(t);
+      dd.appendChild(box);
+      sync();
+    }
+
     var strip = document.querySelector('.login-strip');
-    if (!strip) return;
-    var copy = strip.querySelector('.login-copy');
-    var actions = strip.querySelector('.login-actions');
-    if (!copy || !actions || !actions.querySelector('.login-btn')) return;
-    var strong = copy.querySelector('strong');
-    var small = copy.querySelector('small');
-    if (!strong || !small) return;
-    strong.textContent = 'Xin chào, ' + h.u + '!';
-    small.textContent = h.t || 'Chúc bạn mua sắm vui vẻ tại LPTSHOP.';
-    actions.innerHTML = '<button class="register-btn" data-el="stripLogout">Đăng Xuất</button>';
-    actions.querySelector('button').addEventListener('click', function () {
-      hintClear();
-      if (window.LPT_AUTH && window.LPT_AUTH.logout) window.LPT_AUTH.logout();
-    });
+    var copy = strip && strip.querySelector('.login-copy');
+    var actions = strip && strip.querySelector('.login-actions');
+    var strong = copy && copy.querySelector('strong');
+    var small = copy && copy.querySelector('small');
+    if (strong && small && actions && actions.querySelector('.login-btn')) {
+      strong.textContent = 'Xin chào, ' + h.u + '!';
+      small.textContent = h.t || 'Chúc bạn mua sắm vui vẻ tại LPTSHOP.';
+      actions.innerHTML = '<button class="register-btn" data-el="stripLogout">Đăng Xuất</button>';
+      actions.querySelector('button').addEventListener('click', function () {
+        hintClear();
+        if (window.LPT_AUTH && window.LPT_AUTH.logout) window.LPT_AUTH.logout();
+      });
+    }
+
     fetch('/api/auth/me', { credentials: 'include' })
       .then(function (r) { if (!r.ok) hintClear(); })
       .catch(function () {});
@@ -245,8 +258,7 @@
     if (strip) new MutationObserver(applyStrip).observe(strip, { childList: true, subtree: true, characterData: true });
     sync();
   }
-  if (document.querySelector('.login-strip')) preShow();
-  else document.addEventListener('DOMContentLoaded', preShow);
+  preShow();
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
   else start();
 })();
