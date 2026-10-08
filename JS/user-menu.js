@@ -94,6 +94,8 @@
           '<button type="button" class="um-a um-out" data-um-logout>' + LOGOUT_ICON + 'Đăng xuất</button>' +
         '</div>' +
       '</div>';
+    var h = hintGet();
+    if (!h || h.u !== username) hintSet({ u: username });
     ensureBalance(username);
   }
 
@@ -114,6 +116,11 @@
   var LOCALE   = { vn:'vi-VN', us:'en-US', cn:'zh-CN', tw:'zh-TW', kr:'ko-KR', jp:'ja-JP', th:'th-TH', kh:'km-KH', la:'lo-LA', ru:'ru-RU', fr:'fr-FR', de:'de-DE' };
   var FALLBACK = { VND:1, USD:0.0000385, CNY:0.000275, TWD:0.00125, KRW:0.053, JPY:0.0057, THB:0.00125, KHR:0.155, LAK:0.83, RUB:0.0033, EUR:0.000033 };
   var ZERO_DEC = { VND:1, KRW:1, JPY:1, KHR:1, LAK:1, RUB:0 };
+
+  var HINT = 'lpt_user_hint';
+  function hintGet() { try { return JSON.parse(localStorage.getItem(HINT)); } catch (e) { return null; } }
+  function hintSet(obj) { try { localStorage.setItem(HINT, JSON.stringify(obj)); } catch (e) {} }
+  function hintClear() { try { localStorage.removeItem(HINT); } catch (e) {} }
 
   var state = { user: null, text: null };
 
@@ -172,8 +179,33 @@
       .then(function (txt) {
         if (state.user !== username) return;
         state.text = 'Số Dư Còn Lại: ' + txt;
+        var hh = hintGet();
+        if (hh && hh.u === username) { hh.t = state.text; hintSet(hh); }
         applyStrip();
       })
+      .catch(function () {});
+  }
+
+  function preShow() {
+    var h = hintGet();
+    if (!h || !h.u) return;
+    var strip = document.querySelector('.login-strip');
+    if (!strip) return;
+    var copy = strip.querySelector('.login-copy');
+    var actions = strip.querySelector('.login-actions');
+    if (!copy || !actions || !actions.querySelector('.login-btn')) return;
+    var strong = copy.querySelector('strong');
+    var small = copy.querySelector('small');
+    if (!strong || !small) return;
+    strong.textContent = 'Xin chào, ' + h.u + '!';
+    small.textContent = h.t || 'Chúc bạn mua sắm vui vẻ tại LPTSHOP.';
+    actions.innerHTML = '<button class="register-btn" data-el="stripLogout">Đăng Xuất</button>';
+    actions.querySelector('button').addEventListener('click', function () {
+      hintClear();
+      if (window.LPT_AUTH && window.LPT_AUTH.logout) window.LPT_AUTH.logout();
+    });
+    fetch('/api/auth/me', { credentials: 'include' })
+      .then(function (r) { if (!r.ok) hintClear(); })
       .catch(function () {});
   }
 
@@ -186,6 +218,7 @@
   }
 
   document.addEventListener('click', function (e) {
+    if (e.target.closest('[data-um-logout],[data-el="stripLogout"]')) hintClear();
     var soon = e.target.closest('[data-um-toast]');
     if (soon) {
       e.preventDefault();
@@ -212,6 +245,8 @@
     if (strip) new MutationObserver(applyStrip).observe(strip, { childList: true, subtree: true, characterData: true });
     sync();
   }
+  if (document.querySelector('.login-strip')) preShow();
+  else document.addEventListener('DOMContentLoaded', preShow);
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
   else start();
 })();
