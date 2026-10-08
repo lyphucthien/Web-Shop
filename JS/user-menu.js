@@ -18,7 +18,6 @@
       { t: 'Túi Mù', href: '#' }
     ]}
   ];
-
   var RIGHT = [
     { title: 'Lịch sử', items: [
       { t: 'Lịch Sử Mua Tài Khoản', href: '#' },
@@ -84,7 +83,7 @@
     if (!titleEl) return;
     var username = titleEl.textContent || '';
     dropdown.classList.add('um-mega');
-    dropdown.querySelectorAll('.acc-avatar').forEach(function (n) { n.style.display = 'none'; });
+    hideGuest(dropdown);
 
     box.innerHTML =
       '<div class="um-hello">Xin chào, ' + esc(username) + '<small>Tài khoản LPTSHOP</small></div>' +
@@ -98,13 +97,19 @@
     ensureBalance(username);
   }
 
+  var GUEST_SEL = '.acc-avatar,.acc-guest-title,.acc-login-btn,.acc-register-btn';
+  function setGuestDisplay(dropdown, value) {
+    Array.prototype.forEach.call(dropdown.children, function (n) {
+      if (n.matches(GUEST_SEL)) n.style.display = value;
+    });
+  }
+  function hideGuest(dropdown) { setGuestDisplay(dropdown, 'none'); }
+
   function clearMega(dropdown) {
     dropdown.classList.remove('um-mega');
-    dropdown.querySelectorAll('.acc-avatar').forEach(function (n) { n.style.display = ''; });
+    setGuestDisplay(dropdown, '');
   }
 
-
-  // ===================== SỐ DƯ =====================
   var CURRENCY = { vn:'VND', us:'USD', cn:'CNY', tw:'TWD', kr:'KRW', jp:'JPY', th:'THB', kh:'KHR', la:'LAK', ru:'RUB', fr:'EUR', de:'EUR' };
   var LOCALE   = { vn:'vi-VN', us:'en-US', cn:'zh-CN', tw:'zh-TW', kr:'ko-KR', jp:'ja-JP', th:'th-TH', kh:'km-KH', la:'lo-LA', ru:'ru-RU', fr:'fr-FR', de:'de-DE' };
   var FALLBACK = { VND:1, USD:0.0000385, CNY:0.000275, TWD:0.00125, KRW:0.053, JPY:0.0057, THB:0.00125, KHR:0.155, LAK:0.83, RUB:0.0033, EUR:0.000033 };
