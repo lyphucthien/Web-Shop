@@ -6,11 +6,11 @@
 
   var LEFT = [
     { title: 'Tài khoản', items: [
-      { t: 'Thông tin tài khoản', href: '#' },
-      { t: 'Ví của tôi', href: '#' },
+      { t: 'Thông tin tài khoản', href: '/tai-khoan/thong-tin' },
+      { t: 'Ví của tôi', href: '/tai-khoan/vi' },
       { t: 'Nạp tiền', href: '/nap-tien/chuyen-khoan' },
       { t: 'Cấp bậc VIP', href: '/cap-bac' },
-      { t: 'Bảo mật tài khoản', href: '#' }
+      { t: 'Bảo mật tài khoản', href: '/tai-khoan/bao-mat' }
     ]},
     { title: 'Dịch vụ', items: [
       { t: 'Key System', href: '#' },
@@ -28,14 +28,25 @@
     ]}
   ];
 
+  var HIST_HREF = {
+    'Lịch Sử Mua Tài Khoản': '/tai-khoan/lich-su-mua-acc',
+    'Lịch Sử Dùng Dịch Vụ': '/tai-khoan/lich-su-dich-vu',
+    'Lịch Sử Chơi MiniGame': '/tai-khoan/lich-su-minigame',
+    'Lịch Sử Nạp Tiền': '/tai-khoan/lich-su-nap-tien',
+    'Lịch Sử Rút Vật Phẩm': '/tai-khoan/lich-su-rut-vat-pham'
+  };
+
   function historySection() {
     var src = document.querySelectorAll('.nav-dropdown-history .nav-dropdown-item');
-    if (!src.length) return RIGHT[0];
+    if (!src.length) {
+      return { title: 'Lịch sử', items: RIGHT[0].items.map(function (i) { return { t: i.t, href: HIST_HREF[i.t] || '#' }; }) };
+    }
     var items = [];
     src.forEach(function (a) {
+      var text = a.textContent.replace(/\s+/g, ' ').trim();
       items.push({
-        t: a.textContent.replace(/\s+/g, ' ').trim(),
-        href: a.getAttribute('href') || '#',
+        t: text,
+        href: HIST_HREF[text] || a.getAttribute('href') || '#',
         toast: a.getAttribute('data-toast')
       });
     });
@@ -174,7 +185,7 @@
     if (state.user === username) { applyStrip(); return; }
     state.user = username;
     state.text = null;
-    fetch('/api/auth/balance', { credentials: 'same-origin' })
+    fetch('/api/auth/profile', { credentials: 'same-origin' })
       .then(function (r) { if (!r.ok) throw new Error('bal'); return r.json(); })
       .then(function (d) { return money(Number(d.balance) || 0, getCC()); })
       .then(function (txt) {
