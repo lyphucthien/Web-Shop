@@ -43,6 +43,7 @@
   }
 
   var css = '' +
+  '.acc-wrap .acc-dropdown{transition:opacity .18s ease,transform .18s ease,visibility .18s ease}' +
   '.acc-dropdown.um-mega{width:480px;max-width:calc(100vw - 24px);padding:0;text-align:left;overflow:visible}' +
   '.acc-dropdown.um-mega::after{content:"";position:absolute;left:0;right:0;top:-16px;height:16px}' +
   '.um-hello{padding:14px 22px 10px;font-weight:800;font-size:15px;color:var(--text);border-bottom:1px solid var(--line)}' +
