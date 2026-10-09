@@ -1,19 +1,17 @@
 const redis = require('../_lib/redis');
-const { signCallback } = require('../_lib/napthe');
+const { signCallback, checkCard, settleCard } = require('../_lib/napthe');
 
 module.exports = async (req, res) => {
   const body = req.method === 'GET' ? req.query : (req.body || {});
 
   try {
-    const { requestid: requestId, Pin, Seri, CardValue, Success, amount, Hash } = body;
+    const { requestid: requestId, CardValue, Success, amount, Hash } = body;
 
     if (!requestId) {
       return res.status(400).json({ error: 'Thiếu requestid.' });
     }
 
-    const txKey = `card_tx:${requestId}`;
-    const tx = await redis.get(txKey);
-
+    const tx = await redis.get(`card_tx:${requestId}`);
     if (!tx) {
       console.warn('[napthe/callback] requestid không tìm thấy:', requestId);
       return res.status(200).json({ ok: true });
@@ -30,15 +28,26 @@ module.exports = async (req, res) => {
     }
 
     const isSuccess = Success === true || Success === 'true';
-    const realAmount = Number(amount ?? CardValue ?? 0);
 
-    await redis.set(txKey, {
-      ...tx,
-      realAmount: isSuccess ? realAmount : undefined,
-      status: isSuccess ? 'success' : 'failed',
-      updatedAt: Date.now(),
-    }, { ex: 60 * 60 * 24 });
+    if (!isSuccess) {
+      await settleCard(requestId, tx, { status: 'failed', message: 'Thẻ không hợp lệ hoặc sai thông tin.' });
+      return res.status(200).json({ ok: true });
+    }
 
+    let realAmount = Number(amount ?? CardValue ?? 0);
+    if (!(realAmount > 0)) {
+      try {
+        const r = await checkCard(requestId);
+        if (Number(r.Code) === 2) realAmount = Number(r.CardValue || 0);
+      } catch (err) {
+        console.error('[napthe/callback] không xác minh được giá trị thẻ', err);
+      }
+    }
+    if (!(realAmount > 0)) {
+      return res.status(200).json({ ok: true, note: 'waiting_verify' });
+    }
+
+    await settleCard(requestId, tx, { status: 'success', realAmount });
     return res.status(200).json({ ok: true });
   } catch (err) {
     console.error('[napthe/callback]', err);

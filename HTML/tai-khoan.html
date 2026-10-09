@@ -30,6 +30,7 @@
     .tk-btn.alt{background:var(--green-soft);color:var(--green-dark);margin-right:8px}
     .tk-empty{padding:40px 10px;text-align:center;color:var(--muted)}
     .tk-table{width:100%;border-collapse:collapse;font-size:14px}
+    .tk-table td{padding:10px;border-bottom:1px solid var(--line);color:var(--text)}
     .tk-table th{padding:10px;text-align:left;border-bottom:1px solid var(--line);color:var(--muted);font-weight:700}
     .tk-sec{margin:30px 0 16px;padding-top:20px;border-top:1px solid var(--line)}
     .tk-big{font-size:28px;font-weight:800;color:var(--green);margin:4px 0 6px}
@@ -113,10 +114,11 @@
       main.innerHTML = '<h2>Thông tin tài khoản</h2><div class="tk-grid">' +
         field('Số Dư', 'tkBal', vnd(p.balance), true) +
         field('Đã Nạp', 'tkDep', vnd(p.totalDeposit), true) +
+        field('ID', 'tkId', p.uid, true) +
         field('Tên Đăng Nhập', 'tkUser', p.username, true) +
         field('Họ Và Tên', 'tkName', p.fullName, false, 'Nhập họ và tên') +
-        field('Email', 'tkMail', p.email, false, 'Nhập email') +
         field('Số Điện Thoại', 'tkPhone', p.phone, false, 'Nhập số điện thoại') +
+        field('Email', 'tkMail', p.email, false, 'Nhập email') +
         field('Ngày Tham Gia', 'tkJoin', fmtDate(p.createdAt), true) +
         '</div><button type="button" class="tk-btn" id="tkSave">Cập nhật</button>' +
         '<h2 id="tkSec" class="tk-sec">Bảo mật tài khoản</h2><div class="tk-grid">' +
@@ -177,9 +179,34 @@
         '<a class="tk-btn alt" href="/nap-tien/nap-the">Nạp thẻ cào</a><a class="tk-btn alt" href="/nap-tien/chuyen-khoan">Chuyển khoản</a>';
     }
 
-    function viewHistory(title) {
-      main.innerHTML = '<h2>' + esc(title) + '</h2><table class="tk-table"><thead><tr><th>Mã</th><th>Nội dung</th><th>Số tiền</th><th>Thời gian</th></tr></thead></table>' +
-        '<div class="tk-empty">Chưa có dữ liệu.</div>';
+    var HIST_TYPE = {
+      'lich-su-mua-acc': 'purchase',
+      'lich-su-dich-vu': 'service',
+      'lich-su-minigame': 'minigame',
+      'lich-su-nap-tien': 'deposit',
+      'lich-su-rut-vat-pham': 'withdraw'
+    };
+    var STATUS_TEXT = { success: 'Thành công', failed: 'Thất bại', pending: 'Đang xử lý' };
+
+    function viewHistory(title, slug) {
+      var head = '<h2>' + esc(title) + '</h2>';
+      main.innerHTML = head + '<div class="tk-empty">Đang tải...</div>';
+      fetch('/api/auth/profile?history=' + HIST_TYPE[slug], { credentials: 'same-origin' })
+        .then(function (r) { if (!r.ok) throw new Error('hist'); return r.json(); })
+        .then(function (d) {
+          if (current() !== slug) return;
+          var items = d.items || [];
+          if (!items.length) { main.innerHTML = head + '<div class="tk-empty">Chưa có dữ liệu.</div>'; return; }
+          main.innerHTML = head + '<div style="overflow-x:auto"><table class="tk-table"><thead><tr><th>Mã</th><th>Nội dung</th><th>Số tiền</th><th>Thời gian</th><th>Trạng thái</th></tr></thead><tbody>' +
+            items.map(function (it) {
+              return '<tr><td>' + esc(String(it.id || '').slice(-8)) + '</td><td>' + esc(it.title) + '</td><td>' +
+                (it.status === 'success' ? '+' : '') + vnd(it.amount) + '</td><td>' + esc(fmtDate(it.at)) + '</td><td>' +
+                esc(STATUS_TEXT[it.status] || it.status) + '</td></tr>';
+            }).join('') + '</tbody></table></div>';
+        })
+        .catch(function () {
+          if (current() === slug) main.innerHTML = head + '<div class="tk-empty">Không tải được dữ liệu, vui lòng thử lại.</div>';
+        });
     }
 
     function viewGuest() {
@@ -194,7 +221,7 @@
       var s = SECTIONS.filter(function (x) { return x.slug === slug; })[0];
       if (slug === 'thong-tin') viewProfile();
       else if (slug === 'vi') viewWallet();
-      else viewHistory(s.text);
+      else viewHistory(s.text, slug);
     }
 
     function load() {

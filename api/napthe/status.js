@@ -1,7 +1,6 @@
 const redis = require('../_lib/redis');
-const { checkCard } = require('../_lib/napthe');
-
-const TTL = 60 * 60 * 24;
+const { getUserFromRequest } = require('../_lib/auth');
+const { checkCard, settleCard } = require('../_lib/napthe');
 
 module.exports = async (req, res) => {
   if (req.method !== 'GET') {
@@ -9,43 +8,49 @@ module.exports = async (req, res) => {
   }
 
   try {
+    const user = await getUserFromRequest(req);
+    if (!user) {
+      return res.status(401).json({ error: 'Vui lòng đăng nhập.' });
+    }
+
     const { requestId } = req.query;
-    if (!requestId) {
+    if (!requestId || !/^[0-9a-f]{16}$/.test(String(requestId))) {
       return res.status(400).json({ error: 'Thiếu requestId.' });
     }
 
-    const txKey = `card_tx:${requestId}`;
-    const tx = await redis.get(txKey);
+    const tx = await redis.get(`card_tx:${requestId}`);
     if (!tx) {
       return res.status(200).json({ status: 'expired' });
     }
+    if (tx.username && tx.username.toLowerCase() !== user.username.toLowerCase()) {
+      return res.status(403).json({ error: 'Giao dịch không thuộc tài khoản này.' });
+    }
 
-    // Nếu còn đang chờ, chủ động hỏi thẳng cổng (không phụ thuộc callback)
+    let current = tx;
     if (tx.status === 'pending') {
       try {
         const r = await checkCard(requestId);
         const code = Number(r.Code);
         if (code === 2) {
-          const realAmount = Number(r.CardValue || tx.declaredAmount);
-          const updated = { ...tx, status: 'success', realAmount, wrongPrice: !!r.wrongPrice, message: r.Message || '', updatedAt: Date.now() };
-          await redis.set(txKey, updated, { ex: TTL });
-          return res.status(200).json({ status: 'success', realAmount, wrongPrice: !!r.wrongPrice, message: updated.message });
-        }
-        if (code === 3) {
-          const updated = { ...tx, status: 'failed', message: r.Message || 'Thẻ không hợp lệ.', updatedAt: Date.now() };
-          await redis.set(txKey, updated, { ex: TTL });
-          return res.status(200).json({ status: 'failed', message: updated.message });
+          current = await settleCard(requestId, tx, {
+            status: 'success',
+            realAmount: Number(r.CardValue || tx.declaredAmount),
+            wrongPrice: !!r.wrongPrice,
+            message: r.Message || '',
+          });
+        } else if (code === 3) {
+          current = await settleCard(requestId, tx, { status: 'failed', message: r.Message || 'Thẻ không hợp lệ.' });
         }
       } catch (err) {
-        console.error('[napthe/status] checkCard lỗi tạm thời', err);
+        console.error('[napthe/status] lỗi tạm thời, sẽ thử lại lượt sau', err);
       }
     }
 
     return res.status(200).json({
-      status: tx.status,
-      realAmount: tx.realAmount,
-      wrongPrice: tx.wrongPrice,
-      message: tx.message,
+      status: current.status,
+      realAmount: current.realAmount,
+      wrongPrice: current.wrongPrice,
+      message: current.message,
     });
   } catch (err) {
     console.error('[napthe/status]', err);

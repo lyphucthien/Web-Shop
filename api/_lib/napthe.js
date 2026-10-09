@@ -1,4 +1,6 @@
 const crypto = require('crypto');
+const redis = require('./redis');
+const { creditDeposit, addHistory } = require('./wallet');
 
 // Theo tài liệu doithegiatot.com: chỉ cần 1 ApiKey (gửi thẳng trong JSON, không ký MD5 trên request)
 const API_KEY = process.env.NAPTHE_PARTNER_KEY;
@@ -59,4 +61,48 @@ async function checkCard(requestId) {
   return res.json();
 }
 
-module.exports = { submitCard, checkCard, signCallback, CARD_TYPE };
+const TX_TTL = 60 * 60 * 24 * 7;
+const fmtVND = (n) => Number(n || 0).toLocaleString('vi-VN') + 'đ';
+
+// Chốt kết quả 1 giao dịch thẻ: cộng tiền (nếu thành công) rồi mới đánh dấu xong.
+// Cộng tiền chạy trước nên nếu lỗi giữa chừng, giao dịch vẫn "pending" và lần hỏi sau sẽ thử lại.
+async function settleCard(requestId, tx, result) {
+  const txKey = `card_tx:${requestId}`;
+  if (result.status === 'success') {
+    if (tx.username) {
+      const rate = Math.min(100, Math.max(1, Number(process.env.NAPTHE_RATE) || 100));
+      const credit = Math.floor((Number(result.realAmount) || 0) * rate / 100);
+      await creditDeposit({
+        username: tx.username,
+        amount: credit,
+        source: 'card',
+        ref: requestId,
+        title: `Nạp thẻ ${tx.telco} ${fmtVND(result.realAmount)}`,
+      });
+    }
+  } else if (tx.username) {
+    const first = await redis.set(`hist_lock:card:${requestId}`, '1', { nx: true, ex: TX_TTL });
+    if (first) {
+      await addHistory(tx.username, 'deposit', {
+        id: `card:${requestId}`,
+        title: `Nạp thẻ ${tx.telco} ${fmtVND(tx.declaredAmount)}`,
+        amount: tx.declaredAmount,
+        status: 'failed',
+        message: result.message || '',
+        at: Date.now(),
+      });
+    }
+  }
+  const updated = {
+    ...tx,
+    status: result.status,
+    realAmount: result.status === 'success' ? Number(result.realAmount) || 0 : undefined,
+    wrongPrice: !!result.wrongPrice,
+    message: result.message || '',
+    updatedAt: Date.now(),
+  };
+  await redis.set(txKey, updated, { ex: TX_TTL });
+  return updated;
+}
+
+module.exports = { submitCard, checkCard, signCallback, settleCard, CARD_TYPE, TX_TTL };

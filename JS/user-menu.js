@@ -178,13 +178,13 @@
   function applyStrip() {
     if (!state.text) return;
     var small = document.querySelector('.login-strip .login-copy small');
-    if (small && small.textContent.indexOf('Chúc bạn mua sắm') === 0) small.textContent = state.text;
+    if (!small || small.textContent === state.text) return;
+    if (small.textContent.indexOf('Chúc bạn mua sắm') === 0 || small.textContent.indexOf('Số Dư Còn Lại') === 0) {
+      small.textContent = state.text;
+    }
   }
 
-  function ensureBalance(username) {
-    if (state.user === username) { applyStrip(); return; }
-    state.user = username;
-    state.text = null;
+  function loadBalance(username) {
     fetch('/api/auth/profile', { credentials: 'same-origin' })
       .then(function (r) { if (!r.ok) throw new Error('bal'); return r.json(); })
       .then(function (d) { return money(Number(d.balance) || 0, getCC()); })
@@ -197,6 +197,17 @@
       })
       .catch(function () {});
   }
+
+  function ensureBalance(username) {
+    if (state.user === username) { applyStrip(); return; }
+    state.user = username;
+    state.text = null;
+    loadBalance(username);
+  }
+
+  window.addEventListener('lpt:balance', function () {
+    if (state.user) loadBalance(state.user);
+  });
 
   function preShow() {
     var h = hintGet();

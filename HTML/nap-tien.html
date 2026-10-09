@@ -134,7 +134,7 @@
           <button type="button" class="submit-btn" id="submitBankBtn">Xác Nhận Đã Chuyển</button>
 
           <div class="note-box">
-            ⚠ Vui lòng ghi đúng nội dung chuyển khoản. Sai nội dung có thể khiến giao dịch bị hủy.
+            ⚠ Vui lòng ghi đúng nội dung chuyển khoản. Tiền được cộng tự động sau 1-2 phút; sai nội dung sẽ không được cộng tự động.
           </div>
         </div>
       </div>
@@ -301,7 +301,29 @@
 
     // ===== Xác nhận chuyển khoản =====
     document.getElementById('submitBankBtn').addEventListener('click', () => {
-      showToast('Chức năng xác nhận đang ở chế độ demo.');
+      if (!requireLogin()) return;
+      const btn = document.getElementById('submitBankBtn');
+      btn.disabled = true;
+      showToast('Đang kiểm tra giao dịch...');
+      const start = me.balance;
+      let tries = 0;
+      const timer = setInterval(async () => {
+        tries += 1;
+        try {
+          const p = await apiCall('/api/auth/profile', { method: 'GET' });
+          if (p.balance > start) {
+            clearInterval(timer);
+            btn.disabled = false;
+            me = p;
+            showToast('Đã nhận ' + formatVND(p.balance - start) + '. Số dư mới: ' + formatVND(p.balance));
+            window.dispatchEvent(new Event('lpt:balance'));
+          } else if (tries >= 24) {
+            clearInterval(timer);
+            btn.disabled = false;
+            showToast('Chưa thấy giao dịch. Nếu bạn đã chuyển khoản, số dư sẽ tự cộng sau ít phút.');
+          }
+        } catch (err) { /* lỗi mạng tạm thời, thử lại lượt sau */ }
+      }, 5000);
     });
 
     // ===== Nạp thẻ (API thật — doithegiatot.com) =====
@@ -314,6 +336,38 @@
     }
 
     const formatVND = n => Number(n || 0).toLocaleString('vi-VN') + 'đ';
+
+    // ===== Tài khoản đang đăng nhập (ID, số dư) =====
+    let me = null;
+
+    function requireLogin() {
+      if (me) return true;
+      showToast('Vui lòng đăng nhập để nạp tiền.');
+      if (window.LPT_AUTH_MODAL) window.LPT_AUTH_MODAL.open('login');
+      return false;
+    }
+
+    function renderBank() {
+      const content = document.getElementById('infoContent');
+      const qr = document.querySelector('#panel-bank .qr-box img');
+      if (!me) {
+        content.textContent = 'Đăng nhập để lấy nội dung';
+        return;
+      }
+      const text = 'LPT' + me.uid;
+      content.textContent = text;
+      if (qr) {
+        const account = document.getElementById('infoAccount').textContent.trim();
+        qr.src = 'https://img.vietqr.io/image/MB-' + account + '-compact2.png?addInfo=' + encodeURIComponent(text) +
+          '&accountName=' + encodeURIComponent('LY PHUC THIEN');
+        qr.style.display = '';
+      }
+    }
+
+    async function loadMe() {
+      try { me = await apiCall('/api/auth/profile', { method: 'GET' }); } catch (e) { me = null; }
+      renderBank();
+    }
     let cardPollTimer = null;
 
     function stopCardPolling() {
@@ -334,6 +388,8 @@
         try {
           const d = await apiCall('/api/napthe/status?requestId=' + requestId, { method: 'GET' });
           if (d.status === 'success') {
+            loadMe();
+            window.dispatchEvent(new Event('lpt:balance'));
             finishCard(btn, d.wrongPrice
               ? 'Thẻ đúng nhưng sai mệnh giá. Giá trị thực nhận: ' + formatVND(d.realAmount)
               : 'Nạp thẻ thành công! Giá trị thực nhận: ' + formatVND(d.realAmount));
@@ -348,6 +404,7 @@
 
     document.getElementById('submitCardBtn').addEventListener('click', async () => {
       const btn = document.getElementById('submitCardBtn');
+      if (!requireLogin()) return;
       const telco = cardTypeMenu.querySelector('.dropdown-option.active').dataset.card;
       const code = document.getElementById('cardCode').value.trim();
       const serial = document.getElementById('cardSerial').value.trim();
@@ -378,6 +435,10 @@
         showToast(err.message);
       }
     });
+
+    loadMe();
+    const accDrop = document.querySelector('.acc-dropdown');
+    if (accDrop) new MutationObserver(loadMe).observe(accDrop, { childList: true, subtree: true });
   </script>
 </body>
 </html>

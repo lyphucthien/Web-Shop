@@ -122,7 +122,7 @@
           '<span class="news-tag">'+esc(feat.cat)+'</span>'+
           '<h2>'+esc(feat.title)+'</h2>'+
           '<p>'+esc(feat.summary)+'</p>'+
-          '<div class="news-meta"><time>'+fmtDate(feat.date)+'</time><span class="news-more-link">Đọc tiếp →</span></div>'+
+          '<div class="news-meta"><time>'+fmtDate(feat.date)+'</time><span class="news-more-link">Xem Chi Tiết →</span></div>'+
         '</div>'+
       '</article>' : "";
 
@@ -133,7 +133,7 @@
           '<span class="news-tag">'+esc(a.cat)+'</span>'+
           '<h3>'+esc(a.title)+'</h3>'+
           '<p>'+esc(a.summary)+'</p>'+
-          '<div class="news-meta"><time>'+fmtDate(a.date)+'</time><span class="news-more-link">Đọc tiếp →</span></div>'+
+          '<div class="news-meta"><time>'+fmtDate(a.date)+'</time><span class="news-more-link">Xem Chi Tiết →</span></div>'+
         '</div>'+
       '</article>';
     }).join("");

@@ -1,9 +1,10 @@
 const crypto = require('crypto');
 const redis = require('../_lib/redis');
-const { submitCard } = require('../_lib/napthe');
+const { getUserFromRequest } = require('../_lib/auth');
+const { submitCard, settleCard, TX_TTL } = require('../_lib/napthe');
 
-const TX_TTL_SECONDS = 60 * 60 * 24; // giữ log giao dịch 24h để đối soát
 const VALID_TELCO = ['Viettel', 'Vinaphone', 'Mobifone', 'Garena', 'Zing', 'Gate', 'Vietnamobile', 'Vcoin'];
+const VALID_AMOUNT = [10000, 20000, 30000, 50000, 100000, 200000, 300000, 500000, 1000000];
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
@@ -11,6 +12,11 @@ module.exports = async (req, res) => {
   }
 
   try {
+    const user = await getUserFromRequest(req);
+    if (!user) {
+      return res.status(401).json({ error: 'Vui lòng đăng nhập để nạp thẻ.' });
+    }
+
     const { telco, code, serial, amount } = req.body || {};
 
     if (!VALID_TELCO.includes(telco)) {
@@ -22,42 +28,49 @@ module.exports = async (req, res) => {
     if (!serial || !/^[0-9A-Za-z]{6,20}$/.test(String(serial).trim())) {
       return res.status(400).json({ error: 'Số serial không hợp lệ.' });
     }
-    if (!amount || Number(amount) <= 0) {
+    if (!VALID_AMOUNT.includes(Number(amount))) {
       return res.status(400).json({ error: 'Mệnh giá không hợp lệ.' });
+    }
+
+    const lower = user.username.toLowerCase();
+    const rlKey = `rl:card:${lower}`;
+    const count = await redis.incr(rlKey);
+    if (count === 1) await redis.expire(rlKey, 60);
+    if (count > 5) {
+      return res.status(429).json({ error: 'Bạn gửi thẻ quá nhanh, vui lòng thử lại sau 1 phút.' });
+    }
+
+    const cleanCode = String(code).trim();
+    const cleanSerial = String(serial).trim();
+    const dup = await redis.set(`card_dup:${telco}:${cleanSerial}`, '1', { nx: true, ex: 120 });
+    if (!dup) {
+      return res.status(409).json({ error: 'Thẻ này vừa được gửi, vui lòng chờ kết quả.' });
     }
 
     const requestId = crypto.randomBytes(8).toString('hex');
     const txKey = `card_tx:${requestId}`;
-
-    await redis.set(txKey, {
+    const base = {
+      username: user.username,
       telco,
-      code: String(code).trim(),
-      serial: String(serial).trim(),
+      code: cleanCode,
+      serial: cleanSerial,
       declaredAmount: Number(amount),
-      status: 'pending',
       createdAt: Date.now(),
-    }, { ex: TX_TTL_SECONDS });
+    };
+
+    await redis.set(txKey, { ...base, status: 'pending' }, { ex: TX_TTL });
 
     let gatewayData;
     try {
-      gatewayData = await submitCard({ telco, code, serial, amount, requestId });
+      gatewayData = await submitCard({ telco, code: cleanCode, serial: cleanSerial, amount, requestId });
     } catch (err) {
       console.error('[napthe/submit] gateway error', err);
-      await redis.set(txKey, {
-        telco, code: String(code).trim(), serial: String(serial).trim(),
-        declaredAmount: Number(amount), status: 'failed', message: 'Không kết nối được cổng nạp thẻ.',
-        createdAt: Date.now(), updatedAt: Date.now(),
-      }, { ex: TX_TTL_SECONDS });
+      await settleCard(requestId, { ...base, status: 'pending' }, { status: 'failed', message: 'Không kết nối được cổng nạp thẻ.' });
       return res.status(502).json({ error: 'Không kết nối được cổng nạp thẻ, vui lòng thử lại.' });
     }
-    
-    if (Number(gatewayData.Code) === 1) {
-      await redis.set(txKey, {
-        telco, code: String(code).trim(), serial: String(serial).trim(),
-        declaredAmount: Number(amount), status: 'pending',
-        taskId: gatewayData.TaskId, createdAt: Date.now(), updatedAt: Date.now(),
-      }, { ex: TX_TTL_SECONDS });
 
+    if (Number(gatewayData.Code) === 1) {
+      await redis.set(txKey, { ...base, status: 'pending', taskId: gatewayData.TaskId, updatedAt: Date.now() }, { ex: TX_TTL });
       return res.status(200).json({
         requestId,
         status: 'pending',
@@ -65,17 +78,9 @@ module.exports = async (req, res) => {
       });
     }
 
-    await redis.set(txKey, {
-      telco, code: String(code).trim(), serial: String(serial).trim(),
-      declaredAmount: Number(amount), status: 'failed',
-      message: gatewayData.Message || '', createdAt: Date.now(), updatedAt: Date.now(),
-    }, { ex: TX_TTL_SECONDS });
-
-    return res.status(200).json({
-      requestId,
-      status: 'failed',
-      message: gatewayData.Message || 'Gửi thẻ thất bại, vui lòng kiểm tra lại thông tin.',
-    });
+    const message = gatewayData.Message || 'Gửi thẻ thất bại, vui lòng kiểm tra lại thông tin.';
+    await settleCard(requestId, { ...base, status: 'pending' }, { status: 'failed', message });
+    return res.status(200).json({ requestId, status: 'failed', message });
   } catch (err) {
     console.error('[napthe/submit]', err);
     return res.status(500).json({ error: 'Lỗi máy chủ, vui lòng thử lại.' });

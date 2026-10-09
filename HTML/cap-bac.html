@@ -47,11 +47,9 @@
     {name:"Cao Cấp",   need:10000000, img:"/Uploads/Logo Vip/Vip 5.png", perks:["Hỗ Trợ Riêng","Giá Sỉ Cho Đơn Lớn","Quà Tặng Mỗi 2 Tuần","Giảm 4% Khi Mua","Voucher Giảm 5% (Đơn Đầu Tiên Khi Lên Hạng)"]}
   ];
 
-  var total=Number(window.LPT_TOTAL_DEPOSIT);
-  if(!isFinite(total)){
-    try{ total=Number(localStorage.getItem("lpt_total_deposit")); }catch(e){}
-  }
-  if(!isFinite(total)||total<0) total=0;
+  var total=0;
+
+  function init(){
 
   function money(n){ return n.toLocaleString("vi-VN")+"đ"; }
   function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];}); }
@@ -127,6 +125,13 @@
     renderNext();
   });
   renderNext();
+  }
+
+  fetch("/api/auth/profile",{credentials:"same-origin"})
+    .then(function(r){ return r.ok?r.json():null; })
+    .then(function(d){ if(d&&isFinite(Number(d.totalDeposit))) total=Math.max(0,Number(d.totalDeposit)); })
+    .catch(function(){})
+    .then(init);
 })();
 </script>
   <script src="/JS/layout.js"></script>
