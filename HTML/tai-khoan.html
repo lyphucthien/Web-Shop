@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tài Khoản〡LPTSHOP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>try{document.documentElement.dataset.theme=localStorage.getItem("lpt_theme")||"light"}catch(e){}</script>
+  <link rel="stylesheet" href="/CSS/chung.css" />
+  <link rel="stylesheet" href="/CSS/modal-auth.css" />
+  <style>
+    .tk-page{display:grid;grid-template-columns:260px minmax(0,1fr);gap:20px;padding:24px 0 40px;align-items:start}
+    .tk-side,.tk-main{background:var(--panel);border-radius:12px;box-shadow:var(--shadow)}
+    .tk-side{padding:10px}
+    .tk-side a{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:8px;color:var(--muted);text-decoration:none;font-size:15px;transition:.15s}
+    .tk-side a:hover{background:var(--green-soft);color:var(--green-dark)}
+    .tk-side a.active{background:var(--green-soft);color:var(--green);font-weight:700}
+    .tk-side svg{flex:none}
+    .tk-main{padding:20px 22px 26px;min-height:320px}
+    .tk-main h2{margin:0 0 16px;font-size:18px;color:var(--text)}
+    .tk-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px 22px}
+    .tk-field label{display:block;margin-bottom:6px;font-size:14px;font-weight:700;color:var(--text)}
+    .tk-field input{width:100%;box-sizing:border-box;padding:11px 14px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--text);font:inherit;font-size:14px;outline:none}
+    .tk-field input:focus{border-color:var(--green)}
+    .tk-field input[readonly]{opacity:.8;cursor:default}
+    .tk-btn{display:inline-block;margin-top:20px;padding:10px 22px;border:0;border-radius:6px;background:var(--green);color:#fff;font:inherit;font-weight:700;cursor:pointer;text-decoration:none}
+    .tk-btn:hover{background:var(--green-dark)}
+    .tk-btn.alt{background:var(--green-soft);color:var(--green-dark);margin-right:8px}
+    .tk-empty{padding:40px 10px;text-align:center;color:var(--muted)}
+    .tk-table{width:100%;border-collapse:collapse;font-size:14px}
+    .tk-table th{padding:10px;text-align:left;border-bottom:1px solid var(--line);color:var(--muted);font-weight:700}
+    .tk-sec{margin:30px 0 16px;padding-top:20px;border-top:1px solid var(--line)}
+    .tk-big{font-size:28px;font-weight:800;color:var(--green);margin:4px 0 6px}
+    @media(max-width:820px){
+      .tk-page{grid-template-columns:1fr}
+      .tk-side{display:flex;overflow-x:auto;gap:4px}
+      .tk-side a{white-space:nowrap}
+      .tk-grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div id="site-header"></div>
+
+  <main>
+    <div class="container tk-page">
+      <nav class="tk-side" id="tkSide"></nav>
+      <section class="tk-main" id="tkMain"></section>
+    </div>
+  </main>
+
+  <div id="site-footer"></div>
+  <script src="/JS/layout.js"></script>
+  <script>
+  (function () {
+    var I = function (d) {
+      return '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + d + '</svg>';
+    };
+    var ICON = {
+      user: I('<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>'),
+      wallet: I('<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M16 12h4"/>'),
+      clock: I('<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><polyline points="3 3 3 8 8 8"/><polyline points="12 7 12 12 15 14"/>')
+    };
+    var SECTIONS = [
+      { slug: 'thong-tin', text: 'Thông Tin Tài Khoản', icon: 'user' },
+      { slug: 'vi', text: 'Ví Của Tôi', icon: 'wallet' },
+      { slug: 'lich-su-mua-acc', text: 'Lịch Sử Mua Tài Khoản', icon: 'clock' },
+      { slug: 'lich-su-dich-vu', text: 'Lịch Sử Dùng Dịch Vụ', icon: 'clock' },
+      { slug: 'lich-su-minigame', text: 'Lịch Sử Chơi MiniGame', icon: 'clock' },
+      { slug: 'lich-su-nap-tien', text: 'Lịch Sử Nạp Tiền', icon: 'clock' },
+      { slug: 'lich-su-rut-vat-pham', text: 'Lịch Sử Rút Vật Phẩm', icon: 'clock' }
+    ];
+
+    var side = document.getElementById('tkSide');
+    var main = document.getElementById('tkMain');
+    var profile = null;
+    var loaded = false;
+
+    function esc(s) {
+      return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+      });
+    }
+    function toast(t) { if (window.showToast) window.showToast(t); }
+    function vnd(n) { return Number(n || 0).toLocaleString('vi-VN') + ' ₫'; }
+    function pad(n) { return String(n).padStart(2, '0'); }
+    function fmtDate(ts) {
+      if (!ts) return '';
+      var d = new Date(ts);
+      return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+    }
+    function current() {
+      var seg = location.pathname.replace(/\/+$/, '').split('/')[2] || 'thong-tin';
+      if (seg === 'bao-mat') seg = 'thong-tin';
+      return SECTIONS.some(function (s) { return s.slug === seg; }) ? seg : 'thong-tin';
+    }
+
+    function renderSide(active) {
+      side.innerHTML = SECTIONS.map(function (s) {
+        return '<a href="/tai-khoan/' + s.slug + '" data-slug="' + s.slug + '"' + (s.slug === active ? ' class="active"' : '') + '>' + ICON[s.icon] + esc(s.text) + '</a>';
+      }).join('');
+    }
+
+    function field(label, id, value, readonly, placeholder, type) {
+      return '<div class="tk-field"><label for="' + id + '">' + label + '</label><input id="' + id + '"' + (type ? ' type="' + type + '"' : '') + ' value="' + esc(value) + '"' +
+        (readonly ? ' readonly' : '') + (placeholder ? ' placeholder="' + placeholder + '"' : '') + '></div>';
+    }
+
+    function viewProfile() {
+      var p = profile;
+      main.innerHTML = '<h2>Thông tin tài khoản</h2><div class="tk-grid">' +
+        field('Số Dư', 'tkBal', vnd(p.balance), true) +
+        field('Đã Nạp', 'tkDep', vnd(p.totalDeposit), true) +
+        field('Tên Đăng Nhập', 'tkUser', p.username, true) +
+        field('Họ Và Tên', 'tkName', p.fullName, false, 'Nhập họ và tên') +
+        field('Email', 'tkMail', p.email, false, 'Nhập email') +
+        field('Số Điện Thoại', 'tkPhone', p.phone, false, 'Nhập số điện thoại') +
+        field('Ngày Tham Gia', 'tkJoin', fmtDate(p.createdAt), true) +
+        '</div><button type="button" class="tk-btn" id="tkSave">Cập nhật</button>' +
+        '<h2 id="tkSec" class="tk-sec">Bảo mật tài khoản</h2><div class="tk-grid">' +
+        field('Mật Khẩu Hiện Tại', 'tkOld', '', false, 'Nhập mật khẩu hiện tại', 'password') +
+        '<div></div>' +
+        field('Mật Khẩu Mới', 'tkNew', '', false, 'Tối thiểu 6 ký tự', 'password') +
+        field('Nhập Lại Mật Khẩu Mới', 'tkNew2', '', false, 'Nhập lại mật khẩu mới', 'password') +
+        '</div><button type="button" class="tk-btn" id="tkPass">Đổi mật khẩu</button>';
+      document.getElementById('tkPass').onclick = function () {
+        var o = document.getElementById('tkOld');
+        var n = document.getElementById('tkNew');
+        var n2 = document.getElementById('tkNew2');
+        fetch('/api/auth/profile', {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'password', oldPassword: o.value, newPassword: n.value, confirmPassword: n2.value })
+        })
+          .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+          .then(function (x) {
+            if (!x.ok) return toast(x.d.error || 'Đổi mật khẩu thất bại.');
+            o.value = n.value = n2.value = '';
+            toast('Đổi mật khẩu thành công.');
+          })
+          .catch(function () { toast('Lỗi kết nối, vui lòng thử lại.'); });
+      };
+      if (/\/bao-mat\/?$/.test(location.pathname)) {
+        var sec = document.getElementById('tkSec');
+        if (sec) sec.scrollIntoView();
+      }
+      document.getElementById('tkSave').onclick = function () {
+        var body = {
+          fullName: document.getElementById('tkName').value,
+          email: document.getElementById('tkMail').value,
+          phone: document.getElementById('tkPhone').value
+        };
+        fetch('/api/auth/profile', {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        })
+          .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+          .then(function (x) {
+            if (!x.ok) return toast(x.d.error || 'Cập nhật thất bại.');
+            profile.fullName = body.fullName.trim();
+            profile.email = body.email.trim();
+            profile.phone = body.phone.trim();
+            toast('Cập nhật thành công.');
+          })
+          .catch(function () { toast('Lỗi kết nối, vui lòng thử lại.'); });
+      };
+    }
+
+    function viewWallet() {
+      main.innerHTML = '<h2>Ví của tôi</h2><div>Số dư hiện tại</div><div class="tk-big">' + vnd(profile.balance) + '</div>' +
+        '<div>Tổng đã nạp: <b>' + vnd(profile.totalDeposit) + '</b></div>' +
+        '<a class="tk-btn alt" href="/nap-tien/nap-the">Nạp thẻ cào</a><a class="tk-btn alt" href="/nap-tien/chuyen-khoan">Chuyển khoản</a>';
+    }
+
+    function viewHistory(title) {
+      main.innerHTML = '<h2>' + esc(title) + '</h2><table class="tk-table"><thead><tr><th>Mã</th><th>Nội dung</th><th>Số tiền</th><th>Thời gian</th></tr></thead></table>' +
+        '<div class="tk-empty">Chưa có dữ liệu.</div>';
+    }
+
+    function viewGuest() {
+      main.innerHTML = '<div class="tk-empty">Vui lòng đăng nhập để xem trang này.<br><button type="button" class="tk-btn" data-modal="login">Đăng Nhập</button></div>';
+    }
+
+    function render() {
+      var slug = current();
+      renderSide(slug);
+      if (!loaded) { main.innerHTML = '<div class="tk-empty">Đang tải...</div>'; return; }
+      if (!profile) return viewGuest();
+      var s = SECTIONS.filter(function (x) { return x.slug === slug; })[0];
+      if (slug === 'thong-tin') viewProfile();
+      else if (slug === 'vi') viewWallet();
+      else viewHistory(s.text);
+    }
+
+    function load() {
+      fetch('/api/auth/profile', { credentials: 'same-origin' })
+        .then(function (r) { if (!r.ok) throw new Error('auth'); return r.json(); })
+        .then(function (d) { profile = d; })
+        .catch(function () { profile = null; })
+        .then(function () { loaded = true; render(); });
+    }
+
+    side.addEventListener('click', function (e) {
+      var a = e.target.closest('a[data-slug]');
+      if (!a) return;
+      e.preventDefault();
+      history.pushState({}, '', a.getAttribute('href'));
+      render();
+    });
+    window.addEventListener('popstate', render);
+
+    var dd = document.querySelector('.acc-dropdown');
+    if (dd) {
+      new MutationObserver(function () {
+        if (!profile && document.querySelector('[data-el="userBox"]')) load();
+      }).observe(dd, { childList: true, subtree: true });
+    }
+
+    render();
+    load();
+  })();
+  </script>
+</body>
+</html>
