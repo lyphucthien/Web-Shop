@@ -1,10 +1,15 @@
 const redis = require('../_lib/redis');
 const { hashPassword } = require('../_lib/auth');
 const { ensureUid } = require('../_lib/wallet');
+const { allow } = require('../_lib/limit');
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Phương thức không được hỗ trợ.' });
+  }
+
+  if (!(await allow(req, 'register', 5, 600))) {
+    return res.status(429).json({ error: 'Bạn đăng ký quá nhiều lần, vui lòng thử lại sau.' });
   }
 
   try {
