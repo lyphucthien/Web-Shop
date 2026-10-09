@@ -1,9 +1,14 @@
 const redis = require('../_lib/redis');
 const { comparePassword, signJWT, setAuthCookie } = require('../_lib/auth');
+const { allow } = require('../_lib/limit');
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Phương thức không được hỗ trợ.' });
+  }
+
+  if (!(await allow(req, 'login', 10, 60))) {
+    return res.status(429).json({ error: 'Bạn thử quá nhiều lần, vui lòng đợi 1 phút.' });
   }
 
   try {
