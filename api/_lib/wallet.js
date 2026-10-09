@@ -6,15 +6,21 @@ const LOCK_TTL = 60 * 60 * 24 * 400;
 
 const userKey = (username) => `user:${String(username).toLowerCase()}`;
 
-// Mỗi tài khoản có 1 ID số (dùng làm nội dung chuyển khoản LPT<ID>), cấp 1 lần duy nhất.
 async function ensureUid(username) {
-  const key = userKey(username);
+  const lower = String(username).toLowerCase();
+  const key = userKey(lower);
   const cur = await redis.hget(key, 'uid');
   if (cur) return Number(cur);
+
   const n = 3000 + Number(await redis.incr('uid:seq'));
+  const reserved = await redis.set(`uid:${n}`, lower, { nx: true });
+  if (!reserved) return ensureUid(username);
+
   const won = await redis.hsetnx(key, 'uid', n);
-  if (!won) return Number(await redis.hget(key, 'uid'));
-  await redis.set(`uid:${n}`, String(username).toLowerCase());
+  if (!won) {
+    await redis.del(`uid:${n}`);
+    return Number(await redis.hget(key, 'uid'));
+  }
   return n;
 }
 
@@ -35,7 +41,6 @@ async function getHistory(username, type, limit = 100) {
   return (rows || []).filter((r) => r && typeof r === 'object');
 }
 
-// Cộng tiền đúng 1 lần cho mỗi (source, ref): gọi lại nhiều lần / callback trùng cũng không cộng lặp.
 async function creditDeposit({ username, amount, source, ref, title }) {
   const value = Math.floor(Number(amount));
   if (!(value > 0)) return { credited: false, reason: 'invalid_amount' };
