@@ -1,5 +1,6 @@
 const redis = require('../_lib/redis');
 const { hashPassword } = require('../_lib/auth');
+const { ensureUid } = require('../_lib/wallet');
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
@@ -20,17 +21,19 @@ module.exports = async (req, res) => {
     }
 
     const key = `user:${username.toLowerCase()}`;
-    const exists = await redis.exists(key);
-    if (exists) {
+    const passwordHash = await hashPassword(password);
+
+    const created = await redis.hsetnx(key, 'username', username);
+    if (!created) {
       return res.status(409).json({ error: 'Tên đăng nhập đã tồn tại.' });
     }
+    await redis.hset(key, { passwordHash, createdAt: Date.now() });
 
-    const passwordHash = await hashPassword(password);
-    await redis.hset(key, {
-      username,
-      passwordHash,
-      createdAt: Date.now(),
-    });
+    try {
+      await ensureUid(username);
+    } catch (err) {
+      console.error('[register] chưa cấp được ID, sẽ cấp lại khi vào trang tài khoản', err);
+    }
 
     return res.status(200).json({ ok: true });
   } catch (err) {
